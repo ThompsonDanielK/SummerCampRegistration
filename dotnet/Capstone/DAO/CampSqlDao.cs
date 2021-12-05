@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Capstone.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -24,26 +25,26 @@ namespace Capstone.DAO
 
 
 
-        // return type needs set to a list of campers
-        public void FetchAllCampers()
+        public List<Camper> FetchAllCampers()
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
+            //using (SqlConnection conn = new SqlConnection(connectionString))
+            //{
+            //    conn.Open();
 
-                using (SqlCommand command = new SqlCommand(sqlAllCampers, conn))
-                {
-                    using (SqlDataReader Reader = command.ExecuteReader())
-                    {
-                        while (Reader.Read())
-                        {
-                            BuildCamperFromReader(Reader);
-                            //Add Camper to list
-                        }
-                    }
-                }
-            }
+            //    using (SqlCommand command = new SqlCommand(sqlAllCampers, conn))
+            //    {
+            //        using (SqlDataReader Reader = command.ExecuteReader())
+            //        {
+            //            while (Reader.Read())
+            //            {
+            //                BuildCamperFromReader(Reader);
+            //                //Add Camper to list
+            //            }
+            //        }
+            //    }
+            //}
             // return list of campers
+            return new List<Camper>();
         }
 
         // return type needs set to a camper

@@ -1,7 +1,10 @@
-﻿namespace Capstone.DAO
+﻿using Capstone.Models;
+using System.Collections.Generic;
+
+namespace Capstone.DAO
 {
     public interface ICampDao
     {
-        void FetchAllCampers();
+        List<Camper> FetchAllCampers();
     }
 }
