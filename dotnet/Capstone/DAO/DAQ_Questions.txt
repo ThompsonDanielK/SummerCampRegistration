@@ -1,0 +1,2 @@
+﻿Do we want to call a seperate sql update for each field, or build a complete camper
+	from the passed in object using existing data plus the data to update?
