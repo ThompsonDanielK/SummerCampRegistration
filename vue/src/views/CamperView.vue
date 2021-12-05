@@ -1,11 +1,16 @@
 <template>
   <article>
+      <camper-info />
   </article>
 </template>
 
 <script>
-export default {
+import CamperInfo from '../components/CamperInfo.vue'
 
+export default {
+    components: {
+        CamperInfo,
+    }
 }
 </script>
 

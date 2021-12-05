@@ -4,7 +4,7 @@
 <template>
   <div id="app" class="container">
     <!-- If you start to get random styling you don't like, remove container from this div -->
-    <nav-bar />
+    <nav-bar id='navBar' />
     <div class="page">
       <router-view />
     </div>
@@ -26,21 +26,15 @@ export default {
 <style lang="scss">
 @import "./styles/colors.scss";
 
-// Import the bootstrap styles. If you want to override Bootstrap colors, it needs to happen above this line
-@import "../node_modules/bootstrap/scss/bootstrap";
-
 .container {
-  display: grid;
-  grid-template-areas:
-    "nav"
-    "page";
-  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  margin: 10px 50px;
 }
-.page {
-  margin: 0px 10% 0px 10%;
+.container .page {
   color: $main;
-  grid-area: page;
-  padding: 5px 5%;
+  padding: 0px 100px;
   color: $textDark;
+  align-items: flex-start;
 }
 </style>

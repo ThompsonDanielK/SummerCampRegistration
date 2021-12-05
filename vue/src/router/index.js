@@ -55,11 +55,11 @@ const router = new Router({
       },
     },
     {
-      path: "/camper/:camperName",
+      path: "/camper",
       name: "camper",
       component: CamperView,
       meta: {
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },
     {

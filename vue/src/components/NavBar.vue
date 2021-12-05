@@ -46,30 +46,28 @@ export default {
   justify-content: space-between;
   align-items: center;
   grid-area: nav;
-  padding: 5px;
-  margin-top: 5px;
-  border-radius: 300px;
+  padding: 5px 5px;
+  margin-top: 20px;
+  border-radius: 250px;
   background-image: url("../../images/DanHeader.jpg");
-  background-size: cover;
+  background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
 }
 .nav #logo{
-  z-index: 1;
-  height: 10rem;
+  height: 10em;
   }
 .nav a {
   color: $textLight;
   text-shadow: 3px 1px 1px black;
   text-decoration: none;
-  font-size: 1.3em;
+  font-size: 200%;
   border: 2px solid $textLight;
   border-radius: 10px;
   text-align: center;
   background-color: $textDark;
   padding: 0px 10px;
   margin: 0px 10px;
-  font-size: 200%;
 }
 .nav #navBar{
   padding-right: 100px;
