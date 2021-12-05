@@ -85,3 +85,16 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+@import '../styles/colors.scss';
+
+#login{
+  color: $textDark;
+  padding: 10px;
+  border-radius: 10px;
+}
+a, button{
+  color: $highlight;
+}
+</style>

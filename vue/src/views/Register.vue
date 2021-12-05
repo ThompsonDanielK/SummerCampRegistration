@@ -93,4 +93,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+@import '../styles/colors.scss';
+
+#register{
+  color: $textDark;
+  padding: 10px;
+  border-radius: 10px;
+}
+a, button{
+  color: $highlight;
+}
+</style>
