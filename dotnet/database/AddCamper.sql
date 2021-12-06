@@ -1,0 +1,1 @@
+INSERT INTO campers (family_id, first_name, last_name, dob, medications, allergies, special_needs) VALUES (100001, 'Bruce', 'Wayne', '1990/03/14', 'M&Ms,Snickers,PB&J', 'Work,Effort,Social Situations', 'Constant Attention,Talk Slowly')

@@ -22,10 +22,40 @@ namespace Capstone.DAO
         const string sqlAllCampers = "SELECT camper_code, family_id, " +
             "first_name, last_name, dob, " +
             "medications, allergies, special_needs FROM campers";
+        const string sqlAddCamper = "INSERT INTO campers " +
+            "(family_id, first_name, last_name, dob, medications, allergies, special_needs) " +
+            "VALUES (@familyId, @firstName, @lastName, @dob, @medications, " +
+            "@allergies, @specialNeeds)";
         const string sqlFilterCampers = "Sql Statement";
 
 
+        public bool AddCamper(Camper camper)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
 
+                using (SqlCommand command = new SqlCommand(sqlAddCamper, conn))
+                {
+                    command.Parameters.AddWithValue("@familyId", camper.FamilyId);
+                    command.Parameters.AddWithValue("@firstName", camper.FirstName);
+                    command.Parameters.AddWithValue("@lastName", camper.LastName);
+                    command.Parameters.AddWithValue("@dob", camper.DOB);
+                    command.Parameters.AddWithValue("@medications", camper.MedicationsCSV);
+                    command.Parameters.AddWithValue("@allergies", camper.AllergiesCSV);
+                    command.Parameters.AddWithValue("@specialNeeds", camper.SpecialNeedsCSV);
+
+                    int returnedRows = command.ExecuteNonQuery();
+
+                    if (returnedRows == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
+        }
 
         public List<Camper> FetchAllCampers()
         {

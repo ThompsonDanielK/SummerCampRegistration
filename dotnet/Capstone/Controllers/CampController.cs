@@ -29,5 +29,16 @@ namespace Capstone.Controllers
             return Ok(camperList);
         }
 
+        [HttpPost("Camper")]
+        public ActionResult PostCamper(Camper camper)
+        {
+            if (camp.AddCamper(camper))
+            {
+                return Created("Your camper has been added", camper);
+            }
+
+            return BadRequest(new { message = "This request could not be completed." });
+        }
+
     }
 }
