@@ -24,6 +24,7 @@ export default new Vuex.Store({
   state: {
     token: currentToken || '',
     user: currentUser || {}, // If a user is an admin, their user.role will be 'admin'
+    campers: []
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {
@@ -42,13 +43,13 @@ export default new Vuex.Store({
       state.user = {};
       axios.defaults.headers.common = {};
     },
-    ADD_ATTENDEE(state, attendee)
+    ADD_CAMPER(state, camper)
     {
-      state.attendees.push(attendee);
+      state.campers.push(camper);
     },
-    DELETE_ATTENDEE(state, attendeeId)
+    DELETE_CAMPER(state, camperId)
     {
-      state.attendees.splice(this.state.attendees.indexOf(attendeeId), 1);
+      state.campers.splice(this.state.campers.indexOf(camperId), 1);
     },
   }
 })

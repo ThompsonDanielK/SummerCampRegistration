@@ -6,7 +6,7 @@ import Logout from "../views/Logout.vue";
 import Register from "../views/Register.vue";
 import store from "../store/index";
 import IndividualView from "../views/IndividualView.vue"
-import AttendeeListView from "../views/AttendeeListView.vue"
+import CamperListView from "../views/CamperListView.vue"
 
 Vue.use(Router);
 
@@ -56,17 +56,17 @@ const router = new Router({
       },
     },
     {
-      path: "/attendee/:attendeeId",
-      name: "attendee",
+      path: "/camper/:camperId",
+      name: "camper",
       component: IndividualView,
       meta: {
         requiresAuth: true,
       },
     },
     {
-      path: "/allattendees",
-      name: "attendeeList",
-      component: AttendeeListView,
+      path: "/CamperList",
+      name: "camperList",
+      component: CamperListView,
       meta: {
         requiresAuth: true,
       },
