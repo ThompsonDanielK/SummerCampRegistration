@@ -1,15 +1,15 @@
 <template>
   <article>
-      <attendee-info />
+      <camper-info />
   </article>
 </template>
 
 <script>
-import AttendeeInfo from '../components/AttendeeInfo.vue'
+import CamperInfo from '../components/CamperInfo.vue'
 
 export default {
     components: {
-        AttendeeInfo,
+        CamperInfo,
     }
 }
 </script>

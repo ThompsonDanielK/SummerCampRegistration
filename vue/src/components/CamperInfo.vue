@@ -5,49 +5,49 @@
       <td>First Name:</td>
       <td>
         <div v-show="!showFirst" class="data">
-          {{ this.attendee.firstName }}
+          {{ this.camper.firstName }}
         </div>
         <input type="text" v-model="newValue.firstName" v-show="showFirst" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('firstName')" v-show="!showFirst">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst">Save</button>
-        <button type="button" id="firstCancel" v-on:click.prevent="newValue.firstName = attendee.firstName; showFirst = false" v-show="showFirst">Cancel</button>
+        <button type="button" id="firstCancel" v-on:click.prevent="newValue.firstName = camper.firstName; showFirst = false" v-show="showFirst">Cancel</button>
       </td>
     </tr>
     <tr id="lastName">
       <td>Last Name:</td>
       <td>
         <div v-show="!showLast"  class="data">
-          {{ this.attendee.lastName }}
+          {{ this.camper.lastName }}
         </div>
         <input type="text" v-model="newValue.lastName" v-show="showLast" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('lastName')" v-show="!showLast">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast">Save</button>
-        <button type="button" id="lastCancel" v-on:click.prevent="newValue.lastName = attendee.lastName; showLast = false" v-show="showLast">Cancel</button>
+        <button type="button" id="lastCancel" v-on:click.prevent="newValue.lastName = camper.lastName; showLast = false" v-show="showLast">Cancel</button>
       </td>
     </tr>
     <tr id="city">
       <td>City:</td>
       <td>
         <div v-show="!showCity" class="data">
-          {{ this.attendee.city }}
+          {{ this.camper.city }}
         </div>
         <input type="text" v-model="newValue.city" v-show="showCity" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('city')" v-show="!showCity">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('city')" v-show="showCity">Save</button>
-        <button type="button" id="cityCancel" v-on:click.prevent="newValue.city = attendee.city; showCity = false" v-show="showCity">Cancel</button>
+        <button type="button" id="cityCancel" v-on:click.prevent="newValue.city = camper.city; showCity = false" v-show="showCity">Cancel</button>
       </td>
     </tr>
     <tr id="state">
       <td>State:</td>
       <td>
         <div v-show="!showState" class="data">
-          {{ this.attendee.state }}
+          {{ this.camper.state }}
         </div>
         <select v-model="newValue.state" v-show="showState">
           <option v-for="state in states" v-bind:key="state">
@@ -58,28 +58,28 @@
       <td>
         <button type="button" v-on:click.prevent="showHideForm('state')" v-show="!showState">Edit</button>
         <button type="submit" v-on:click.prevent="saveChange('state')" v-show="showState">Save</button>
-        <button type="button" id="stateCancel" v-on:click.prevent="newValue.state = attendee.state; showState = false" v-show="showState">Cancel</button>
+        <button type="button" id="stateCancel" v-on:click.prevent="newValue.state = camper.state; showState = false" v-show="showState">Cancel</button>
       </td>
     </tr>
     <tr id="zip">
       <td>Zip:</td>
       <td>
         <div v-show="!showZip" class="data">
-          {{ this.attendee.zip }}
+          {{ this.camper.zip }}
         </div>
         <input type="text" v-model.number="newValue.zip" v-show="showZip" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('zip')" v-show="!showZip">Edit</button>
         <button type="submit" v-on:click.prevent="saveChange('zip')" v-show="showZip">Save</button>
-        <button type="button" id="zipCancel" v-on:click.prevent="newValue.zip = attendee.zip; showZip = false" v-show="showZip">Cancel</button>
+        <button type="button" id="zipCancel" v-on:click.prevent="newValue.zip = camper.zip; showZip = false" v-show="showZip">Cancel</button>
       </td>
     </tr>
     <tr id="info">
       <td>Special Needs:</td>
       <td>
         <ul class="data">
-          <li v-show="!showSpecial" v-for="line in this.attendee.specialInfo" v-bind:key="line">
+          <li v-show="!showSpecial" v-for="line in this.camper.specialInfo" v-bind:key="line">
             {{ line }}
           </li>
           <div v-show="showSpecial">
@@ -91,19 +91,19 @@
       <td>
         <button type="button" v-on:click.prevent="showHideForm('specialInfo')" v-show="!showSpecial">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('specialInfo')" v-show="showSpecial">Save</button>
-        <button type="button" id="specialCancel" v-on:click.prevent="newValue.specialInfo = attendee.specialInfo; showSpecial = false" v-show="showSpecial">Cancel</button>
+        <button type="button" id="specialCancel" v-on:click.prevent="newValue.specialInfo = camper.specialInfo; showSpecial = false" v-show="showSpecial">Cancel</button>
       </td>
     </tr>
   </table>
 </template>
 
 <script>
-import AttendeeService from "../services/AttendeeService.js";
+import CamperService from "../services/CamperService.js";
 
 export default {
   data() {
     return {
-      attendee: {},
+      camper: {},
       newValue: {},
       changes: {},
       showFirst: false,
@@ -143,46 +143,46 @@ export default {
       }
     },
     saveChange(formName) {
-        this.changes.attendeeId = this.newValue.id;
+        this.changes.camperId = this.newValue.id;
       switch (formName) {
         case "firstName":
           this.changes.firstName = this.newValue.firstName;
-          this.attendee.firstName= this.newValue.firstName;
+          this.camper.firstName= this.newValue.firstName;
           this.showFirst = false;
           break;
         case "lastName":
           this.changes.lastName = this.newValue.lastName;
-          this.attendee.lastName= this.newValue.lastName;
+          this.camper.lastName= this.newValue.lastName;
           this.showLast = false;
           break;
         case "city":
           this.changes.city = this.newValue.city;
-          this.attendee.city = this.newValue.city;
+          this.camper.city = this.newValue.city;
           this.showCity = false;
           break;
         case "state":
           this.changes.state = this.newValue.state;
-          this.attendee.state = this.newValue.state;
+          this.camper.state = this.newValue.state;
           this.showState = false;
           break;
         case "zip":
           this.changes.zip = this.newValue.zip;
-          this.attendee.zip = this.newValue.zip;
+          this.camper.zip = this.newValue.zip;
           this.showZip = false;
           break;
         case "specialInfo":
           this.newValue.specialInfo = this.newValue.specialInfo.split(',');
-          this.attendee.specialInfo = this.newValue.specialInfo;
+          this.camper.specialInfo = this.newValue.specialInfo;
           this.changes.specialInfo = this.newValue.specialInfo;
           this.showSpecial = false;
           break;
       }
     },
     finalizeChanges(){
-      AttendeeService.updateAttendee(this.attendee)
+      CamperService.updateCamper(this.camper)
       .then(response => {
-        console.log('Updated attendee info', response.data);
-        AttendeeService.logChanges(this.changes)
+        console.log('Updated camper info', response.data);
+        CamperService.logChanges(this.changes)
         .then(response => {
           console.log('Logged changes', response.data);
           this.changes = {};
@@ -197,14 +197,14 @@ export default {
     }
   },
     created() {
-      AttendeeService.getAttendee(this.$route.params.attendeeId).then((response) => {
-        console.log('Got attendee', response.data)
+      CamperService.getCamper(this.$route.params.camperId).then((response) => {
+        console.log('Got camper', response.data)
         this.newValue = response.data;
-        this.attendee = response.data;
+        this.camper = response.data;
       })
       .catch(response =>
       {
-        console.error('Problem getting attendee', response)
+        console.error('Problem getting camper', response)
       })
     },
 };

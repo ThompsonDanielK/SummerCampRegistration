@@ -1,25 +1,25 @@
 <template>
   <section>
-    <h1>Attendees</h1>
-    <button type="button" v-on:click="showAddForm = true" v-show="!showAddForm">Add New Attendee</button>
+    <h1>Campers</h1>
+    <button type="button" v-on:click="showAddForm = true" v-show="!showAddForm">Add New Camper</button>
     <form class="form-group" v-show="showAddForm">
         <label for="firstName">First Name:</label>
-        <input v-model="newAttendee.firstName" name="firstName" type='text' />
+        <input v-model="newCamper.firstName" name="firstName" type='text' />
         <label for="lastName">Last Name:</label>
-        <input v-model="newAttendee.lastName" name="lastName" type='text' />
+        <input v-model="newCamper.lastName" name="lastName" type='text' />
         <label for="city">City:</label>
-        <input v-model="newAttendee.city" name="city" type='text' />
+        <input v-model="newCamper.city" name="city" type='text' />
         <label for="state">State:</label>
-        <select v-model="newAttendee.state" name="state">
+        <select v-model="newCamper.state" name="state">
           <option v-for="state in states" v-bind:key="state">
             {{ state }}
           </option>
         </select>
         <label for="zip">Zip Code:</label>
-        <input v-model="newAttendee.zip" name="zip" type='text' />
-        <button type="submit" v-on:click.prevent="saveNewAttendee()" v-bind:disabled="!filledForm">
+        <input v-model="newCamper.zip" name="zip" type='text' />
+        <button type="submit" v-on:click.prevent="saveNewCamper()" v-bind:disabled="!filledForm">
             Submit</button>
-        <button type="button" v-on:click="showAddForm = false; newAttendee = {}">Cancel</button>
+        <button type="button" v-on:click="showAddForm = false; newcamper = {}">Cancel</button>
     </form>
     <table>
       <thead>
@@ -42,30 +42,30 @@
           <td></td>
         </tr>
       <tr
-        v-for="attendee in this.filteredAttendees"
-        v-bind:key="attendee.id"
+        v-for="camper in this.filteredCampers"
+        v-bind:key="camper.id"
         v-bind:showDetails="false"
       >
-        <td>{{ attendee.id }}</td>
-        <td>{{ attendee.firstName }}</td> 
-        <td>{{ attendee.lastName }}</td>
-        <td>{{ attendee.city }}</td>
-        <td>{{ attendee.state }}</td>
-        <td>{{ attendee.zip }}</td>
-        <td><router-link v-bind:to="{name:'attendee', params: {attendeeId: attendee.id}}"><button type="button">Edit</button></router-link></td>
-        <td><button type="button" v-on:click="deleteAttendee(attendee.id)">Delete</button></td>
+        <td>{{ camper.id }}</td>
+        <td>{{ camper.firstName }}</td> 
+        <td>{{ camper.lastName }}</td>
+        <td>{{ camper.city }}</td>
+        <td>{{ camper.state }}</td>
+        <td>{{ camper.zip }}</td>
+        <td><router-link v-bind:to="{name:'camper', params: {camperId: camper.id}}"><button type="button">Edit</button></router-link></td>
+        <td><button type="button" v-on:click="deleteCamper(camper.id)">Delete</button></td>
      </tr>
     </table>
   </section>
 </template>
 
 <script>
-import AttendeeService from '../services/AttendeeService.js';
+import CamperService from '../services/CamperService.js';
 
 export default {
   data() {
     return {
-      newAttendee: {
+      newCamper: {
         firstName: '',
         lastName: '',
         city: '',
@@ -73,7 +73,7 @@ export default {
         zip: '',
         },
       showAddForm: false,
-      attendees: [],
+      campers: [],
       firstNameToFilter: '',
       lastNameToFilter: '',
       cityToFilter: '',
@@ -87,50 +87,50 @@ export default {
     };
   },
   created() {
-    AttendeeService.getAllAttendees()
+    CamperService.getAllCampers()
     .then(response =>{
-        console.log('Got all attendees', response.data);
-        this.attendees = response.data;
+        console.log('Got all campers', response.data);
+        this.campers = response.data;
     })
     .catch(response => {
-        console.error('Problem getting all attendees', response)
+        console.error('Problem getting all campers', response)
     })
   },
   computed: {
       filledForm(){
-          return this.newAttendee.firstName && this.newAttendee.lastName && this.newAttendee.city && this.newAttendee.state && this.newAttendee.zip;
+          return this.newCamper.firstName && this.newCamper.lastName && this.newCamper.city && this.newCamper.state && this.newCamper.zip;
       },
-    filteredAttendees() {
-        let attendeesList = this.attendees;
+    filteredCampers() {
+        let campersList = this.campers;
         if(this.firstNameToFilter)
         {
-            attendeesList = attendeesList.filter(a => a.firstName.toLowerCase().includes(this.firstNameToFilter.toLowerCase()))
+            campersList = campersList.filter(a => a.firstName.toLowerCase().includes(this.firstNameToFilter.toLowerCase()))
         }
         if(this.lastNameToFilter)
         {
-            attendeesList = attendeesList.filter(a => a.lastName.toLowerCase().includes(this.lastNameToFilter.toLowerCase()))
+            campersList = campersList.filter(a => a.lastName.toLowerCase().includes(this.lastNameToFilter.toLowerCase()))
         }
         if(this.cityToFilter)
         {
-            attendeesList = attendeesList.filter(a => a.city.toLowerCase().includes(this.cityToFilter.toLowerCase()))
+            campersList = campersList.filter(a => a.city.toLowerCase().includes(this.cityToFilter.toLowerCase()))
         }
         if(this.stateToFilter)
         {
-            attendeesList = attendeesList.filter(a => a.state.toLowerCase().includes(this.stateToFilter.toLowerCase()))
+            campersList = campersList.filter(a => a.state.toLowerCase().includes(this.stateToFilter.toLowerCase()))
         }
         if(this.zipToFilter)
         {
-            attendeesList = attendeesList.filter(a => a.zipCode.toLowerCase().includes(this.zipToFilter.toLowerCase()))
+            campersList = campersList.filter(a => a.zipCode.toLowerCase().includes(this.zipToFilter.toLowerCase()))
         }        
-    return attendeesList;
+    return campersList;
     }
   },
   methods: {
-      saveNewAttendee(){
-          this.$store.commit('ADD_ATTENDEE', this.newAttendee);
+      saveNewCamper(){
+          this.$store.commit('ADD_camper', this.newcamper);
       },
-      deleteAttendee(attendeeId){
-          this.$store.commit('DELETE_ATTENDEE', attendeeId);
+      deleteCamper(camperId){
+          this.$store.commit('DELETE_camper', camperId);
       },
   }
 };
