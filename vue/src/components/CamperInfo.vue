@@ -143,7 +143,7 @@ export default {
       }
     },
     saveChange(formName) {
-        this.changes.camperId = this.newValue.id;
+        this.changes.camperCode = this.newValue.id;
       switch (formName) {
         case "firstName":
           this.changes.firstName = this.newValue.firstName;
@@ -197,16 +197,18 @@ export default {
     }
   },
     created() {
-      CamperService.getCamper(this.$route.params.camperId).then((response) => {
-        console.log('Got camper', response.data)
-        this.newValue = response.data;
-        this.camper = response.data;
-      })
-      .catch(response =>
-      {
-        console.error('Problem getting camper', response)
-      })
-    },
+    //   CamperService.getCamper(this.$route.params.camperCode).then((response) => {
+    //     console.log('Got camper', response.data)
+    //     this.newValue = response.data;
+    //     this.camper = response.data;
+    //   })
+    //   .catch(response =>
+    //   {
+    //     console.error('Problem getting camper', response)
+    //   })
+    // },
+    this.camper = this.$store.state.campers.find( c => c.camperCode = this.$route.params.camperCode)
+    }
 };
 </script>
 

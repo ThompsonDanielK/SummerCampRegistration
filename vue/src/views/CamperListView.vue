@@ -33,7 +33,7 @@
         </tr>
       </thead>
         <tr>
-          <td>Id</td>
+          <td>Camper Code: </td>
           <td>First Name:</td>
           <td>Last Name:</td>
           <td>City:</td>
@@ -43,17 +43,17 @@
         </tr>
       <tr
         v-for="camper in this.filteredCampers"
-        v-bind:key="camper.id"
+        v-bind:key="camper.camperCode"
         v-bind:showDetails="false"
       >
-        <td>{{ camper.id }}</td>
+        <td>{{ camper.camperCode }}</td>
         <td>{{ camper.firstName }}</td> 
         <td>{{ camper.lastName }}</td>
         <td>{{ camper.city }}</td>
         <td>{{ camper.state }}</td>
         <td>{{ camper.zip }}</td>
-        <td><router-link v-bind:to="{name:'camper', params: {camperId: camper.id}}"><button type="button">Edit</button></router-link></td>
-        <td><button type="button" v-on:click="deleteCamper(camper.id)">Delete</button></td>
+        <td><router-link v-bind:to="{name:'camper', params: {camperCode: camper.camperCode}}"><button type="button">Edit</button></router-link></td>
+        <td><button type="button" v-on:click="deleteCamper(camper.camperCode)">Delete</button></td>
      </tr>
     </table>
   </section>
@@ -129,8 +129,8 @@ export default {
       saveNewCamper(){
           this.$store.commit('ADD_camper', this.newcamper);
       },
-      deleteCamper(camperId){
-          this.$store.commit('DELETE_camper', camperId);
+      deleteCamper(camperCode){
+          this.$store.commit('DELETE_camper', camperCode);
       },
   }
 };

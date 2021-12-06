@@ -1,20 +1,20 @@
 import axios from "axios"
 
 export default{
-    getCamper(camperId){
-        return axios.get(`/Camp/${camperId}`);
+    getCamper(camperCode){
+        return axios.get(`/Camp/Camper/${camperCode}`);
     },
     getAllCampers(){
-        return axios.get('/CamperList');
+        return axios.get('/Camp/CamperList');
     },
     addCamper(camper){
         return axios.post('/Camp', camper);
     },
-    deleteCamper(camperId){
-        return axios.delete('/Camp', camperId);
+    deleteCamper(camperCode){
+        return axios.delete('/Camp', camperCode);
     },
     updateCamper(camper){
-        return axios.put(`/Camp/${camper.id}`, camper)
+        return axios.put(`/Camp/${camper.camperCode}`, camper)
     },
     logChanges(changes){
         return axios.put('/updates', changes)

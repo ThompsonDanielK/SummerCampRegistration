@@ -56,7 +56,7 @@ const router = new Router({
       },
     },
     {
-      path: "/camper/:camperId",
+      path: "/camper/:camperCode",
       name: "camper",
       component: IndividualView,
       meta: {
