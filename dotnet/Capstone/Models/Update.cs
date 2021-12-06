@@ -13,6 +13,12 @@ namespace Capstone.Models
 
         public int CamperCode { get; set; }
 
+        public string NewData { get; set; }
+
+        public string OldData { get; set; }
+
+        public int RequestedBy { get; set; }
+
         public Update()
         {
 

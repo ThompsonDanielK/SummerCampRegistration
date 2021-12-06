@@ -19,7 +19,9 @@ namespace Capstone.DAO
             this.connectionString = connectionString;
         }
 
-        const string sqlAllCampers = "Sql Statement";
+        const string sqlAllCampers = "SELECT camper_code, family_id, " +
+            "first_name, last_name, dob, " +
+            "medications, allergies, special_needs FROM campers";
         const string sqlFilterCampers = "Sql Statement";
 
 
@@ -27,33 +29,46 @@ namespace Capstone.DAO
 
         public List<Camper> FetchAllCampers()
         {
-            //using (SqlConnection conn = new SqlConnection(connectionString))
-            //{
-            //    conn.Open();
+            List<Camper> camperList = new List<Camper>();
 
-            //    using (SqlCommand command = new SqlCommand(sqlAllCampers, conn))
-            //    {
-            //        using (SqlDataReader Reader = command.ExecuteReader())
-            //        {
-            //            while (Reader.Read())
-            //            {
-            //                BuildCamperFromReader(Reader);
-            //                //Add Camper to list
-            //            }
-            //        }
-            //    }
-            //}
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlAllCampers, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            camperList.Add(BuildCamperFromReader(reader));
+                            //Add Camper to list
+                        }
+                    }
+                }
+            }
             // return list of campers
-            return new List<Camper>();
+            return camperList;
         }
 
         // return type needs set to a camper
-        private void BuildCamperFromReader(SqlDataReader reader)
+        private Camper BuildCamperFromReader(SqlDataReader reader)
         {
             //return new Camper
-            //{
-            //    Field = Convert.ToXxx(reader["tablefield]),
-            //}
+            Camper camper = new Camper
+            {
+                CamperCode = Convert.ToInt32(reader["camper_code"]),
+                FamilyId = Convert.ToInt32(reader["family_id"]),
+                FirstName = Convert.ToString(reader["first_name"]),
+                LastName = Convert.ToString(reader["last_name"]),
+                DOB = Convert.ToDateTime(reader["dob"]),
+                MedicationsCSV = Convert.ToString(reader["medications"]),
+                AllergiesCSV = Convert.ToString(reader["allergies"]),
+                SpecialNeedsCSV = Convert.ToString(reader["special_needs"])
+                 
+            };
+
+            return camper;
         }
 
     }
