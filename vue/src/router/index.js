@@ -5,7 +5,8 @@ import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
 import Register from "../views/Register.vue";
 import store from "../store/index";
-import CamperView from "../views/CamperView.vue"
+import IndividualView from "../views/IndividualView.vue"
+import AttendeeListView from "../views/AttendeeListView.vue"
 
 Vue.use(Router);
 
@@ -55,11 +56,19 @@ const router = new Router({
       },
     },
     {
-      path: "/camper",
-      name: "camper",
-      component: CamperView,
+      path: "/attendee/:attendeeId",
+      name: "attendee",
+      component: IndividualView,
       meta: {
-        requiresAuth: false,
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/allattendees",
+      name: "attendeeList",
+      component: AttendeeListView,
+      meta: {
+        requiresAuth: true,
       },
     },
     {

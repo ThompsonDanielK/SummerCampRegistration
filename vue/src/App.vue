@@ -29,11 +29,10 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
-  margin: 10px 50px;
 }
 .container .page {
   color: $main;
-  padding: 0px 100px;
+  padding: 2% 20%;
   color: $textDark;
   align-items: flex-start;
 }

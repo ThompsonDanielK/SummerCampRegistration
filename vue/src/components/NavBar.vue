@@ -1,6 +1,6 @@
 <template>
   <header class="nav">
-      <img id="logo" src="../../images/logo.png" />
+      <img id="logo" src="../../images/logo.png" alt="C.A.M.P. Logo" />
       <div id="navBar">
       <router-link class="nav-item" v-bind:to="{ name: 'home' }">
         <i class="fas fa-home"></i>
@@ -10,7 +10,7 @@
       <router-link
         class="nav-item"
         v-bind:to="{ name: 'register' }"
-        v-if="!$store.state.token"
+        v-if="!$store.state.token && changedOurMinds"
         >Register</router-link
       >
       <router-link
@@ -32,7 +32,11 @@
 
 <script>
 export default {
-
+data(){
+  return{
+    changedOurMinds: false,
+  }
+}
 }
 </script>
 
@@ -44,10 +48,9 @@ export default {
   background-color: $secondary;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  grid-area: nav;
-  padding: 5px 5px;
-  margin-top: 20px;
+  align-items: flex-end;
+  padding: 0.3% 0.3%;
+  margin: 1% 15% 0% 15%;
   border-radius: 250px;
   background-image: url("../../images/DanHeader.jpg");
   background-size: 100%;
@@ -55,21 +58,25 @@ export default {
   background-position: center;
 }
 .nav #logo{
-  height: 10em;
+  height: 13%;
+  width: 13%;
   }
-.nav a {
+.nav .nav-item{
+  display: flex;
+  justify-content: space-around;
   color: $textLight;
-  text-shadow: 3px 1px 1px black;
+  text-shadow: 3px 2px 1px black;
   text-decoration: none;
   font-size: 200%;
-  border: 2px solid $textLight;
+  border: 2px solid $highlight;
   border-radius: 10px;
   text-align: center;
   background-color: $textDark;
-  padding: 0px 10px;
-  margin: 0px 10px;
+  padding: 0% 5%;
+  margin: 0% 2%;
 }
 .nav #navBar{
-  padding-right: 100px;
+  display: flex;
+  padding-right: 20%;
 }
 </style>

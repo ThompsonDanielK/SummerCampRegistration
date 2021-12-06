@@ -24,7 +24,6 @@ export default new Vuex.Store({
   state: {
     token: currentToken || '',
     user: currentUser || {}, // If a user is an admin, their user.role will be 'admin'
-    showThis: true,
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {
@@ -42,6 +41,14 @@ export default new Vuex.Store({
       state.token = '';
       state.user = {};
       axios.defaults.headers.common = {};
-    }
+    },
+    ADD_ATTENDEE(state, attendee)
+    {
+      state.attendees.push(attendee);
+    },
+    DELETE_ATTENDEE(state, attendeeId)
+    {
+      state.attendees.splice(this.state.attendees.indexOf(attendeeId), 1);
+    },
   }
 })

@@ -38,7 +38,9 @@
       <div class="form-group">
         <router-link :to="{ name: 'register' }">Need an account?</router-link>
       </div>
+      <div class="form-group">
       <button class="btn btn-primary" type="submit">Sign in</button>
+      </div>
     </form>
   </div>
 </template>
@@ -93,8 +95,34 @@ export default {
   color: $textDark;
   padding: 10px;
   border-radius: 10px;
+  background-color: $textLight;
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  margin: 0 20%;
+  border: 2px solid $highlight;
 }
-a, button{
-  color: $highlight;
+.form-group{
+  display: flex;
+  justify-content: center;
+}
+.form-group input, button, a{
+  margin: 10px;
+  background-color: $textDark;
+  color: $textLight;
+  border: 2px solid $highlight;
+  border-radius: 5px;
+}
+input::-webkit-input-placeholder{
+  color: white;
+  font-family: 'Russo One', sans-serif;
+}
+a{
+  width: 70%;
+  text-align: center;
+}
+button{
+  font-size: 1.2em;
+  font-family: 'Russo One', sans-serif;
 }
 </style>
