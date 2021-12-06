@@ -21,7 +21,7 @@ namespace Capstone.Controllers
             this.camp = camp;
         }
 
-        [HttpGet("/CamperList")]
+        [HttpGet("CamperList")]
         public ActionResult GetCamperList()
         {
             List<Camper> camperList = camp.FetchAllCampers();
