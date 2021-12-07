@@ -26,8 +26,33 @@ namespace Capstone.DAO
             "(family_id, first_name, last_name, dob, medications, allergies, special_needs) " +
             "VALUES (@familyId, @firstName, @lastName, @dob, @medications, " +
             "@allergies, @specialNeeds)";
+        const string sqlAddFamily = "INSERT INTO family " +
+            "(parent_guardian_name, address, city, state, zip, phone) " +
+            "VALUES " +
+            "(@parentGuardianName, @address, @city, @state, @zip, @phoneNumber); SELECT @@IDENTITY";
         const string sqlFilterCampers = "Sql Statement";
 
+        public int AddFamily(Family family)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlAddFamily, conn))
+                {
+                    command.Parameters.AddWithValue("@parentGuardianName", family.ParentGuardianName);
+                    command.Parameters.AddWithValue("@address", family.Address);
+                    command.Parameters.AddWithValue("@city", family.City);
+                    command.Parameters.AddWithValue("@state", family.State);
+                    command.Parameters.AddWithValue("@zip", family.ZIP);
+                    command.Parameters.AddWithValue("@phoneNumber", family.PhoneNumber);
+
+                    int familyId = Convert.ToInt32(command.ExecuteScalar());
+
+                    return familyId;
+                }
+            }
+        }
 
         public bool AddCamper(Camper camper)
         {
