@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import CamperService from '../services/CamperService.js'
+
 export default {
 showHideForm(formName) {
       switch (formName) {
@@ -125,8 +127,7 @@ showHideForm(formName) {
       .catch(response => {
         console.error('Cannot finalize changes', response);
       })
-    }
-  },
+    },
     created() {
     //   CamperService.getCamper(this.$route.params.camperCode).then((response) => {
     //     console.log('Got camper', response.data)

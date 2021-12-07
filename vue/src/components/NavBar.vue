@@ -67,7 +67,7 @@ data(){
   color: $textLight;
   text-shadow: 3px 2px 1px black;
   text-decoration: none;
-  font-size: 200%;
+  font-size: 2em;
   border: 2px solid $highlight;
   border-radius: 10px;
   text-align: center;
@@ -78,5 +78,19 @@ data(){
 .nav #navBar{
   display: flex;
   padding-right: 20%;
+}
+@media only screen and (max-width:768px){
+  .nav-item{
+    font-size: 1.4em;
+  }
+}
+@media only screen and (max-width:425px){
+  .nav{
+    padding: 0;
+    margin: 0;
+  } 
+  .nav .nav-item{
+    font-size: 1em;
+  }
 }
 </style>

@@ -4,6 +4,7 @@
     <p>Welcome to CAMP!<br>CAMP is a camp camper management program meant to simplify the hassle of adding and managing your summer camp campers.</p>
     <router-link v-bind:to="{ name: 'camper', params: {camperCode: '200001'}}">Camper Example</router-link>
     <router-link v-bind:to="{ name: 'camperList'}">Camper List Example</router-link>
+    <router-link v-bind:to="{ name:'familyList' }">Family List Example</router-link>
   </div>
 </template>
 
