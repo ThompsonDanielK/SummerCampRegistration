@@ -7,11 +7,6 @@ namespace Capstone.Models
 {
     public class Camper
     {
-        public string MedicationsCSV { get; set; }
-
-        public string AllergiesCSV { get; set; }
-
-        public string SpecialNeedsCSV { get; set; }
 
         public int CamperCode { get; set; }
 
@@ -22,6 +17,16 @@ namespace Capstone.Models
         public string LastName { get; set; }
 
         public DateTime DOB { get; set; }
+
+        public string MedicationsCSV { get; set; }
+
+        public string AllergiesCSV { get; set; }
+
+        public string SpecialNeedsCSV { get; set; }
+
+        public DateTime DateAdded { get; set; }
+
+
 
         public List<string> Medications 
         {
