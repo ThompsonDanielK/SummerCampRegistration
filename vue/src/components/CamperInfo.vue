@@ -29,50 +29,42 @@
         <button type="button" id="lastCancel" v-on:click.prevent="newValue.lastName = camper.lastName; showLast = false" v-show="showLast">Cancel</button>
       </td>
     </tr>
-    <tr id="city">
-      <td>City:</td>
+    <tr id="allergies">
+      <td>Allergies:</td>
       <td>
-        <div v-show="!showCity" class="data">
-          {{ this.camper.city }}
-        </div>
-        <input type="text" v-model="newValue.city" v-show="showCity" />
+        <ul class="data">
+          <li v-show="!showAllergies" v-for="line in this.camper.allergies" v-bind:key="line">
+            {{ line }}
+          </li>
+          <div v-show="showAllergies">
+          <small>Seperate items by commas (,) with no spaces</small>
+          <input type="text" v-model="newValue.allergies" />
+          </div>
+        </ul>
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('city')" v-show="!showCity">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('city')" v-show="showCity">Save</button>
-        <button type="button" id="cityCancel" v-on:click.prevent="newValue.city = camper.city; showCity = false" v-show="showCity">Cancel</button>
-      </td>
-    </tr>
-    <tr id="state">
-      <td>State:</td>
-      <td>
-        <div v-show="!showState" class="data">
-          {{ this.camper.state }}
-        </div>
-        <select v-model="newValue.state" v-show="showState">
-          <option v-for="state in states" v-bind:key="state">
-            {{ state }}
-          </option>
-        </select>
-      </td>
-      <td>
-        <button type="button" v-on:click.prevent="showHideForm('state')" v-show="!showState">Edit</button>
-        <button type="submit" v-on:click.prevent="saveChange('state')" v-show="showState">Save</button>
-        <button type="button" id="stateCancel" v-on:click.prevent="newValue.state = camper.state; showState = false" v-show="showState">Cancel</button>
+        <button type="button" v-on:click.prevent="showHideForm('allergies')" v-show="!showAllergies">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies">Save</button>
+        <button type="button" id="allergiesCancel" v-on:click.prevent="newValue.allergies = camper.allergies; showAllergies = false" v-show="showAllergies">Cancel</button>
       </td>
     </tr>
-    <tr id="zip">
-      <td>Zip:</td>
+     <tr id="medications">
+      <td>Medications:</td>
       <td>
-        <div v-show="!showZip" class="data">
-          {{ this.camper.zip }}
-        </div>
-        <input type="text" v-model.number="newValue.zip" v-show="showZip" />
+        <ul class="data">
+          <li v-show="!showMedications" v-for="line in this.camper.medications" v-bind:key="line">
+            {{ line }}
+          </li>
+          <div v-show="showMedications">
+          <small>Seperate items by commas (,) with no spaces</small>
+          <input type="text" v-model="newValue.medications" />
+          </div>
+        </ul>
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('zip')" v-show="!showZip">Edit</button>
-        <button type="submit" v-on:click.prevent="saveChange('zip')" v-show="showZip">Save</button>
-        <button type="button" id="zipCancel" v-on:click.prevent="newValue.zip = camper.zip; showZip = false" v-show="showZip">Cancel</button>
+        <button type="button" v-on:click.prevent="showHideForm('medications')" v-show="!showMedications">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications">Save</button>
+        <button type="button" id="medicationsCancel" v-on:click.prevent="newValue.medications = camper.medications; showMedications = false" v-show="showMedications">Cancel</button>
       </td>
     </tr>
     <tr id="info">
@@ -94,6 +86,20 @@
         <button type="button" id="specialCancel" v-on:click.prevent="newValue.specialInfo = camper.specialInfo; showSpecial = false" v-show="showSpecial">Cancel</button>
       </td>
     </tr>
+    <tr id="family">
+      <td>Family: </td>
+      <td>
+        <div v-show="!showFamily"  class="data">
+          {{ this.camper.familyId }}
+        </div>
+        <input type="text" v-model="newValue.familyId" v-show="showFamily" />
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showHideForm('family')" v-show="!showFamily">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('family')" v-show="showFamily">Save</button>
+        <button type="button" id="lastCancel" v-on:click.prevent="newValue.familyId = camper.familyId; showFamily = false" v-show="showFamily">Cancel</button>
+      </td>
+    </tr>
   </table>
 </template>
 
@@ -108,9 +114,9 @@ export default {
       changes: {},
       showFirst: false,
       showLast: false,
-      showCity: false,
-      showState: false,
-      showZip: false,
+      showAllergies: false,
+      showMedications: false,
+      showFamily: false,
       showSpecial: false,
       states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
                "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",
@@ -128,14 +134,14 @@ export default {
         case "lastName":
           this.showLast = true;
           break;
-        case "city":
-          this.showCity = true;
+        case "allergies":
+          this.showAllergies = true;
           break;
-        case "state":
-          this.showState = true;
+        case "medications":
+          this.showMedications = true;
           break;
-        case "zip":
-          this.showZip = true;
+        case "family":
+          this.showFamily = true;
           break;
         case "specialInfo":
           this.showSpecial = true;
@@ -155,20 +161,20 @@ export default {
           this.camper.lastName= this.newValue.lastName;
           this.showLast = false;
           break;
-        case "city":
-          this.changes.city = this.newValue.city;
-          this.camper.city = this.newValue.city;
-          this.showCity = false;
+        case "allergies":
+          this.changes.allergies = this.newValue.allergies;
+          this.camper.allergies = this.newValue.allergies;
+          this.showAllergies = false;
           break;
-        case "state":
-          this.changes.state = this.newValue.state;
-          this.camper.state = this.newValue.state;
-          this.showState = false;
+        case "medications":
+          this.changes.medications = this.newValue.medications;
+          this.camper.medications = this.newValue.medications;
+          this.showMedications = false;
           break;
-        case "zip":
-          this.changes.zip = this.newValue.zip;
-          this.camper.zip = this.newValue.zip;
-          this.showZip = false;
+        case "family":
+          this.changes.family = this.newValue.family;
+          this.camper.family = this.newValue.family;
+          this.showFamily = false;
           break;
         case "specialInfo":
           this.newValue.specialInfo = this.newValue.specialInfo.split(',');
@@ -179,7 +185,8 @@ export default {
       }
     },
     finalizeChanges(){
-      CamperService.updateCamper(this.camper)
+      this.changes.action = 'update'
+      CamperService.updateCamper(this.changes)
       .then(response => {
         console.log('Updated camper info', response.data);
         CamperService.logChanges(this.changes)
@@ -232,7 +239,7 @@ button {
   margin-left: 15px;
   border-radius: 5px;
 }
-:disabled{
+button:disabled{
   background-color: $secondary;
   color: black;
 }
