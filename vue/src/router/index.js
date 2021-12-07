@@ -7,6 +7,8 @@ import Register from "../views/Register.vue";
 import store from "../store/index";
 import IndividualView from "../views/IndividualView.vue"
 import CamperListView from "../views/CamperListView.vue"
+import AddNewView from '../views/AddNewView.vue'
+import FamilyListView from '../views/FamilyListView.vue'
 
 Vue.use(Router);
 
@@ -67,6 +69,22 @@ const router = new Router({
       path: "/CamperList",
       name: "camperList",
       component: CamperListView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/familyList",
+      name: "familyList",
+      component: FamilyListView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/new",
+      name: "new",
+      component: AddNewView,
       meta: {
         requiresAuth: true,
       },

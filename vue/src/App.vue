@@ -36,4 +36,14 @@ export default {
   color: $textDark;
   align-items: flex-start;
 }
+@media only screen and (max-width:768px){
+  .container div.page {
+    padding: 2% 10%;
+  }
+}
+@media only screen and (max-width:425px){
+  .container div.page {
+    padding: 2% 5%;
+  }
+}
 </style>

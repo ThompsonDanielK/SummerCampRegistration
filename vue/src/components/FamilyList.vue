@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Campers</h1>
+    <h1>Families</h1>
     <router-link v-bind:to="{name: 'new'}">
       <button type="button">Add New Camper</button>
     </router-link>
@@ -14,32 +14,28 @@
           <td>
             <input type="text" v-model="lastNameToFilter" placeholder="Last Name"  />
           </td>
-          <td>
-            <input type="text" v-model="familyIdToFilter" placeholder="Family ID" />
-          </td>
         </tr>
       </thead>
       <tr>
-        <td>Camper Code:</td>
+        <td>Family ID:</td>
         <td>First Name:</td>
         <td>Last Name:</td>
-        <td>Family:</td>
         <td></td>
       </tr>
       <tr
-        v-for="camper in this.filteredCampers"
-        v-bind:key="camper.camperCode"
+        v-for="family in this.filteredFamilies"
+        v-bind:key="family.familyId"
         v-bind:showDetails="false"
       >
-        <td>{{ camper.camperCode }}</td>
-        <td>{{ camper.firstName }}</td>
-        <td>{{ camper.lastName }}</td>
-        <td>{{ camper.familyId }}</td>
+        <td>{{ family.familyId }}</td>
+        <td>{{ family.firstName }}</td>
+        <td>{{ family.lastName }}</td>
+        <td>{{ family.familyId }}</td>
         <td>
-          <router-link v-bind:to="{ name: 'camper', params: { camperCode: camper.camperCode },}"><button type="button">Edit</button></router-link>
+          <router-link v-bind:to="{ name: 'family', params: { familyId: family.familyId },}"><button type="button">Edit</button></router-link>
         </td>
         <td>
-          <button type="button" v-on:click="deleteCamper(camper.camperCode)">
+          <button type="button" v-on:click="deleteFamily(family.familyId)">
             Delete
           </button>
         </td>
@@ -49,31 +45,29 @@
 </template>
 
 <script>
-import CamperService from "../services/CamperService.js";
+import FamilyService from "../services/FamilyService.js";
 
 export default {
   data() {
     return {
-      campers: [],
+      families: [],
       firstNameToFilter: "",
       lastNameToFilter: "",
-      familyIdToFilter: "",
-      
     };
   },
   created() {
-    CamperService.getAllCampers()
+    FamilyService.getAllFamilies()
       .then((response) => {
-        console.log("Got all campers", response.data);
-        this.campers = response.data;
+        console.log("Got all families", response.data);
+        this.families = response.data;
       })
       .catch((response) => {
-        console.error("Problem getting all campers", response);
+        console.error("Problem getting all families", response);
       });
   },
   computed: {
     filteredCampers() {
-      let campersList = this.campers;
+      let campersList = this.families;
       if (this.firstNameToFilter) {
         campersList = campersList.filter((a) =>
           a.firstName
@@ -105,16 +99,15 @@ export default {
     },
   },
   methods: {
-    deleteCamper(camperCode) {
-        CamperService.deleteCamper(this.camper.camperCode)
+    deleteFamily(familyId) {
+        FamilyService.deleteCamper(familyId)
         .then(() => {
-            console.log('Removed camper');
-            this.$store.commit("DELETE_CAMPER", this.newCamper.camperCode);
+            console.log('Removed family');
+            this.$store.commit("DELETE_FAMILY", familyId);
         })
         .catch(response => {
-            console.error('Problem deleting camper', response);
+            console.error('Problem deleting family', response);
         })
-      this.$store.commit("DELETE_camper", camperCode);
     },
   },
 };

@@ -6,13 +6,14 @@
       <td>
         <div v-show="!showFirst" class="data">
           {{ this.camper.firstName }}
+          <p v-show="newData.firstName">{{ this.newData.firstName }}</p>
         </div>
-        <input type="text" v-model="newValue.firstName" v-show="showFirst" />
+        <input type="text" v-model="newData.firstName" v-show="showFirst" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('firstName')" v-show="!showFirst">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst">Save</button>
-        <button type="button" id="firstCancel" v-on:click.prevent="newValue.firstName = camper.firstName; showFirst = false" v-show="showFirst">Cancel</button>
+        <button type="button" id="firstCancel" v-on:click.prevent="newData.firstName = camper.firstName; showFirst = false" v-show="showFirst">Cancel</button>
       </td>
     </tr>
     <tr id="lastName">
@@ -20,13 +21,14 @@
       <td>
         <div v-show="!showLast"  class="data">
           {{ this.camper.lastName }}
+          <p v-show="newData.lastName">{{ this.newData.lastName }}</p>
         </div>
-        <input type="text" v-model="newValue.lastName" v-show="showLast" />
+        <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('lastName')" v-show="!showLast">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast">Save</button>
-        <button type="button" id="lastCancel" v-on:click.prevent="newValue.lastName = camper.lastName; showLast = false" v-show="showLast">Cancel</button>
+        <button type="button" id="lastCancel" v-on:click.prevent="newData.lastName = camper.lastName; showLast = false" v-show="showLast">Cancel</button>
       </td>
     </tr>
     <tr id="allergies">
@@ -36,16 +38,19 @@
           <li v-show="!showAllergies" v-for="line in this.camper.allergies" v-bind:key="line">
             {{ line }}
           </li>
+          <li v-show="!showAllergies && newData.allergies" v-for="line in this.newData.allergies" v-bind:key="line">
+            {{ line }}
+          </li>
           <div v-show="showAllergies">
           <small>Seperate items by commas (,) with no spaces</small>
-          <input type="text" v-model="newValue.allergies" />
+          <input type="text" v-model="newData.allergies" />
           </div>
         </ul>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('allergies')" v-show="!showAllergies">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies">Save</button>
-        <button type="button" id="allergiesCancel" v-on:click.prevent="newValue.allergies = camper.allergies; showAllergies = false" v-show="showAllergies">Cancel</button>
+        <button type="button" id="allergiesCancel" v-on:click.prevent="newData.allergies = camper.allergies; showAllergies = false" v-show="showAllergies">Cancel</button>
       </td>
     </tr>
      <tr id="medications">
@@ -55,49 +60,56 @@
           <li v-show="!showMedications" v-for="line in this.camper.medications" v-bind:key="line">
             {{ line }}
           </li>
+          <li v-show="!showMedications && newData.medications" v-for="line in this.newData.medications" v-bind:key="line">
+            {{ line }}
+          </li>
           <div v-show="showMedications">
           <small>Seperate items by commas (,) with no spaces</small>
-          <input type="text" v-model="newValue.medications" />
+          <input type="text" v-model="newData.medications" />
           </div>
         </ul>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('medications')" v-show="!showMedications">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications">Save</button>
-        <button type="button" id="medicationsCancel" v-on:click.prevent="newValue.medications = camper.medications; showMedications = false" v-show="showMedications">Cancel</button>
+        <button type="button" id="medicationsCancel" v-on:click.prevent="newData.medications = camper.medications; showMedications = false" v-show="showMedications">Cancel</button>
       </td>
     </tr>
     <tr id="info">
       <td>Special Needs:</td>
       <td>
         <ul class="data">
-          <li v-show="!showSpecial" v-for="line in this.camper.specialInfo" v-bind:key="line">
+          <li v-show="!showSpecial" v-for="line in this.camper.specialNeeds" v-bind:key="line">
+            {{ line }}
+          </li>
+          <li v-show="!showSpecial && newData.specialNeeds" v-for="line in this.newData.specialNeeds" v-bind:key="line">
             {{ line }}
           </li>
           <div v-show="showSpecial">
           <small>Seperate items by commas (,) with no spaces</small>
-          <input type="text" v-model="newValue.specialInfo" />
+          <input type="text" v-model="newData.specialNeeds" />
           </div>
         </ul>
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('specialInfo')" v-show="!showSpecial">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('specialInfo')" v-show="showSpecial">Save</button>
-        <button type="button" id="specialCancel" v-on:click.prevent="newValue.specialInfo = camper.specialInfo; showSpecial = false" v-show="showSpecial">Cancel</button>
+        <button type="button" v-on:click.prevent="showHideForm('specialNeeds')" v-show="!showSpecial">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial">Save</button>
+        <button type="button" id="specialCancel" v-on:click.prevent="newData.specialNeeds = camper.specialNeeds; showSpecial = false" v-show="showSpecial">Cancel</button>
       </td>
     </tr>
-    <tr id="family">
+    <tr id="familyId">
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
           {{ this.camper.familyId }}
+          <p v-show="newData.familyId">{{ this.newData.familyId }}</p>
         </div>
-        <input type="text" v-model="newValue.familyId" v-show="showFamily" />
+        <input type="text" v-model="newData.familyId" v-show="showFamily" />
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('family')" v-show="!showFamily">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('family')" v-show="showFamily">Save</button>
-        <button type="button" id="lastCancel" v-on:click.prevent="newValue.familyId = camper.familyId; showFamily = false" v-show="showFamily">Cancel</button>
+        <button type="button" v-on:click.prevent="showHideForm('familyId')" v-show="!showFamily">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily">Save</button>
+        <button type="button" id="lastCancel" v-on:click.prevent="newData.familyId = camper.familyId; showFamily = false" v-show="showFamily">Cancel</button>
       </td>
     </tr>
   </table>
@@ -110,8 +122,15 @@ export default {
   data() {
     return {
       camper: {},
-      newValue: {},
-      changes: {},
+      newData: {},
+      camperToAdd: {
+        fieldToBeChanged:'',
+        oldValue: '',
+        newValue: '',
+      },
+      request: {
+        changes: []
+      },
       showFirst: false,
       showLast: false,
       showAllergies: false,
@@ -140,73 +159,99 @@ export default {
         case "medications":
           this.showMedications = true;
           break;
-        case "family":
+        case "familyId":
           this.showFamily = true;
           break;
-        case "specialInfo":
+        case "specialNeeds":
           this.showSpecial = true;
           break;
       }
     },
     saveChange(formName) {
-        this.changes.camperCode = this.newValue.id;
+        this.request.camperCode = this.newData.camperCode;
+        this.request.camperToAdd.fieldToBeChanged = formName;
       switch (formName) {
         case "firstName":
-          this.changes.firstName = this.newValue.firstName;
-          this.camper.firstName= this.newValue.firstName;
+          this.camperToAdd.firstName = this.newData.firstName;
           this.showFirst = false;
           break;
         case "lastName":
-          this.changes.lastName = this.newValue.lastName;
-          this.camper.lastName= this.newValue.lastName;
+          this.camperToAdd.lastName = this.newData.lastName;
           this.showLast = false;
           break;
         case "allergies":
-          this.changes.allergies = this.newValue.allergies;
-          this.camper.allergies = this.newValue.allergies;
+          this.camperToAdd.newValue = this.newData.allergies;
+          this.request.changes.push(this.camperToAdd)
           this.showAllergies = false;
           break;
         case "medications":
-          this.changes.medications = this.newValue.medications;
-          this.camper.medications = this.newValue.medications;
+          this.camperToAdd.medications = this.newData.medications;
           this.showMedications = false;
           break;
-        case "family":
-          this.changes.family = this.newValue.family;
-          this.camper.family = this.newValue.family;
+        case "familyId":
+          this.camperToAdd.familyId = this.newData.familyId;
           this.showFamily = false;
           break;
-        case "specialInfo":
-          this.newValue.specialInfo = this.newValue.specialInfo.split(',');
-          this.camper.specialInfo = this.newValue.specialInfo;
-          this.changes.specialInfo = this.newValue.specialInfo;
+        case "specialNeeds":
+          this.newData.specialNeeds = this.newData.specialNeeds.split(',');
+          this.camperToAdd.specialNeeds = this.newData.specialNeeds;
           this.showSpecial = false;
           break;
       }
     },
     finalizeChanges(){
-      this.changes.action = 'update'
-      CamperService.updateCamper(this.changes)
+      this.setcamper();
+      CamperService.updateCamper(this.camper)
       .then(response => {
         console.log('Updated camper info', response.data);
-        CamperService.logChanges(this.changes)
-        .then(response => {
-          console.log('Logged changes', response.data);
-          this.changes = {};
-        })
-        .catch(response => {
-          console.warn('Problem logging changes', response);
-        })
+        this.logChanges();
+        this.$router.push('/');
       })
       .catch(response => {
         console.error('Cannot finalize changes', response);
       })
+    },
+    logChanges(){
+      this.request.action = 'update'
+       CamperService.logChanges(this.request)
+        .then(response => {
+          console.log('Logged changes', response.data);
+        })
+        .catch(response => {
+          console.warn('Problem logging changes', response);
+        })
+    },
+    setCamper(){
+      if(this.newData.firstName)
+      {
+        this.camper.firstName = this.newData.firstName;
+      }
+      if(this.newData.lastName)
+      {
+        this.camper.larstName = this.newData.lastName;
+      }
+      if(this.newData.allergies)
+      {
+        this.camper.allergies = this.newData.allergies;
+      }
+      if(this.newData.medications)
+      {
+        this.camper.medications = this.newData.medications;
+      }
+      if(this.newData.familyId)
+      {
+        this.camper.familyId = this.newData.familyId;
+      }
+      if(this.newData.specialNeeds)
+      {
+        this.camper.specialNeeds = this.newData.specialNeeds;
+      }
     }
   },
     created() {
     //   CamperService.getCamper(this.$route.params.camperCode).then((response) => {
     //     console.log('Got camper', response.data)
-    //     this.newValue = response.data;
+    //     this.newData = response.data;
     //     this.camper = response.data;
     //   })
     //   .catch(response =>
