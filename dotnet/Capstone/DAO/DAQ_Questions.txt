@@ -1,2 +1,8 @@
 ﻿Do we want to call a seperate sql update for each field, or build a complete camper
 	from the passed in object using existing data plus the data to update?
+Do we want to include a DateTime for the request and approval/rejection?  We probably
+	should in order to provide a history later.
+AddCamper needs to use @@Identity and return at least the camper code
+	if not the entire object.
+Should we normalize the updates table into a parent/child?
+	(ReqId/Camper/Action/Dates  & field, new, old, status)
