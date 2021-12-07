@@ -8,7 +8,7 @@ export default{
         return axios.get('/Camp/CamperList');
     },
     addCamper(camper){
-        return axios.post('/Camp', camper);
+        return axios.post('/Camp/camper', camper);
     },
     deleteCamper(camperCode){
         return axios.delete('/Camp', camperCode);

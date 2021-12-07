@@ -1,6 +1,6 @@
 <template>
   <article>
-      <camper-info />
+      <camper-info></camper-info>
   </article>
 </template>
 
