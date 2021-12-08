@@ -9,7 +9,7 @@ namespace Capstone.Models
     {
         public int FamilyId { get; set; }
 
-        public string ParentGuardianName { get; set; }
+        public string FullName { get; set; }
 
         public string Address { get; set; }
 
@@ -17,7 +17,7 @@ namespace Capstone.Models
 
         public string State { get; set; }
 
-        public int ZIP { get; set; }
+        public int Zip { get; set; }
 
         public string PhoneNumber { get; set; }
         public Family()

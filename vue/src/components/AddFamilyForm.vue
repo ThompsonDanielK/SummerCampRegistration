@@ -2,13 +2,9 @@
   <section>
       <h1>New Family</h1>
       <form class="form-group">
-      <div id="firstName">
-      <label for="firstName">First Name:</label>
-      <input v-model="newFamily.firstName" name="firstName" type="text" />
-      </div>
-      <div id="lastName">
-      <label for="lastName">Last Name:</label>
-      <input v-model="newFamily.lastName" name="lastName" type="text" />
+      <div id="fullName">
+      <label for="fullName">Full Name:</label>
+      <input v-model="newFamily.fullName" name="fullName" type="text" />
       </div>
       <div id="streetAddress">
       <label for="streetAddress">Street Address:</label>

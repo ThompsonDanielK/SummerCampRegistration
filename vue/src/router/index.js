@@ -9,6 +9,7 @@ import IndividualView from "../views/IndividualView.vue"
 import CamperListView from "../views/CamperListView.vue"
 import AddNewView from '../views/AddNewView.vue'
 import FamilyListView from '../views/FamilyListView.vue'
+import FamilyView from '../views/FamilyView.vue'
 
 Vue.use(Router);
 
@@ -69,6 +70,14 @@ const router = new Router({
       path: "/CamperList",
       name: "camperList",
       component: CamperListView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/family/:familyId",
+      name: "family",
+      component: FamilyView,
       meta: {
         requiresAuth: true,
       },

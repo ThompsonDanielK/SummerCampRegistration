@@ -22,6 +22,15 @@ namespace Capstone.DAO
         const string sqlAllCampers = "SELECT camper_code, family_id, " +
             "first_name, last_name, dob, " +
             "medications, allergies, special_needs FROM campers";
+        const string sqlAllFamilies = "SELECT family_id, " +
+            "parent_guardian_name, address, city, " +
+            "state, zip, phone FROM family";
+        const string sqlFamily = "SELECT family_id, " +
+            "parent_guardian_name, address, city, " +
+            "state, zip, phone FROM family WHERE family_id = @family_id";
+        const string sqlCamper = "SELECT camper_code, family_id, " +
+            "first_name, last_name, dob, " +
+            "medications, allergies, special_needs FROM campers WHERE camper_code = @camper_code";
         const string sqlAddCamper = "INSERT INTO campers " +
             "(family_id, first_name, last_name, dob, medications, allergies, special_needs) " +
             "VALUES (@familyId, @firstName, @lastName, @dob, @medications, " +
@@ -40,11 +49,11 @@ namespace Capstone.DAO
 
                 using (SqlCommand command = new SqlCommand(sqlAddFamily, conn))
                 {
-                    command.Parameters.AddWithValue("@parentGuardianName", family.ParentGuardianName);
+                    command.Parameters.AddWithValue("@parentGuardianName", family.FullName);
                     command.Parameters.AddWithValue("@address", family.Address);
                     command.Parameters.AddWithValue("@city", family.City);
                     command.Parameters.AddWithValue("@state", family.State);
-                    command.Parameters.AddWithValue("@zip", family.ZIP);
+                    command.Parameters.AddWithValue("@zip", family.Zip);
                     command.Parameters.AddWithValue("@phoneNumber", family.PhoneNumber);
 
                     int familyId = Convert.ToInt32(command.ExecuteScalar());
@@ -78,7 +87,7 @@ namespace Capstone.DAO
                     }
                 }
             }
-            
+
             return true;
         }
 
@@ -106,6 +115,90 @@ namespace Capstone.DAO
             return camperList;
         }
 
+        public List<Family> FetchAllFamilies()
+        {
+            List<Family> familyList = new List<Family>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlAllFamilies, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //Add Family to list
+                            familyList.Add(BuildFamilyFromReader(reader));
+                        }
+                    }
+                }
+            }
+            // return list of families
+            return familyList;
+        }
+
+        public Family FetchFamily(int familyId)
+        {
+            Family family = new Family();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlFamily, conn))
+                {
+                    command.Parameters.AddWithValue("@family_id", familyId);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            family = (BuildFamilyFromReader(reader));
+                        }
+                    }
+                }
+            }
+            return family;
+        }
+
+        private Family BuildFamilyFromReader(SqlDataReader reader)
+        {
+            Family family = new Family()
+            {
+                FamilyId = Convert.ToInt32(reader["family_id"]),
+                FullName = Convert.ToString(reader["parent_guardian_name"]),
+                Address = Convert.ToString(reader["address"]),
+                City = Convert.ToString(reader["city"]),
+                State = Convert.ToString(reader["state"]),
+                Zip = Convert.ToInt32(reader["zip"]),
+                PhoneNumber = Convert.ToString(reader["phone"]),
+            };
+            return family;
+        }
+
+        public Camper FetchCamper(int camperCode)
+        {
+            Camper camper = new Camper();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(sqlCamper, conn))
+                {
+                    command.Parameters.AddWithValue("@camper_code", camperCode);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            camper = BuildCamperFromReader(reader);
+                        }
+                    }
+                    return camper;
+                }
+            }
+        }
+
         // return type needs set to a camper
         private Camper BuildCamperFromReader(SqlDataReader reader)
         {
@@ -120,7 +213,7 @@ namespace Capstone.DAO
                 MedicationsCSV = Convert.ToString(reader["medications"]),
                 AllergiesCSV = Convert.ToString(reader["allergies"]),
                 SpecialNeedsCSV = Convert.ToString(reader["special_needs"])
-                 
+
             };
 
             return camper;

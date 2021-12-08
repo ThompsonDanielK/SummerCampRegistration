@@ -28,8 +28,8 @@
       </div>
       <div  id="family">
       <label for="familyId">Family:</label>
-      <select v-model="newCamper.familyId" name="familyId" v-for="f in families" v-bind:key="f.familyId">
-          <option>{{f.familyId}} -- {{f.lastName}}</option>
+      <select v-model="newCamper.familyId" name="familyId">
+          <option v-for="f in families" v-bind:key="f.familyId">{{f.familyId}} -- {{f.fullName}}</option>
       </select>
       </div>
     </form>

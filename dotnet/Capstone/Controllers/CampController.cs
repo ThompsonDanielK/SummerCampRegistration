@@ -29,6 +29,30 @@ namespace Capstone.Controllers
             return Ok(camperList);
         }
 
+        [HttpGet("FamilyList")]
+        public ActionResult GetFamilyList()
+        {
+            List<Family> familyList = camp.FetchAllFamilies();
+
+            return Ok(familyList);
+        }
+
+        [HttpGet("Camper/{camperCode}")]
+        public ActionResult GetCamper(int camperCode)
+        {
+            Camper camper = camp.FetchCamper(camperCode);
+
+            return Ok(camper);
+        }
+
+        [HttpGet("family/{familyId}")]
+        public ActionResult GetFamily(int familyId)
+        {
+            Family family = camp.FetchFamily(familyId);
+
+            return Ok(family);
+        }
+
         [HttpPost("Camper")]
         public ActionResult PostCamperAndFamily(CamperFamily camperFamily)
         {

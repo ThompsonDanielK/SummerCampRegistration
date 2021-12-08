@@ -9,18 +9,21 @@
         <tr>
           <td>Search:</td>
           <td>
-            <input type="text" v-model="firstNameToFilter" placeholder="First Name"  />
+            <input type="text" v-model="fullNameToFilter" placeholder="Full Name"  />
           </td>
           <td>
-            <input type="text" v-model="lastNameToFilter" placeholder="Last Name"  />
+            <input type="text" v-model="cityToFilter" placeholder="City"  />
+          </td>
+          <td>
+            <input type="text" v-model="stateToFilter" placeholder="State"  />
           </td>
         </tr>
       </thead>
       <tr>
         <td>Family ID:</td>
-        <td>First Name:</td>
-        <td>Last Name:</td>
-        <td></td>
+        <td>Full Name:</td>
+        <td>City:</td>
+        <td>State:</td>
       </tr>
       <tr
         v-for="family in this.filteredFamilies"
@@ -28,9 +31,10 @@
         v-bind:showDetails="false"
       >
         <td>{{ family.familyId }}</td>
-        <td>{{ family.firstName }}</td>
-        <td>{{ family.lastName }}</td>
-        <td>{{ family.familyId }}</td>
+        <td>{{ family.fullName }}</td>
+        <td>{{ family.city }}</td>
+        <td>{{ family.state }}</td>
+
         <td>
           <router-link v-bind:to="{ name: 'family', params: { familyId: family.familyId },}"><button type="button">Edit</button></router-link>
         </td>
@@ -51,8 +55,9 @@ export default {
   data() {
     return {
       families: [],
-      firstNameToFilter: "",
-      lastNameToFilter: "",
+      fullNameToFilter: "",
+      cityToFilter: "",
+      stateToFilter: "",
     };
   },
   created() {
@@ -66,18 +71,13 @@ export default {
       });
   },
   computed: {
-    filteredCampers() {
+    filteredFamilies() {
       let campersList = this.families;
-      if (this.firstNameToFilter) {
+      if (this.fullNameToFilter) {
         campersList = campersList.filter((a) =>
-          a.firstName
+          a.fullName
             .toLowerCase()
-            .includes(this.firstNameToFilter.toLowerCase())
-        );
-      }
-      if (this.lastNameToFilter) {
-        campersList = campersList.filter((a) =>
-          a.lastName.toLowerCase().includes(this.lastNameToFilter.toLowerCase())
+            .includes(this.fullNameToFilter.toLowerCase())
         );
       }
       if (this.cityToFilter) {
@@ -88,11 +88,6 @@ export default {
       if (this.stateToFilter) {
         campersList = campersList.filter((a) =>
           a.state.toLowerCase().includes(this.stateToFilter.toLowerCase())
-        );
-      }
-      if (this.zipToFilter) {
-        campersList = campersList.filter((a) =>
-          a.zipCode.toLowerCase().includes(this.zipToFilter.toLowerCase())
         );
       }
       return campersList;

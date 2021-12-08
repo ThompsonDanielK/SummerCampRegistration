@@ -2,7 +2,10 @@ import axios from "axios"
 
 export default{
     getAllFamilies(){
-        return axios.get('/camp/family');
+        return axios.get('/camp/familyList');
+    },
+    getFamily(familyId){
+        return axios.get(`/camp/family/${familyId}`);
     },
     addNewFamily(family){
         return axios.post('/camp/family', family);

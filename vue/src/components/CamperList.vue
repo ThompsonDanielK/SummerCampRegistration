@@ -58,7 +58,6 @@ export default {
       firstNameToFilter: "",
       lastNameToFilter: "",
       familyIdToFilter: "",
-      
     };
   },
   created() {
@@ -86,19 +85,9 @@ export default {
           a.lastName.toLowerCase().includes(this.lastNameToFilter.toLowerCase())
         );
       }
-      if (this.cityToFilter) {
+      if (this.familyIdToFilter) {
         campersList = campersList.filter((a) =>
-          a.city.toLowerCase().includes(this.cityToFilter.toLowerCase())
-        );
-      }
-      if (this.stateToFilter) {
-        campersList = campersList.filter((a) =>
-          a.state.toLowerCase().includes(this.stateToFilter.toLowerCase())
-        );
-      }
-      if (this.zipToFilter) {
-        campersList = campersList.filter((a) =>
-          a.zipCode.toLowerCase().includes(this.zipToFilter.toLowerCase())
+          a.familyId.toString().includes(this.familyIdToFilter.toString())
         );
       }
       return campersList;

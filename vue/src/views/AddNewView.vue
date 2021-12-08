@@ -4,7 +4,7 @@
       <add-family-form v-show="showFamilyForm" v-model="this.CamperFamily.newFamily" />
       <div class ="camperButtons">
       <button type="submit" v-on:click.prevent="saveNewCamper()">Submit</button>
-      <button type="button" v-on:click=" showAddForm = false; newcamper = {};">Cancel</button>
+      <button type="button" v-on:click="newcamper = {}; $router.push('/CamperList')">Cancel</button>
       <button type="button" v-on:click.prevent="showFamilyForm = true">Add New Family</button>
       </div>
   </article>

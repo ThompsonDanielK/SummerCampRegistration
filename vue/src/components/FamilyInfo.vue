@@ -1,26 +1,40 @@
 <template>
   <table>
+    <tr id="fullName">
+      <td>Full Name:</td>
+      <td>
+        <div v-show="!showFull" class="data">
+          {{ this.family.fullName }}
+        </div>
+        <input type="text" v-model="newData.fullName" v-show="showFull" />
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showHideForm('fullName')" v-show="!showFull">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('fullName')" v-show="showFull">Save</button>
+        <button type="button" id="cityCancel" v-on:click.prevent="newData.fullName = family.fullName; showFull = false" v-show="showFull">Cancel</button>
+      </td>
+    </tr>
     <tr id="city">
       <td>City:</td>
       <td>
         <div v-show="!showCity" class="data">
-          {{ this.camper.city }}
+          {{ this.family.city }}
         </div>
-        <input type="text" v-model="newValue.city" v-show="showCity" />
+        <input type="text" v-model="newData.city" v-show="showCity" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('city')" v-show="!showCity">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('city')" v-show="showCity">Save</button>
-        <button type="button" id="cityCancel" v-on:click.prevent="newValue.city = camper.city; showCity = false" v-show="showCity">Cancel</button>
+        <button type="button" id="cityCancel" v-on:click.prevent="newData.city = family.city; showCity = false" v-show="showCity">Cancel</button>
       </td>
     </tr>
     <tr id="state">
       <td>State:</td>
       <td>
         <div v-show="!showState" class="data">
-          {{ this.camper.state }}
+          {{ this.family.state }}
         </div>
-        <select v-model="newValue.state" v-show="showState">
+        <select v-model="newData.state" v-show="showState">
           <option v-for="state in states" v-bind:key="state">
             {{ state }}
           </option>
@@ -29,37 +43,68 @@
       <td>
         <button type="button" v-on:click.prevent="showHideForm('state')" v-show="!showState">Edit</button>
         <button type="submit" v-on:click.prevent="saveChange('state')" v-show="showState">Save</button>
-        <button type="button" id="stateCancel" v-on:click.prevent="newValue.state = camper.state; showState = false" v-show="showState">Cancel</button>
+        <button type="button" id="stateCancel" v-on:click.prevent="newData.state = family.state; showState = false" v-show="showState">Cancel</button>
       </td>
     </tr>
     <tr id="zip">
       <td>Zip:</td>
       <td>
         <div v-show="!showZip" class="data">
-          {{ this.camper.zip }}
+          {{ this.family.zip }}
         </div>
-        <input type="text" v-model.number="newValue.zip" v-show="showZip" />
+        <input type="text" v-model.number="newData.zip" v-show="showZip" />
       </td>
       <td>
         <button type="button" v-on:click.prevent="showHideForm('zip')" v-show="!showZip">Edit</button>
         <button type="submit" v-on:click.prevent="saveChange('zip')" v-show="showZip">Save</button>
-        <button type="button" id="zipCancel" v-on:click.prevent="newValue.zip = camper.zip; showZip = false" v-show="showZip">Cancel</button>
+        <button type="button" id="zipCancel" v-on:click.prevent="newData.zip = family.zip; showZip = false" v-show="showZip">Cancel</button>
+      </td>
+    </tr>
+    <tr id="phoneNumber">
+      <td>Phone Number:</td>
+      <td>
+        <div v-show="!showPhone" class="data">
+          {{ this.family.phoneNumber }}
+        </div>
+        <input type="text" v-model.number="newData.phoneNumber" v-show="showPhone" />
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showHideForm('phoneNumber')" v-show="!showPhone">Edit</button>
+        <button type="submit" v-on:click.prevent="saveChange('phoneNumber')" v-show="showPhone">Save</button>
+        <button type="button" id="zipCancel" v-on:click.prevent="newData.phoneNumber = family.phoneNumber; showPhone = false" v-show="showPhone">Cancel</button>
       </td>
     </tr>
     </table>
 </template>
 
 <script>
-import CamperService from '../services/CamperService.js'
+import FamilyService from '../services/FamilyService.js'
 
 export default {
-showHideForm(formName) {
+  data(){
+    return{
+      family: {},
+      showFull: false,
+      showEmail: false,
+      showCity: false,
+      showState: false,
+      showZip: false,
+      showPhone: false,
+      newData: {},
+      states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
+               "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",
+               "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA",
+               "VT", "WA", "WI", "WV", "WY"],
+    }
+  },
+  methods:{
+    showHideForm(formName) {
       switch (formName) {
-        case "firstName":
-          this.showFirst = true;
+        case "fullName":
+          this.showFull = true;
           break;
-        case "lastName":
-          this.showLast = true;
+        case "email":
+          this.showEmail = true;
           break;
         case "city":
           this.showCity = true;
@@ -70,52 +115,51 @@ showHideForm(formName) {
         case "zip":
           this.showZip = true;
           break;
-        case "specialInfo":
-          this.showSpecial = true;
+        case "phoneNumber":
+          this.Phonecial = true;
           break;
       }
     },
     saveChange(formName) {
-        this.changes.camperCode = this.newValue.id;
+      this.changes.familyId = this.newData.id;
       switch (formName) {
-        case "firstName":
-          this.changes.firstName = this.newValue.firstName;
-          this.camper.firstName= this.newValue.firstName;
-          this.showFirst = false;
-          break;
-        case "lastName":
-          this.changes.lastName = this.newValue.lastName;
-          this.camper.lastName= this.newValue.lastName;
-          this.showLast = false;
+        case "fullName":
+          this.changes.fullName = this.newData.fullName;
+          this.family.fullName= this.newData.fullName;
+          this.showFull = false;
           break;
         case "city":
-          this.changes.city = this.newValue.city;
-          this.camper.city = this.newValue.city;
+          this.changes.city = this.newData.city;
+          this.family.city = this.newData.city;
           this.showCity = false;
           break;
         case "state":
-          this.changes.state = this.newValue.state;
-          this.camper.state = this.newValue.state;
+          this.changes.state = this.newData.state;
+          this.family.state = this.newData.state;
           this.showState = false;
           break;
         case "zip":
-          this.changes.zip = this.newValue.zip;
-          this.camper.zip = this.newValue.zip;
+          this.changes.zip = this.newData.zip;
+          this.family.zip = this.newData.zip;
           this.showZip = false;
           break;
-        case "specialInfo":
-          this.newValue.specialInfo = this.newValue.specialInfo.split(',');
-          this.camper.specialInfo = this.newValue.specialInfo;
-          this.changes.specialInfo = this.newValue.specialInfo;
-          this.showSpecial = false;
+        case "phoneNumber":
+          this.family.phoneNumber = this.newData.phoneNumber;
+          this.changes.phoneNumber = this.newData.phoneNumber;
+          this.showPhone = false;
+          break;
+        case "email":
+          this.changes.email = this.newData.email;
+          this.family.email= this.newData.email;
+          this.showEmail = false;
           break;
       }
     },
     finalizeChanges(){
-      CamperService.updateCamper(this.camper)
+      FamilyService.updateCamper(this.family)
       .then(response => {
-        console.log('Updated camper info', response.data);
-        CamperService.logChanges(this.changes)
+        console.log('Updated family info', response.data);
+        FamilyService.logChanges(this.changes)
         .then(response => {
           console.log('Logged changes', response.data);
           this.changes = {};
@@ -127,20 +171,18 @@ showHideForm(formName) {
       .catch(response => {
         console.error('Cannot finalize changes', response);
       })
+      }
     },
     created() {
-    //   CamperService.getCamper(this.$route.params.camperCode).then((response) => {
-    //     console.log('Got camper', response.data)
-    //     this.newValue = response.data;
-    //     this.camper = response.data;
-    //   })
-    //   .catch(response =>
-    //   {
-    //     console.error('Problem getting camper', response)
-    //   })
-    // },
-    this.camper = this.$store.state.campers.find( c => c.camperCode = this.$route.params.camperCode)
-    }
+      FamilyService.getFamily(this.$route.params.familyId).then((response) => {
+        console.log('Got family', response.data)
+        this.family = response.data;
+      })
+      .catch(response =>
+      {
+        console.error('Problem getting family', response)
+      })
+    },
 };
 </script>
 

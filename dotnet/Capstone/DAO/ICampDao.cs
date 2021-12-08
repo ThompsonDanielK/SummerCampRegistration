@@ -8,5 +8,8 @@ namespace Capstone.DAO
         bool AddCamper(Camper camper);
         int AddFamily(Family family);
         List<Camper> FetchAllCampers();
+        List<Family> FetchAllFamilies();
+        Camper FetchCamper(int camperCode);
+        Family FetchFamily(int familyId);
     }
 }
