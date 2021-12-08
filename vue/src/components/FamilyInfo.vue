@@ -75,6 +75,22 @@
         <button type="button" id="zipCancel" v-on:click.prevent="newData.phoneNumber = family.phoneNumber; showPhone = false" v-show="showPhone">Cancel</button>
       </td>
     </tr>
+    <tr id="campers">
+      <td>Campers:</td>
+      <td>
+        <div v-show="!showCampers" class="data">
+          <ul>
+            <li v-for="camper in this.family.Campers" v-bind:key="camper.camperCode">
+              {{camper.firstName}} {{camper.lastName}}
+            </li>
+          </ul>
+          <camper-info v-show="showCampers"> </camper-info>
+        </div>
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showHideForm('phoneNumber')" v-show="!showCampers">Show Details</button>
+      </td>
+    </tr>
     </table>
       <button type="submit" v-on:click.prevent="finalizeChanges()" v-bind:disabled="!this.newData">Submit Changes</button>
 </section>
@@ -82,8 +98,12 @@
 
 <script>
 import FamilyService from '../services/FamilyService.js'
+import CamperInfo from '../components/CamperInfo.vue'
 
 export default {
+  components:{
+    CamperInfo,
+  },
   data(){
     return{
       family: {},
@@ -93,6 +113,7 @@ export default {
       showState: false,
       showZip: false,
       showPhone: false,
+      showCampers: false,
       newData: {},
       states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
                "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",
@@ -159,17 +180,17 @@ export default {
       }
     },
     finalizeChanges(){
-      FamilyService.updateCamper(this.family)
+      FamilyService.updateCamper(this.family, this.family.campers[0].camperCode)
       .then(response => {
         console.log('Updated family info', response.data);
-        FamilyService.logChanges(this.changes)
-        .then(response => {
-          console.log('Logged changes', response.data);
-          this.changes = {};
-        })
-        .catch(response => {
-          console.warn('Problem logging changes', response);
-        })
+      //   FamilyService.logChanges(this.changes)
+      //   .then(response => {
+      //     console.log('Logged changes', response.data);
+      //     this.changes = {};
+      //   })
+      //   .catch(response => {
+      //     console.warn('Problem logging changes', response);
+      //   })
       })
       .catch(response => {
         console.error('Cannot finalize changes', response);

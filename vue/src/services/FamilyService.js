@@ -10,8 +10,8 @@ export default{
     addNewFamily(family){
         return axios.post('/camp/family', family);
     },
-    updateFamily(family){
-        return axios.put(`/camp/family/${family.Id}`, family);
+    updateFamily(family, camperCode){
+        return axios.put(`/camp/family/${camperCode}`, family);
     },
     deleteFamily(familyId){
         return axios.delete(`/camp/family/${familyId}`);
