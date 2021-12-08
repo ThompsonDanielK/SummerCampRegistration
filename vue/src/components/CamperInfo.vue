@@ -296,7 +296,7 @@ export default {
       }
       if(this.newData.lastName)
       {
-        this.camper.larstName = this.newData.lastName;
+        this.camper.lastName = this.newData.lastName;
       }
       if(this.newData.allergies)
       {

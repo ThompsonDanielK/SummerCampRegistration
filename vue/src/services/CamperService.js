@@ -14,7 +14,7 @@ export default{
         return axios.delete('/Camp', camperCode);
     },
     updateCamper(camper){
-        return axios.put(`/Camp/${camper.camperCode}`, camper)
+        return axios.put('/Camp/update/camper', camper)
     },
     logChanges(changes){
         return axios.put('/updates', changes)
