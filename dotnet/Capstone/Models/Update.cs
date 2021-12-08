@@ -30,6 +30,10 @@ namespace Capstone.Models
 
         public string Status { get; set; } = "Pending";
 
+        public DateTime RequestDate { get; set; }
+
+        public DateTime FinalizeDate { get; set; }
+
 
         public Update()
         {
