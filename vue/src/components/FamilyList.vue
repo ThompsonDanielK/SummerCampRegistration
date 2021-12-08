@@ -1,9 +1,11 @@
 <template>
   <section>
+    <div class="tableHead">
     <h1>Families</h1>
     <router-link v-bind:to="{name: 'new'}">
       <button type="button">Add New Camper</button>
     </router-link>
+    </div>
     <table>
       <thead>
         <tr>
@@ -127,13 +129,24 @@ button {
   background-color: $textDark;
   color: $textLight;
   border-radius: 10px;
-  border: 1px solid $highlight;
+  border: 2px solid $highlight;
+  text-shadow: 2px 1px 1px black;
+  font-size: 1rem;
+  font-family: 'Russo One', sans-serif;
 }
 input{
   background-color: $textDark;
   color: $textLight;
   border-radius: 10px;
-  border: 1px solid $highlight;
+  border: 2px solid $highlight;
   width: 90%;
+  font-weight: bold;
+  font-size: 1rem;
+  font-family: 'Russo One', sans-serif;
+}
+.tableHead{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

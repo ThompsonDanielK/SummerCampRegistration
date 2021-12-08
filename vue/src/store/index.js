@@ -24,7 +24,11 @@ export default new Vuex.Store({
   state: {
     token: currentToken || '',
     user: currentUser || {}, // If a user is an admin, their user.role will be 'admin'
-    campers: []
+    campers: [],
+    CamperFamily: {
+      camper: {},
+      family: {},
+  },
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {

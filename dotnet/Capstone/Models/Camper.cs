@@ -18,21 +18,21 @@ namespace Capstone.Models
 
         public DateTime DOB { get; set; }
 
-        public string MedicationsCSV { get; set; }
+        public string Medications { get; set; }
 
-        public string AllergiesCSV { get; set; }
+        public string Allergies { get; set; }
 
-        public string SpecialNeedsCSV { get; set; }
+        public string SpecialNeeds { get; set; }
 
         public DateTime DateAdded { get; set; }
 
 
 
-        public List<string> Medications 
+        public List<string> MedicationsList 
         {
             get
             {
-                string[] medications = MedicationsCSV.Split(',');
+                string[] medications = Medications.Split(',');
                 List<string> medList = new List<string>();
 
                 foreach (var med in medications)
@@ -48,11 +48,11 @@ namespace Capstone.Models
             }
         }
 
-        public List<string> Allergies
+        public List<string> AllergiesList
         {
             get
             {
-                string[] allergies = AllergiesCSV.Split(',');
+                string[] allergies = Allergies.Split(',');
                 List<string> allergyList = new List<string>();
 
                 foreach (var allergy in allergies)
@@ -68,11 +68,11 @@ namespace Capstone.Models
             }
         }
 
-        public List<string> SpecialNeeds
+        public List<string> SpecialNeedsList
         {
             get
             {
-                string[] needs = SpecialNeedsCSV.Split(',');
+                string[] needs = SpecialNeeds.Split(',');
                 List<string> needsList = new List<string>();
 
                 foreach (var need in needs)

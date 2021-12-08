@@ -80,13 +80,16 @@ namespace Capstone.Controllers
                 familyExists = true;
             }
 
-            if (familyExists && familyCreationSuccess)
+            if (familyExists || familyCreationSuccess)
             {
                 camperFamily.Camper.FamilyId = familyId;
 
-                if (camp.AddCamper(camperFamily.Camper))
+                int camperCode = camp.AddCamper(camperFamily.Camper);
+
+                if (camperCode != 0)
                 {
-                    return Created(successMessage, camperFamily.Camper);
+                    
+                    return Created(successMessage, camperCode);
                 }
             }
 
