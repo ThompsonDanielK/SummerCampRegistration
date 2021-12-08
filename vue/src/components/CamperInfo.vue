@@ -272,23 +272,23 @@ export default {
       CamperService.updateCamper(this.camper)
       .then(response => {
         console.log('Updated camper info', response.data);
-        this.logChanges();
+        // this.logChanges();
         this.$router.push('/');
       })
       .catch(response => {
         console.error('Cannot finalize changes', response);
       })
     },
-    logChanges(){
-      this.request.action = 'update'
-       CamperService.logChanges(this.request)
-        .then(response => {
-          console.log('Logged changes', response.data);
-        })
-        .catch(response => {
-          console.warn('Problem logging changes', response);
-        })
-    },
+    // logChanges(){
+    //   this.request.action = 'update'
+    //    CamperService.logChanges(this.request)
+    //     .then(response => {
+    //       console.log('Logged changes', response.data);
+    //     })
+    //     .catch(response => {
+    //       console.warn('Problem logging changes', response);
+    //     })
+    // },
     setCamper(){
       if(this.newData.firstName)
       {
