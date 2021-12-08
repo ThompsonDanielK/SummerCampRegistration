@@ -6,3 +6,8 @@ AddCamper needs to use @@Identity and return at least the camper code
 	if not the entire object.
 Should we normalize the updates table into a parent/child?
 	(ReqId/Camper/Action/Dates  & field, new, old, status)
+
+
+
+	What are we doing with delete requests.  Adding an 'active' field to camper?  Open to suggestions.
+	I think I want to allow new data to be null to allow for delete requests.

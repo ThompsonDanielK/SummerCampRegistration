@@ -20,6 +20,9 @@ namespace Capstone.Models
         public int Zip { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public string EmailAddress { get; set; }
+
         public Family()
         {
 
