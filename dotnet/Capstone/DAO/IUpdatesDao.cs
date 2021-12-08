@@ -4,8 +4,8 @@ namespace Capstone.DAO
 {
     public interface IUpdatesDao
     {
-        int AddNewCamperUpdateRequest(int userId, Camper newCamperData);
-        int AddNewFamilyUpdateRequest(int userId, Family newFamilyData);
+        int AddNewCamperUpdateRequest(int userId, Camper newCamperData, Camper currentCamperData);
+        //int AddNewFamilyUpdateRequest(int userId, Family newFamilyData);
         bool ProcessApprovedRequests(int requestId);
     }
 }

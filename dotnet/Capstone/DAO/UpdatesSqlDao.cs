@@ -11,21 +11,21 @@ namespace Capstone.DAO
     public class UpdatesSqlDao : IUpdatesDao
     {
         private readonly string connectionString;
-        private readonly ICampDao camp;
 
         public UpdatesSqlDao(string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentNullException(nameof(connectionString));
             this.connectionString = connectionString;
-            this.camp = camp;
+
+            
         }
 
         const string sqlGetLastUpdateRequestId = "SELECT TOP 1 request_id FROM updates ORDER BY request_id DESC";
         const string sqlGetFirstCamperCodeByFamilyId = "SELECT TOP 1 camper_code FROM campers WHERE family_id = @familyId";
-        const string sqlAddNewUpdateRequest = "INSERT INTO updates " +
+        const string sqlAddNewUpdateRequest = "SET IDENTITY_INSERT updates ON; INSERT INTO updates " +
                     "(request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date) " +
-                    "VALUES (@requestId, @fieldToBeChanged, @camperCode, @action, @newData, @oldData, @requestor, @status, @requestDate)";
+                    "VALUES (@requestId, @fieldToBeChanged, @camperCode, @action, @newData, @oldData, @requestor, @status, @requestDate); SET IDENTITY_INSERT updates OFF;";
         const string sqlRequestById = "SELECT * FROM updates WHERE request_id = @requestId";
         const string sqlSetFinalizeDate = "UPDATE updates SET finalize_date = @Now WHERE request_id = @requestId";
         const string sqlUnenrollCamper = "UPDATE campers SET active = false WHERE camper_code = @camperCode";
@@ -54,11 +54,16 @@ namespace Capstone.DAO
 
         }
 
-        public int AddNewCamperUpdateRequest(int userId, Camper newCamperData)
+        public int AddNewCamperUpdateRequest(int userId, Camper newCamperData, Camper oldCamperData)
         {
-            Camper oldCamperData = camp.FetchCamper(newCamperData.CamperCode);
+            //Camper oldCamperData = camp.FetchCamper(newCamperData.CamperCode);
             int requestId = GetNextUpdateRequestId();
             string user = userId.ToString();
+
+            if (requestId == 0)
+            {
+                requestId = 1;
+            }
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -130,89 +135,89 @@ namespace Capstone.DAO
             }
         }
 
-        public int AddNewFamilyUpdateRequest(int userId, Family newFamilyData)
-        {
-            int requestId = GetNextUpdateRequestId();
-            Family oldFamilyData = camp.FetchFamily(newFamilyData.FamilyId);
-            int camperCode = GetFirstCamperCodeByFamilyId(newFamilyData.FamilyId);
-            string user = userId.ToString();
+        //public int AddNewFamilyUpdateRequest(int userId, Family newFamilyData)
+        //{
+        //    int requestId = GetNextUpdateRequestId();
+        //    Family oldFamilyData = camp.FetchFamily(newFamilyData.FamilyId);
+        //    int camperCode = GetFirstCamperCodeByFamilyId(newFamilyData.FamilyId);
+        //    string user = userId.ToString();
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        try
+        //        {
+        //            conn.Open();
 
-                    using (SqlCommand cmd = new SqlCommand(sqlAddNewUpdateRequest, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@requestId", requestId);
-                        cmd.Parameters.AddWithValue("@camperCode", camperCode);
-                        cmd.Parameters.AddWithValue("@action", "Update");
-                        cmd.Parameters.AddWithValue("@requestor", user);
-                        cmd.Parameters.AddWithValue("@status", "Pending");
-                        cmd.Parameters.AddWithValue("@requestDate", DateTime.Now);
+        //            using (SqlCommand cmd = new SqlCommand(sqlAddNewUpdateRequest, conn))
+        //            {
+        //                cmd.Parameters.AddWithValue("@requestId", requestId);
+        //                cmd.Parameters.AddWithValue("@camperCode", camperCode);
+        //                cmd.Parameters.AddWithValue("@action", "Update");
+        //                cmd.Parameters.AddWithValue("@requestor", user);
+        //                cmd.Parameters.AddWithValue("@status", "Pending");
+        //                cmd.Parameters.AddWithValue("@requestDate", DateTime.Now);
 
-                        cmd.Parameters.Add("@fieldToBeChanged", SqlDbType.NVarChar);
-                        cmd.Parameters.Add("@newData", SqlDbType.NVarChar);
-                        cmd.Parameters.Add("@oldData", SqlDbType.NVarChar);
-                        if (oldFamilyData.FullName != newFamilyData.FullName)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "FullName";
-                            cmd.Parameters["@newData"].Value = newFamilyData.FullName;
-                            cmd.Parameters["@oldData"].Value = oldFamilyData.FullName;
-                            cmd.ExecuteNonQuery();
-                        }
-                        if (oldFamilyData.Address != newFamilyData.Address)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "Address";
-                            cmd.Parameters["@newData"].Value = newFamilyData.Address;
-                            cmd.Parameters["@oldData"].Value = oldFamilyData.Address;
-                            cmd.ExecuteNonQuery();
-                        }
-                        if (oldFamilyData.City != newFamilyData.City)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "City";
-                            cmd.Parameters["@newData"].Value = newFamilyData.City;
-                            cmd.Parameters["@oldData"].Value = oldFamilyData.City;
-                            cmd.ExecuteNonQuery();
-                        }
-                        if (oldFamilyData.State != newFamilyData.State)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "State";
-                            cmd.Parameters["@newData"].Value = newFamilyData.State;
-                            cmd.Parameters["@oldData"].Value = oldFamilyData.State;
-                            cmd.ExecuteNonQuery();
-                        }
-                        if (oldFamilyData.Zip != newFamilyData.Zip)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "Zip";
-                            cmd.Parameters["@newData"].Value = newFamilyData.Zip;
-                            cmd.Parameters["@oldData"].Value = oldFamilyData.Zip;
-                            cmd.ExecuteNonQuery();
-                        }
-                        if (oldFamilyData.PhoneNumber != newFamilyData.PhoneNumber)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "PhoneNumber";
-                            cmd.Parameters["@newData"].Value = newFamilyData.PhoneNumber;
-                            cmd.Parameters["@oldData"].Value = oldFamilyData.PhoneNumber;
-                            cmd.ExecuteNonQuery();
-                        }
-                        if (oldFamilyData.EmailAddress != newFamilyData.EmailAddress)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "EmailAddress";
-                            cmd.Parameters["@newData"].Value = newFamilyData.EmailAddress;
-                            cmd.Parameters["@oldData"].Value = oldFamilyData.EmailAddress;
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                }
-                catch (SqlException ex)
-                {
-                    return -1;
-                }
-                return requestId;
-            }
-        }
+        //                cmd.Parameters.Add("@fieldToBeChanged", SqlDbType.NVarChar);
+        //                cmd.Parameters.Add("@newData", SqlDbType.NVarChar);
+        //                cmd.Parameters.Add("@oldData", SqlDbType.NVarChar);
+        //                if (oldFamilyData.FullName != newFamilyData.FullName)
+        //                {
+        //                    cmd.Parameters["@fieldToBeChanged"].Value = "FullName";
+        //                    cmd.Parameters["@newData"].Value = newFamilyData.FullName;
+        //                    cmd.Parameters["@oldData"].Value = oldFamilyData.FullName;
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //                if (oldFamilyData.Address != newFamilyData.Address)
+        //                {
+        //                    cmd.Parameters["@fieldToBeChanged"].Value = "Address";
+        //                    cmd.Parameters["@newData"].Value = newFamilyData.Address;
+        //                    cmd.Parameters["@oldData"].Value = oldFamilyData.Address;
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //                if (oldFamilyData.City != newFamilyData.City)
+        //                {
+        //                    cmd.Parameters["@fieldToBeChanged"].Value = "City";
+        //                    cmd.Parameters["@newData"].Value = newFamilyData.City;
+        //                    cmd.Parameters["@oldData"].Value = oldFamilyData.City;
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //                if (oldFamilyData.State != newFamilyData.State)
+        //                {
+        //                    cmd.Parameters["@fieldToBeChanged"].Value = "State";
+        //                    cmd.Parameters["@newData"].Value = newFamilyData.State;
+        //                    cmd.Parameters["@oldData"].Value = oldFamilyData.State;
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //                if (oldFamilyData.Zip != newFamilyData.Zip)
+        //                {
+        //                    cmd.Parameters["@fieldToBeChanged"].Value = "Zip";
+        //                    cmd.Parameters["@newData"].Value = newFamilyData.Zip;
+        //                    cmd.Parameters["@oldData"].Value = oldFamilyData.Zip;
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //                if (oldFamilyData.PhoneNumber != newFamilyData.PhoneNumber)
+        //                {
+        //                    cmd.Parameters["@fieldToBeChanged"].Value = "PhoneNumber";
+        //                    cmd.Parameters["@newData"].Value = newFamilyData.PhoneNumber;
+        //                    cmd.Parameters["@oldData"].Value = oldFamilyData.PhoneNumber;
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //                if (oldFamilyData.EmailAddress != newFamilyData.EmailAddress)
+        //                {
+        //                    cmd.Parameters["@fieldToBeChanged"].Value = "EmailAddress";
+        //                    cmd.Parameters["@newData"].Value = newFamilyData.EmailAddress;
+        //                    cmd.Parameters["@oldData"].Value = oldFamilyData.EmailAddress;
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //            }
+        //        }
+        //        catch (SqlException ex)
+        //        {
+        //            return -1;
+        //        }
+        //        return requestId;
+        //    }
+        //}
 
         public bool ProcessApprovedRequests(int requestId)
         {

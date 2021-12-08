@@ -22,7 +22,7 @@ namespace Capstone.Controllers
         {
             this.camp = camp;
             this.updates = updates;
-            this.userId = int.Parse(this.User.FindFirst("sub").Value);
+            
         }
 
         [HttpGet("CamperList")]
@@ -102,22 +102,27 @@ namespace Capstone.Controllers
 
         [HttpPut("update/camper")]
         public ActionResult UpdateCamper(Camper camper)
-        {            
-            int requestId = updates.AddNewCamperUpdateRequest(userId, camper);
-            updates.ProcessApprovedRequests(requestId);
-
-            return Ok();
-
-        }
-
-        [HttpPut("update/family")]
-        public ActionResult UpdateFamily(Family family)
         {
-            int requestId = updates.AddNewFamilyUpdateRequest(userId, family);
+            int userId = int.Parse(this.User.FindFirst("sub").Value);
+            Camper oldCamperData = camp.FetchCamper(camper.CamperCode);
+
+            int requestId = updates.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
             updates.ProcessApprovedRequests(requestId);
 
             return Ok();
 
         }
+
+        //[HttpPut("update/family")]
+        //public ActionResult UpdateFamily(Family family)
+        //{
+        //    int userId = int.Parse(this.User.FindFirst("sub").Value);
+
+        //    int requestId = updates.AddNewFamilyUpdateRequest(userId, family);
+        //    updates.ProcessApprovedRequests(requestId);
+
+        //    return Ok();
+
+        //}
     }
 }
