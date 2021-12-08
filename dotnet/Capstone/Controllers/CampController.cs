@@ -30,15 +30,45 @@ namespace Capstone.Controllers
         }
 
         [HttpPost("Camper")]
-        public ActionResult PostCamper(Camper camper)
+        public ActionResult PostCamperAndFamily(CamperFamily camperFamily)
         {
-            if (camp.AddCamper(camper))
+            bool familyExists = false;
+            bool familyCreationSuccess = true;
+            int familyId = 0;
+            string successMessage = "Your camper has been added";
+
+            if (camperFamily.Family.FamilyId == 0)
             {
-                return Created("Your camper has been added", camper);
+                familyId = camp.AddFamily(camperFamily.Family);
+
+                if (!familyId.Equals(null))
+                {
+                    familyExists = familyCreationSuccess = true;
+                }
+
+                if (familyCreationSuccess)
+                {
+                    successMessage = "Your camper and family has been added";
+                }
+            }
+            else
+            {
+                familyExists = true;
+            }
+
+            if (familyExists && familyCreationSuccess)
+            {
+                camperFamily.Camper.FamilyId = familyId;
+
+                if (camp.AddCamper(camperFamily.Camper))
+                {
+                    return Created(successMessage, camperFamily.Camper);
+                }
             }
 
             return BadRequest(new { message = "This request could not be completed." });
         }
+
 
     }
 }
