@@ -80,7 +80,7 @@ namespace Capstone.Controllers
                 familyExists = true;
             }
 
-            if (familyExists && familyCreationSuccess)
+            if (familyExists || familyCreationSuccess)
             {
                 camperFamily.Camper.FamilyId = familyId;
 

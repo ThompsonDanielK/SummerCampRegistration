@@ -75,9 +75,9 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@firstName", camper.FirstName);
                     command.Parameters.AddWithValue("@lastName", camper.LastName);
                     command.Parameters.AddWithValue("@dob", camper.DOB);
-                    command.Parameters.AddWithValue("@medications", camper.MedicationsCSV);
-                    command.Parameters.AddWithValue("@allergies", camper.AllergiesCSV);
-                    command.Parameters.AddWithValue("@specialNeeds", camper.SpecialNeedsCSV);
+                    command.Parameters.AddWithValue("@medications", camper.Medications);
+                    command.Parameters.AddWithValue("@allergies", camper.Allergies);
+                    command.Parameters.AddWithValue("@specialNeeds", camper.SpecialNeeds);
 
                     int returnedRows = command.ExecuteNonQuery();
 
@@ -210,9 +210,9 @@ namespace Capstone.DAO
                 FirstName = Convert.ToString(reader["first_name"]),
                 LastName = Convert.ToString(reader["last_name"]),
                 DOB = Convert.ToDateTime(reader["dob"]),
-                MedicationsCSV = Convert.ToString(reader["medications"]),
-                AllergiesCSV = Convert.ToString(reader["allergies"]),
-                SpecialNeedsCSV = Convert.ToString(reader["special_needs"])
+                Medications = Convert.ToString(reader["medications"]),
+                Allergies = Convert.ToString(reader["allergies"]),
+                SpecialNeeds = Convert.ToString(reader["special_needs"])
 
             };
 

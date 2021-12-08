@@ -8,7 +8,7 @@
       </div>
       <div id="streetAddress">
       <label for="streetAddress">Street Address:</label>
-      <input v-model="$store.state.CamperFamily.family.streetAddress" name="streetAddress" type="text" />
+      <input v-model="$store.state.CamperFamily.family.address" name="streetAddress" type="text" />
       </div>
       <div id="city">
       <label for="city">City:</label>
@@ -28,7 +28,7 @@
       </div>
       <div id="phone">
       <label for="phone">Phone Number:</label>
-      <input v-model.number="$store.state.CamperFamily.family.phone" name="phone" type="text" />
+      <input v-model="$store.state.CamperFamily.family.phoneNumber" name="phone" type="text" />
       </div>
       <div id="email">
       <label for="email">Email:</label>
@@ -44,7 +44,6 @@ import FamilyService from '../services/FamilyService.js'
 export default {
     data() {
         return{
-            newFamily: {},
             families: [],
     states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
                "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",

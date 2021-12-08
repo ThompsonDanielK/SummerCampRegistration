@@ -29,7 +29,7 @@
       <div  id="family">
       <label for="familyId">Family:</label>
       <select v-model="$store.state.CamperFamily.camper.familyId" name="familyId">
-          <option v-for="f in families" v-bind:key="f.familyId">{{f.familyId}} -- {{f.fullName}}</option>
+          <option v-for="f in families" v-bind:key="f.familyId">{{f.familyId}}</option>
       </select>
       </div>
     </form>
@@ -46,6 +46,7 @@ export default {
         }
     },
     created(){
+      this.$store.state.CamperFamily.family.familyId = this.$store.state.CamperFamily.camper.familyId;
         FamilyService.getAllFamilies()
         .then(response => {
             console.log('Got all families', response.data);
