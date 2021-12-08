@@ -9,9 +9,6 @@ using System.Threading.Tasks;
 
 namespace Capstone.Controllers
 {
-    [Route("camp/")]
-    [ApiController]
-    [Authorize]
     public class UpdateController : ControllerBase
     {
         public ActionResult PostFamilyUpdateRequest(Family updatedFamily)
