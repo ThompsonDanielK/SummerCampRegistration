@@ -31,12 +31,17 @@
         <button type="button" id="lastCancel" v-on:click.prevent="newData.lastName = camper.lastName; showLast = false" v-show="showLast">Cancel</button>
       </td>
     </tr>
+    <tr id="age">
+      <td>Age:</td>
+      <td>{{ this.age }}</td>
+      <td></td>
+    </tr>
     <tr id="dob">
-      <td>Dat of Birth:</td>
+      <td>Date of Birth:</td>
       <td>
         <div v-show="!showDOB"  class="data">
-          {{ this.camper.dob }}
-          <p v-show="newData.dob">{{ this.newData.dob }}</p>
+          {{ this.convertedDateTime }}
+          <p v-show="newData.dob">{{ this.newConvertedDateTime }}</p>
         </div>
         <input type="text" v-model="newData.dob" v-show="showDOB" />
       </td>
@@ -155,6 +160,34 @@ export default {
                "VT", "WA", "WI", "WV", "WY"
               ],
             };
+  },
+  computed:{
+    convertedDateTime() {
+      let dob = new Date(this.camper.dob);
+      let month = dob.getMonth() + 1;
+      let day = dob.getDate();
+      let year = dob.getFullYear(); 
+      let formattedDob = `${month}/${day}/${year}`
+      return formattedDob;
+    },
+    newConvertedDateTime() {
+      if(this.newData.dob)
+      {
+        let dob = new Date(this.newData.dob);
+        let month = dob.getMonth() + 1;
+        let day = dob.getDate();
+        let year = dob.getFullYear(); 
+        let formattedDob = `${month}/${day}/${year}`
+        return formattedDob;
+      }
+      return '';
+    },
+    age() {
+      let birthYear = new Date(this.camper.dob).getFullYear()
+      let currentYear = new Date().getFullYear();
+      let age = currentYear - birthYear;
+      return age;
+    }
   },
   methods: {
     showHideForm(formName) {

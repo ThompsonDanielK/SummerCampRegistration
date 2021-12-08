@@ -10,17 +10,21 @@
       <label for="lastName">Last Name:</label>
       <input v-model="newCamper.lastName" name="lastName" type="text" />
       </div>
+      <div id="dob">
+      <label for="dob">Date of Birth:</label>
+      <input v-model="newCamper.dob" name="dob" type="date" />
+      </div>
       <div id="allergies">
       <label for="allergies">Allergies:</label>
-      <input v-model="newCamper.allergies" name="allergies" type="text" />
+      <textarea v-model="newCamper.allergies" name="allergies" />
       </div>
       <div id="medications">
       <label for="medications">Medications:</label>
-      <input v-model="newCamper.medications" name="medications" type="text" />
+      <textarea v-model="newCamper.medications" name="medications" />
       </div>
       <div id="specialNeeds">
       <label for="specialNeeds">Special Needs:</label>
-      <input v-model="newCamper.specialNeeds" name="specialNeeds" type="text" />
+      <textarea v-model="newCamper.specialNeeds" name="specialNeeds" />
       </div>
       <div  id="family">
       <label for="familyId">Family:</label>
@@ -76,6 +80,7 @@ section{
   padding: 10px;
   border-radius: 10px;
   border: 2px solid black;
+  height: 100%;
 }
 h1{
   margin: 10px;
@@ -85,8 +90,9 @@ h1{
   display: grid;
   grid-template-areas: 
   'firstName lastName'
-  'allergies medications'
-  'specialNeeds familyList';
+  'dob allergies'
+  'medications specialNeeds'
+  'familyList ...';
 }
 #firstName{
     grid-area: firstName;
@@ -106,12 +112,16 @@ h1{
 #specialNeeds{
     grid-area: specialNeeds;
 }
+#dob{
+  grid-area: dob;
+}
 div{
   display: flex;
   justify-content: space-between;
   padding: 10px;
 }
 input,
+textarea,
 select {
   margin: 10px;
   background-color: $textDark;
@@ -120,5 +130,8 @@ select {
   padding-left: 10px;
   border: 1px solid $highlight;
   width: 50%;
+}
+textarea{
+  height: 100%;
 }
 </style>
