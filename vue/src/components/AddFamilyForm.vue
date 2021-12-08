@@ -4,19 +4,19 @@
       <form class="form-group">
       <div id="fullName">
       <label for="fullName">Full Name:</label>
-      <input v-model="newFamily.fullName" name="fullName" type="text" />
+      <input v-model="$store.state.CamperFamily.family.fullName" name="fullName" type="text" />
       </div>
       <div id="streetAddress">
       <label for="streetAddress">Street Address:</label>
-      <input v-model="newFamily.streetAddress" name="streetAddress" type="text" />
+      <input v-model="$store.state.CamperFamily.family.streetAddress" name="streetAddress" type="text" />
       </div>
       <div id="city">
       <label for="city">City:</label>
-      <input v-model="newFamily.city" name="city" type="text" />
+      <input v-model="$store.state.CamperFamily.family.city" name="city" type="text" />
       </div>
       <div id="state">
       <label for="state">State:</label>
-      <select name="state" v-model="newFamily.state">
+      <select name="state" v-model="$store.state.CamperFamily.family.state">
           <option v-for="state in states" v-bind:key="state">
             {{ state }}
           </option>
@@ -24,15 +24,15 @@
       </div>
       <div id="zip">
       <label for="zip">Zip Code:</label>
-      <input v-model.number="newFamily.zip" name="zip" type="text" />
+      <input v-model.number="$store.state.CamperFamily.family.zip" name="zip" type="text" />
       </div>
       <div id="phone">
       <label for="phone">Phone Number:</label>
-      <input v-model.number="newFamily.phone" name="phone" type="text" />
+      <input v-model.number="$store.state.CamperFamily.family.phone" name="phone" type="text" />
       </div>
       <div id="email">
       <label for="email">Email:</label>
-      <input v-model.number="newFamily.email" name="email" type="text" />
+      <input v-model.number="$store.state.CamperFamily.family.email" name="email" type="text" />
       </div>
     </form>
   </section>
@@ -121,5 +121,8 @@ select {
   padding-left: 10px;
   border: 1px solid $highlight;
   width: 50%;
+  font-weight: bold;
+  font-size: 1.2rem;
+  font-family: 'Russo One', sans-serif;
 }
 </style>

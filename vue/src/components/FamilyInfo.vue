@@ -1,4 +1,5 @@
 <template>
+  <section>
   <table>
     <tr id="fullName">
       <td>Full Name:</td>
@@ -75,6 +76,8 @@
       </td>
     </tr>
     </table>
+      <button type="submit" v-on:click.prevent="finalizeChanges()" v-bind:disabled="!this.newData">Submit Changes</button>
+</section>
 </template>
 
 <script>
@@ -205,10 +208,19 @@ button {
   color: $textLight;
   margin-left: 15px;
   border-radius: 5px;
+  text-shadow: 2px 1px 1px black;
+  border: 2px solid $highlight;
+  font-size: 1rem;
+  font-family: 'Russo One', sans-serif;
 }
-:disabled{
+button:disabled{
   background-color: $secondary;
   color: black;
+}
+button[type='submit']
+{
+  margin: 1% 35%;
+  width: 30%;
 }
 table tr {
   padding: 10%;

@@ -4,31 +4,31 @@
       <form class="form-group">
       <div id="firstName">
       <label for="firstName">First Name:</label>
-      <input v-model="newCamper.firstName" name="firstName" type="text" />
+      <input v-model="$store.state.CamperFamily.camper.firstName" name="firstName" type="text" />
       </div>
       <div id="lastName">
       <label for="lastName">Last Name:</label>
-      <input v-model="newCamper.lastName" name="lastName" type="text" />
+      <input v-model="$store.state.CamperFamily.camper.lastName" name="lastName" type="text" />
       </div>
       <div id="dob">
       <label for="dob">Date of Birth:</label>
-      <input v-model="newCamper.dob" name="dob" type="date" />
+      <input v-model="$store.state.CamperFamily.camper.dob" name="dob" type="date" />
       </div>
       <div id="allergies">
       <label for="allergies">Allergies:</label>
-      <textarea v-model="newCamper.allergies" name="allergies" />
+      <textarea v-model="$store.state.CamperFamily.camper.allergies" name="allergies" />
       </div>
       <div id="medications">
       <label for="medications">Medications:</label>
-      <textarea v-model="newCamper.medications" name="medications" />
+      <textarea v-model="$store.state.CamperFamily.camper.medications" name="medications" />
       </div>
       <div id="specialNeeds">
       <label for="specialNeeds">Special Needs:</label>
-      <textarea v-model="newCamper.specialNeeds" name="specialNeeds" />
+      <textarea v-model="$store.state.CamperFamily.camper.specialNeeds" name="specialNeeds" />
       </div>
       <div  id="family">
       <label for="familyId">Family:</label>
-      <select v-model="newCamper.familyId" name="familyId">
+      <select v-model="$store.state.CamperFamily.camper.familyId" name="familyId">
           <option v-for="f in families" v-bind:key="f.familyId">{{f.familyId}} -- {{f.fullName}}</option>
       </select>
       </div>
@@ -42,18 +42,8 @@ import FamilyService from '../services/FamilyService.js'
 export default {
     data() {
         return{
-            newCamper: {},
             families: [],
         }
-    },
-    computed: {
-    filledForm() {
-      return (
-        this.newCamper.firstName &&
-        this.newCamper.lastName &&
-        this.newCamper.familyId
-      );
-    }
     },
     created(){
         FamilyService.getAllFamilies()
@@ -130,8 +120,12 @@ select {
   padding-left: 10px;
   border: 1px solid $highlight;
   width: 50%;
+  font-weight: bold;
+  font-size: 1.2rem;
+  font-family: 'Russo One', sans-serif;
 }
 textarea{
   height: 100%;
 }
+
 </style>

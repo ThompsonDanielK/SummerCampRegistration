@@ -51,6 +51,21 @@
         <button type="button" id="dobCancel" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
       </td>
     </tr>
+    <tr id="familyId">
+      <td>Family: </td>
+      <td>
+        <div v-show="!showFamily"  class="data">
+          {{ this.camper.familyId }}
+          <p v-show="newData.familyId" class="newValue">{{ this.newData.familyId }}</p>
+        </div>
+        <input type="text" v-model="newData.familyId" v-show="showFamily" />
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showHideForm('familyId')" v-show="!showFamily">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily">Save</button>
+        <button type="button" id="lastCancel" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
+      </td>
+    </tr>
     <tr id="allergies">
       <td>Allergies:</td>
       <td>
@@ -115,21 +130,6 @@
         <button type="button" v-on:click.prevent="showHideForm('specialNeeds')" v-show="!showSpecial">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial">Save</button>
         <button type="button" id="specialCancel" v-on:click.prevent="newData.specialNeeds = ''; showSpecial = false" v-show="showSpecial">Cancel</button>
-      </td>
-    </tr>
-    <tr id="familyId">
-      <td>Family: </td>
-      <td>
-        <div v-show="!showFamily"  class="data">
-          {{ this.camper.familyId }}
-          <p v-show="newData.familyId" class="newValue">{{ this.newData.familyId }}</p>
-        </div>
-        <input type="text" v-model="newData.familyId" v-show="showFamily" />
-      </td>
-      <td>
-        <button type="button" v-on:click.prevent="showHideForm('familyId')" v-show="!showFamily">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily">Save</button>
-        <button type="button" id="lastCancel" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
       </td>
     </tr>
   </table>
@@ -348,22 +348,19 @@ button {
   color: $textLight;
   margin-left: 15px;
   border-radius: 5px;
+  border: 2px solid $highlight;
+  text-shadow: 2px 1px 1px black;
+  font-size: 1rem;
+  font-family: 'Russo One', sans-serif;
 }
 button:disabled{
   background-color: $secondary;
   color: black;
 }
-table tr {
-  padding: 10%;
-  margin-top: 10px;
-}
-table td {
-  margin-bottom: 10px;
-}
 table td .data{
     padding-left: 1%;
 }
-table input, select, textarea{
+input, select, textarea{
   font-family: 'Russo One', sans-serif;
   border: 1px dotted $highlight;
   border-radius: 10px;
@@ -377,5 +374,15 @@ input::-webkit-input-placeholder{
 }
 .newValue{
   color: $highlight;
+}
+button[type='submit']
+{
+  margin: 1% 35%;
+  width: 30%;
+}
+section{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
