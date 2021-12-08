@@ -31,6 +31,21 @@
         <button type="button" id="lastCancel" v-on:click.prevent="newData.lastName = camper.lastName; showLast = false" v-show="showLast">Cancel</button>
       </td>
     </tr>
+    <tr id="dob">
+      <td>Dat of Birth:</td>
+      <td>
+        <div v-show="!showDOB"  class="data">
+          {{ this.camper.dob }}
+          <p v-show="newData.dob">{{ this.newData.dob }}</p>
+        </div>
+        <input type="text" v-model="newData.dob" v-show="showDOB" />
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showHideForm('dob')" v-show="!showDOB">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('dob')" v-show="showDOB">Save</button>
+        <button type="button" id="dobCancel" v-on:click.prevent="newData.dob = camper.dob; showDOB = false" v-show="showDOB">Cancel</button>
+      </td>
+    </tr>
     <tr id="allergies">
       <td>Allergies:</td>
       <td>
@@ -123,11 +138,7 @@ export default {
     return {
       camper: {},
       newData: {},
-      camperToAdd: {
-        fieldToBeChanged:'',
-        oldValue: '',
-        newValue: '',
-      },
+      camperToAdd: {},
       request: {
         changes: []
       },
@@ -135,6 +146,7 @@ export default {
       showLast: false,
       showAllergies: false,
       showMedications: false,
+      showDOB: false,
       showFamily: false,
       showSpecial: false,
       states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
@@ -153,6 +165,9 @@ export default {
         case "lastName":
           this.showLast = true;
           break;
+          case "dob":
+          this.showDOB = true;
+          break;
         case "allergies":
           this.showAllergies = true;
           break;
@@ -168,36 +183,48 @@ export default {
       }
     },
     saveChange(formName) {
-        this.request.camperCode = this.newData.camperCode;
+        this.request.camperCode = this.camper.camperCode;
         this.request.camperToAdd.fieldToBeChanged = formName;
       switch (formName) {
         case "firstName":
-          this.camperToAdd.firstName = this.newData.firstName;
+          this.camperToAdd.newValue = this.newData.firstName;
+          this.camperToAdd.oldValue = this.camper.firstName;
           this.showFirst = false;
           break;
         case "lastName":
-          this.camperToAdd.lastName = this.newData.lastName;
+          this.camperToAdd.newValue = this.newData.lastName;
+          this.camperToAdd.oldValue = this.camper.oldValue;
           this.showLast = false;
+          break;
+          case "dob":
+          this.camperToAdd.newValue = this.newData.dob;
+          this.camperToAdd.oldValue = this.camper.dob;
+          this.showDOB = false;
           break;
         case "allergies":
           this.camperToAdd.newValue = this.newData.allergies;
-          this.request.changes.push(this.camperToAdd)
+          this.camperToAdd.oldValue = this.camper.allergies;
           this.showAllergies = false;
           break;
         case "medications":
-          this.camperToAdd.medications = this.newData.medications;
+          this.camperToAdd.newValue = this.newData.medications;
+          this.camperToAdd.oldValue = this.camper.medications;
           this.showMedications = false;
           break;
         case "familyId":
-          this.camperToAdd.familyId = this.newData.familyId;
+          this.camperToAdd.newValue = this.newData.familyId;
+          this.camperToAdd.oldValue = this.camper.familyId;
           this.showFamily = false;
           break;
         case "specialNeeds":
           this.newData.specialNeeds = this.newData.specialNeeds.split(',');
-          this.camperToAdd.specialNeeds = this.newData.specialNeeds;
+          this.camperToAdd.newValue = this.newData.specialNeeds;
+          this.camperToAdd.oldValue = this.camper.specialNeeds;
           this.showSpecial = false;
           break;
       }
+          this.request.changes.push(this.camperToAdd);
+          this.camperToAdd = {};
     },
     finalizeChanges(){
       this.setcamper();
