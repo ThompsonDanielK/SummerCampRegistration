@@ -8,7 +8,7 @@ using Capstone.Models;
 
 namespace Capstone.DAO
 {
-    public class UpdatesSqlDao
+    public class UpdatesSqlDao : IUpdatesDao
     {
         private readonly string connectionString;
         private readonly ICampDao camp;
@@ -29,7 +29,7 @@ namespace Capstone.DAO
         const string sqlRequestById = "SELECT * FROM updates WHERE request_id = @requestId";
         const string sqlSetFinalizeDate = "UPDATE updates SET finalize_date = @Now WHERE request_id = @requestId";
         const string sqlUnenrollCamper = "UPDATE campers SET active = false WHERE camper_code = @camperCode";
-        const string sqlFetchRequest = "SELECT * from updates WHERE request_id = @requestId";
+        
 
         // int userId = int.Parse(this.User.FindFirst("sub").Value);
 
@@ -54,11 +54,11 @@ namespace Capstone.DAO
 
         }
 
-        public bool AddNewCamperUpdateRequest(Camper newCamperData)
+        public int AddNewCamperUpdateRequest(int userId, Camper newCamperData)
         {
             Camper oldCamperData = camp.FetchCamper(newCamperData.CamperCode);
             int requestId = GetNextUpdateRequestId();
-            string user = "User";
+            string user = userId.ToString();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -124,17 +124,18 @@ namespace Capstone.DAO
                 }
                 catch (SqlException ex)
                 {
-                    return false;
+                    return -1;
                 }
-                return true;
+                return requestId;
             }
         }
-        public bool AddNewFamilyUpdateRequest(Family newFamilyData)
+
+        public int AddNewFamilyUpdateRequest(int userId, Family newFamilyData)
         {
             int requestId = GetNextUpdateRequestId();
             Family oldFamilyData = camp.FetchFamily(newFamilyData.FamilyId);
             int camperCode = GetFirstCamperCodeByFamilyId(newFamilyData.FamilyId);
-            string user = "User";
+            string user = userId.ToString();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -196,13 +197,20 @@ namespace Capstone.DAO
                             cmd.Parameters["@oldData"].Value = oldFamilyData.PhoneNumber;
                             cmd.ExecuteNonQuery();
                         }
+                        if (oldFamilyData.EmailAddress != newFamilyData.EmailAddress)
+                        {
+                            cmd.Parameters["@fieldToBeChanged"].Value = "EmailAddress";
+                            cmd.Parameters["@newData"].Value = newFamilyData.EmailAddress;
+                            cmd.Parameters["@oldData"].Value = oldFamilyData.EmailAddress;
+                            cmd.ExecuteNonQuery();
+                        }
                     }
                 }
                 catch (SqlException ex)
                 {
-                    return false;
+                    return -1;
                 }
-                return true;
+                return requestId;
             }
         }
 
@@ -228,19 +236,13 @@ namespace Capstone.DAO
                     {
                         while (reader.Read())
                         {
-                            if (Convert.ToString(reader["Action"]) == "Delete")
-                            {
-                                conn.Close();
-                                return UnenrollCamper(camper.CamperCode);
-                            }
-                            else
-                            {
+                                   
                                 RequestLineItem rqi = new RequestLineItem();
                                 rqi.FieldToBeChanged = Convert.ToString(reader["field_to_be_changed"]);
                                 rqi.NewData = Convert.ToString(reader["new_data"]);
                                 rqi.OldData = Convert.ToString(reader["old_data"]);
                                 BuildUpdateStrings(rqi, ref sqlUpdateCamper, ref sqlUpdateFamily);
-                            }
+                            
                         }
                     }
                 }
@@ -341,6 +343,7 @@ namespace Capstone.DAO
             if (rqi.FieldToBeChanged == "State") sqlUpdateFamily += " state = " + rqi.NewData;
             if (rqi.FieldToBeChanged == "Zip") sqlUpdateFamily += " zip = " + rqi.NewData;
             if (rqi.FieldToBeChanged == "Phone") sqlUpdateFamily += " phone = " + rqi.NewData;
+            if (rqi.FieldToBeChanged == "EmailAddress") sqlUpdateFamily += " email_address = " + rqi.NewData;
         }
     }
 }

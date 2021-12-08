@@ -15,10 +15,14 @@ namespace Capstone.Controllers
     public class CampController : ControllerBase
     {
         private readonly ICampDao camp;
+        private readonly IUpdatesDao updates;
+        private readonly int userId;
 
-        public CampController(ICampDao camp)
+        public CampController(ICampDao camp, IUpdatesDao updates)
         {
             this.camp = camp;
+            this.updates = updates;
+            this.userId = int.Parse(this.User.FindFirst("sub").Value);
         }
 
         [HttpGet("CamperList")]
@@ -88,7 +92,7 @@ namespace Capstone.Controllers
 
                 if (camperCode != 0)
                 {
-                    
+
                     return Created(successMessage, camperCode);
                 }
             }
@@ -96,6 +100,24 @@ namespace Capstone.Controllers
             return BadRequest(new { message = "This request could not be completed." });
         }
 
+        [HttpPut("update/camper")]
+        public ActionResult UpdateCamper(Camper camper)
+        {            
+            int requestId = updates.AddNewCamperUpdateRequest(userId, camper);
+            updates.ProcessApprovedRequests(requestId);
 
+            return Ok();
+
+        }
+
+        [HttpPut("update/family")]
+        public ActionResult UpdateFamily(Family family)
+        {
+            int requestId = updates.AddNewFamilyUpdateRequest(userId, family);
+            updates.ProcessApprovedRequests(requestId);
+
+            return Ok();
+
+        }
     }
 }

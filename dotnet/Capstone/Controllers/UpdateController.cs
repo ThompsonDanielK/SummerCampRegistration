@@ -11,9 +11,9 @@ namespace Capstone.Controllers
 {
     public class UpdateController : ControllerBase
     {
-        public ActionResult PostFamilyUpdateRequest(Family updatedFamily)
-        {
-            return Ok();
-        }
+        //public ActionResult PostFamilyUpdateRequest(Family updatedFamily)
+        //{
+        //    return Ok();
+        //}
     }
 }

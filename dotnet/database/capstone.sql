@@ -37,7 +37,8 @@ CREATE TABLE family (
 	city nvarchar(100),
 	state nvarchar(2),
 	zip nvarchar(10),
-	phone nvarchar(12)
+	phone nvarchar(12),
+	email_address nvarchar(50)
 )
 
 CREATE TABLE campers (
@@ -66,12 +67,12 @@ CREATE TABLE updates (
 GO
 
 SET IDENTITY_INSERT family ON;
-INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone)
-	VALUES (100001, 'Mary Andrews', '100 First St.', 'Columbus', 'OH', '43111', '614-222-3333');
-INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone)
-	VALUES (100002, 'Mike Bowers', '200 Second Ave.', 'Dublin', 'OH', '43222', '614-444-5555');
-INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone)
-	VALUES (100003, 'Molly Carter', '300 Third St.', 'Hilliard', 'OH', '43333', '614-666-7777');
+INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone, email_address)
+	VALUES (100001, 'Mary Andrews', '100 First St.', 'Columbus', 'OH', '43111', '614-222-3333', 'mary@mary.com');
+INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone, email_address)
+	VALUES (100002, 'Mike Bowers', '200 Second Ave.', 'Dublin', 'OH', '43222', '614-444-5555', 'mike@mike.com');
+INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone, email_address)
+	VALUES (100003, 'Molly Carter', '300 Third St.', 'Hilliard', 'OH', '43333', '614-666-7777', 'molly@molly.com');
 SET IDENTITY_INSERT family OFF;
 
 GO
