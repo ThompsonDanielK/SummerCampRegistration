@@ -53,14 +53,16 @@ CREATE TABLE campers (
 )
 
 CREATE TABLE updates (
-	request_id int IDENTITY(300001, 1),
+	request_id int NOT NULL,
 	field_to_be_changed nvarchar(50),
 	camper_code int NOT NULL,
 	action nvarchar(20) NOT NULL,
 	new_data nvarchar(1000) NOT NULL,
 	old_data nvarchar(1000),
 	requestor nvarchar(100) NOT NULL,
-	status nvarchar(20) NOT NULL
+	status nvarchar(20) NOT NULL,
+	request_date date NOT NULL,
+	finalize_date date
 	CONSTRAINT PK_updates PRIMARY KEY (request_id, field_to_be_changed)
 );
 

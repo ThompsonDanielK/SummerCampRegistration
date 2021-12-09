@@ -24,10 +24,10 @@ namespace Capstone.DAO
             "medications, allergies, special_needs FROM campers";
         const string sqlAllFamilies = "SELECT family_id, " +
             "parent_guardian_name, address, city, " +
-            "state, zip, phone FROM family";
+            "state, zip, phone, email_address FROM family";
         const string sqlFamily = "SELECT family_id, " +
             "parent_guardian_name, address, city, " +
-            "state, zip, phone FROM family WHERE family_id = @family_id";
+            "state, zip, phone, email_address FROM family WHERE family_id = @family_id";
         const string sqlCamper = "SELECT camper_code, family_id, " +
             "first_name, last_name, dob, " +
             "medications, allergies, special_needs FROM campers WHERE camper_code = @camper_code";
@@ -171,6 +171,7 @@ namespace Capstone.DAO
                 State = Convert.ToString(reader["state"]),
                 Zip = Convert.ToInt32(reader["zip"]),
                 PhoneNumber = Convert.ToString(reader["phone"]),
+                EmailAddress = Convert.ToString(reader["email_address"])
             };
             return family;
         }
