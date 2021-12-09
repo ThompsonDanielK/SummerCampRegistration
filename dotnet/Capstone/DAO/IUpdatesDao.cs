@@ -4,6 +4,6 @@ namespace Capstone.DAO
 {
     public interface IUpdatesDao
     {
-        bool ProcessApprovedRequests(int requestId);
+        bool ProcessApprovedRequests(string table, int requestId);
     }
 }
