@@ -18,6 +18,9 @@ namespace Capstone.Models
         public int CamperCode { get; set; }
 
         [Required]
+        public int FamilyId { get; set; }
+
+        [Required]
         public string Action { get; set; }
 
         [Required]

@@ -24,6 +24,71 @@ namespace Capstone.DAO
         const string sqlAddNewUpdateRequest = "INSERT INTO updates " +
                     "(request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date) " +
                     "VALUES (@requestId, @fieldToBeChanged, @camperCode, @action, @newData, @oldData, @requestor, @status, @requestDate);";
+        const string sqlGetCamperUpdateList = "SELECT request_id, field_to_be_changed, camper_code, action, " +
+            "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates";
+        const string sqlGetFamilyUpdateList = "SELECT request_id, field_to_be_changed, family_id, action," +
+            " new_data, old_data, requestor, status, request_date, finalize_date FROM family_updates";
+
+        public List<Update> GetCamperUpdateList(bool isCamperUpdate)
+        {
+            List<Update> updateList = new List<Update>();
+
+            string sqlStatement = sqlGetCamperUpdateList;
+
+            if(!isCamperUpdate)
+            {
+                sqlStatement = sqlGetFamilyUpdateList;
+            }
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sqlStatement, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            Update update = BuildUpdate(reader);
+
+                            var finalizeDate = reader["finalize_date"];
+
+                            if (isCamperUpdate)
+                            {
+                                update.CamperCode = Convert.ToInt32(reader["camper_code"]);
+                            }
+
+                            if (!finalizeDate.Equals(null))
+                            {
+                                update.FinalizeDate = Convert.ToDateTime(finalizeDate);
+                            }
+
+                            updateList.Add(update);
+                        }
+                    }
+                }
+            }
+
+            return updateList;
+        }
+
+        private Update BuildUpdate(SqlDataReader reader)
+        {
+            return new Update()
+            {
+                RequestId = Convert.ToInt32(reader["request_id"]),
+                FieldToBeChanged = Convert.ToString(reader["field_to_be_changed"]),
+                FamilyId = Convert.ToInt32(reader["family_id"]),
+                Action = Convert.ToString(reader["action"]),
+                NewData = Convert.ToString(reader["new_data"]),
+                OldData = Convert.ToString(reader["old_data"]),
+                Requestor = Convert.ToString(reader["requestor"]),
+                Status = Convert.ToString(reader["status"]),
+                RequestDate = Convert.ToDateTime(reader["request_date"]),
+            };
+        }
 
         public int GetNextUpdateRequestId()
         {
