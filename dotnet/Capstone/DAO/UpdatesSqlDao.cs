@@ -75,7 +75,7 @@ namespace Capstone.DAO
                         cmd.Parameters.AddWithValue("@action", "Update");
                         cmd.Parameters.AddWithValue("@requestor", user);
                         cmd.Parameters.AddWithValue("@status", "Pending");
-                        cmd.Parameters.AddWithValue("@requestDate", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@requestDate", DateTime.Now.Date);
 
                         cmd.Parameters.Add("@fieldToBeChanged", SqlDbType.NVarChar);
                         cmd.Parameters.Add("@newData", SqlDbType.NVarChar);
@@ -154,7 +154,7 @@ namespace Capstone.DAO
                         cmd.Parameters.AddWithValue("@action", "Update");
                         cmd.Parameters.AddWithValue("@requestor", user);
                         cmd.Parameters.AddWithValue("@status", "Pending");
-                        cmd.Parameters.AddWithValue("@requestDate", DateTime.Now);
+                        cmd.Parameters.AddWithValue("@requestDate", DateTime.Now.Date);
                         
                         cmd.Parameters.Add("@fieldToBeChanged", SqlDbType.NVarChar);
                         cmd.Parameters.Add("@newData", SqlDbType.NVarChar);
@@ -316,6 +316,7 @@ namespace Capstone.DAO
                     }
                 }
             }
+            SetFinalizeDate(requestId);
             return true;
         }
 
@@ -351,9 +352,16 @@ namespace Capstone.DAO
 
                 using (SqlCommand cmd = new SqlCommand(sqlSetFinalizeDate, conn))
                 {
-                    cmd.Parameters.AddWithValue("@now", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@request_id", requestId);
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.Parameters.AddWithValue("@now", DateTime.Now.Date);
+                        cmd.Parameters.AddWithValue("@requestId", requestId);
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
         }

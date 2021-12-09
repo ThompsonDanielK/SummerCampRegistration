@@ -60,7 +60,9 @@ CREATE TABLE updates (
 	new_data nvarchar(1000) NOT NULL,
 	old_data nvarchar(1000),
 	requestor nvarchar(100) NOT NULL,
-	status nvarchar(20) NOT NULL
+	status nvarchar(20) NOT NULL,
+	request_date date NOT NULL,
+	finalize_date date
 	CONSTRAINT PK_updates PRIMARY KEY (request_id, field_to_be_changed)
 );
 
