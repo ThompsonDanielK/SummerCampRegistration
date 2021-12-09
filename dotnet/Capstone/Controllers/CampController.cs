@@ -107,22 +107,30 @@ namespace Capstone.Controllers
             Camper oldCamperData = camp.FetchCamper(camper.CamperCode);
 
             int requestId = updates.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
-            updates.ProcessApprovedRequests(requestId);
+            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
 
             return Ok();
 
         }
 
-        //[HttpPut("update/family")]
-        //public ActionResult UpdateFamily(Family family)
-        //{
-        //    int userId = int.Parse(this.User.FindFirst("sub").Value);
+        [HttpPut("update/family")]
+        public ActionResult UpdateFamily(Family family)
+        {
+            int userId = int.Parse(this.User.FindFirst("sub").Value);
+            Family oldFamilyData = camp.FetchFamily(family.FamilyId);
 
-        //    int requestId = updates.AddNewFamilyUpdateRequest(userId, family);
-        //    updates.ProcessApprovedRequests(requestId);
+            int requestId = updates.AddNewFamilyUpdateRequest(userId, family, oldFamilyData);
+            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
 
-        //    return Ok();
+            return Ok();
 
-        //}
+        }
+
+        [HttpPut("update/approval/{requestId}")]
+        public ActionResult UpdateRequestApproved(int requestId)
+        {
+            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
+            return Ok();
+        }
     }
 }

@@ -53,7 +53,7 @@ CREATE TABLE campers (
 )
 
 CREATE TABLE updates (
-	request_id int IDENTITY(300001, 1),
+	request_id int NOT NULL,
 	field_to_be_changed nvarchar(50),
 	camper_code int NOT NULL,
 	action nvarchar(20) NOT NULL,
