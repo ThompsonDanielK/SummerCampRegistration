@@ -51,7 +51,8 @@ CREATE TABLE campers (
 	allergies nvarchar(200) DEFAULT 'None', 
 	special_needs nvarchar(1000) DEFAULT 'None',
 	registrar nvarchar(100),
-	payment_status bit
+	payment_status bit,
+	active_status bit DEFAULT 'true'
 )
 
 CREATE TABLE camper_updates (
@@ -98,14 +99,14 @@ GO
 SET IDENTITY_INSERT campers ON;
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status)
 	VALUES(200001, 100001, 'Alex', 'Andrews', '2010-01-01', 'user', 'false');
-INSERT INTO campers (camper_code, family_id, first_name, last_name, dob)
-	VALUES(200002, 100001, 'Brandy', 'Andrews', '2009-02-03');
-INSERT INTO campers (camper_code, family_id, first_name, last_name, dob)
-	VALUES(200003, 100002, 'Cathy', 'Bowers', '2011-03-03');
-INSERT INTO campers (camper_code, family_id, first_name, last_name, dob)
-	VALUES(200004, 100003, 'David', 'Carter', '2010-04-04');
-INSERT INTO campers (camper_code, family_id, first_name, last_name, dob)
-	VALUES(200005, 100003, 'Erica', 'Carter', '2009-05-05');
+INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status)
+	VALUES(200002, 100001, 'Brandy', 'Andrews', '2009-02-03', 'user', 'false');
+INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status)
+	VALUES(200003, 100002, 'Cathy', 'Bowers', '2011-03-03', 'user', 'false');
+INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status)
+	VALUES(200004, 100003, 'David', 'Carter', '2010-04-04', 'user', 'false');
+INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status)
+	VALUES(200005, 100003, 'Erica', 'Carter', '2009-05-05', 'user', 'false');
 SET IDENTITY_INSERT campers OFF;
 
 
