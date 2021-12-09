@@ -24,6 +24,10 @@ namespace Capstone.Models
 
         public string SpecialNeeds { get; set; }
 
+        public string Registrar { get; set; }
+
+        public bool PaymentStatus { get; set; } = false;
+
         public DateTime DateAdded { get; set; }
 
 
