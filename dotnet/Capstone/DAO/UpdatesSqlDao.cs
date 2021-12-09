@@ -16,10 +16,9 @@ namespace Capstone.DAO
         {
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ArgumentNullException(nameof(connectionString));
-            this.connectionString = connectionString;            
+            this.connectionString = connectionString;
         }
-               
-        
+
         public bool ProcessApprovedRequests(string table, int requestId)
         {
             string sqlRequestById = ($"SELECT * FROM {table} WHERE request_id = @requestId");
@@ -69,29 +68,28 @@ namespace Capstone.DAO
                     }
                 }
             }
-                
+
             sqlUpdateString = $"Update {tableToUpdate} SET {sqlUpdateString} WHERE {indexField} = {indexValue}";
-     
+
             using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
                 {
-                    try
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sqlUpdateString, conn))
                     {
-                        conn.Open();
-                        using (SqlCommand cmd = new SqlCommand(sqlUpdateString, conn))
-                        {
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                    catch (SqlException ex)
-                    {
-                        // deal with exception
+                        cmd.ExecuteNonQuery();
                     }
                 }
-                    
+                catch (SqlException ex)
+                {
+                    // deal with exception
+                }
+            }
 
-            SetFinalizeDate(table, requestId);
+            FinalizeRequest(table, requestId);
             return true;
-        }        
+        }
 
         public bool UnenrollCamper(int camperCode)
         {
@@ -116,20 +114,20 @@ namespace Capstone.DAO
             return true;
         }
 
-
-        public void SetFinalizeDate(string table, int requestId)
+        public void FinalizeRequest(string table, int requestId)
         {
-            string sqlSetFinalizeDate = $"UPDATE {table} SET finalize_date = @Now WHERE request_id = @requestId";
+            string sqlFinalizeRequest = $"UPDATE {table} SET finalize_date = @Now, status = @status WHERE request_id = @requestId";
             // Updates are done, close the request by setting the finalize date
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                using (SqlCommand cmd = new SqlCommand(sqlSetFinalizeDate, conn))
+                using (SqlCommand cmd = new SqlCommand(sqlFinalizeRequest, conn))
                 {
                     try
                     {
                         cmd.Parameters.AddWithValue("@now", DateTime.Now.Date);
+                        cmd.Parameters.AddWithValue("@status", "Approved");
                         cmd.Parameters.AddWithValue("@requestId", requestId);
                         cmd.ExecuteNonQuery();
                     }
