@@ -16,11 +16,14 @@ namespace Capstone.Controllers
     public class UpdateController : ControllerBase
     {
         private readonly IUpdatesDao updates;
+        private readonly IRequestDao request;
         private readonly ICampDao camp;
-        public UpdateController(ICampDao camp, IUpdatesDao updates)
+
+        public UpdateController(ICampDao camp, IUpdatesDao updates, IRequestDao request)
         {
             this.camp = camp;
             this.updates = updates;
+            this.request = request;
         }
 
         [HttpPut("camper")]
@@ -29,7 +32,7 @@ namespace Capstone.Controllers
             int userId = int.Parse(this.User.FindFirst("sub").Value);
             Camper oldCamperData = camp.FetchCamper(camper.CamperCode);
 
-            int requestId = updates.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
+            int requestId = request.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
             if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
 
             return Ok();
@@ -42,7 +45,7 @@ namespace Capstone.Controllers
             int userId = int.Parse(this.User.FindFirst("sub").Value);
             Family oldFamilyData = camp.FetchFamily(family.FamilyId);
 
-            int requestId = updates.AddNewFamilyUpdateRequest(userId, family, oldFamilyData);
+            int requestId = request.AddNewFamilyUpdateRequest(userId, family, oldFamilyData);
             if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
 
             return Ok();
