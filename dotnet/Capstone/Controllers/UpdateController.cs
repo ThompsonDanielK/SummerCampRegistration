@@ -26,6 +26,22 @@ namespace Capstone.Controllers
             this.request = request;
         }
 
+        [HttpGet("camperUpdateList")]
+        public ActionResult CamperUpdateList()
+        {
+            List<Update> updateList = request.GetCamperUpdateList(true);
+
+            return Ok(updateList);
+        }
+
+        [HttpGet("familyUpdateList")]
+        public ActionResult FamilyUpdateList()
+        {
+            List<Update> updateList = request.GetCamperUpdateList(false);
+
+            return Ok(updateList);
+        }
+
         [HttpPut("camper")]
         public ActionResult UpdateCamper(Camper camper)
         {
