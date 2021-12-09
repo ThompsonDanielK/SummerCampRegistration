@@ -6,7 +6,6 @@
 
 <script>
 import CamperInfo from '../components/CamperInfo.vue'
-import CamperService from '../services/CamperService.js'
 
 export default {
     data(){
@@ -17,19 +16,20 @@ export default {
     components: {
         CamperInfo,
     },
-    created(){
-        CamperService.getCamper(this.$route.params.camperCode).then((response) => {
-        console.log('Got camper', response.data)
-        this.camper = response.data;
-      })
-      .catch(response =>
-      {
-        console.error('Problem getting camper', response)
-      })
+    created() {
+        this.camper = this.$store.state.campers.find(c => c.camperCode == this.$route.params.camperCode)
     },
 }
 </script>
 
-<style>
-
+<style lang="scss">
+@import "../styles/colors.scss";
+article{
+  color: $textDark;
+  font-size: 1.2rem;
+  border: 2px solid $highlight;
+  background-color: $secondary;
+  border-radius: 20px;
+  box-shadow: 2px 1px 1px 1px $textLight;
+}
 </style>

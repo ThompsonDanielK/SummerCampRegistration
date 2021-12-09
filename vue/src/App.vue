@@ -14,30 +14,12 @@
 
 <script>
 import NavBar from "./components/NavBar.vue";
-import FamilyService from './services/FamilyService.js'
-import CamperService from './services/CamperService.js'
+
 export default {
   components: {
     NavBar,
   },
-  created(){
-    CamperService.getAllCampers()
-      .then((response) => {
-        console.log("Got all campers", response.data);
-        this.$store.commit('SET_CAMPERLIST', response.data);
-      })
-      .catch((response) => {
-        console.error("Problem getting all campers", response);
-      });
-    FamilyService.getAllFamilies()
-        .then(response => {
-          console.log('Got all families', response.data);
-          this.$store.commit('SET_FAMILYLIST', response.data);
-        })
-        .catch(response => {
-            console.error('Problem getting all families', response)
-        });
-  },
+  
 };
 </script>
 
@@ -49,12 +31,13 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .container .page {
   color: $main;
   margin: 2% 5%;
   color: $textDark;
-  align-items: flex-start;
+  align-items: center;
   box-shadow: 3px 2px 1px $secondary;
   border-radius: 20px;
 }

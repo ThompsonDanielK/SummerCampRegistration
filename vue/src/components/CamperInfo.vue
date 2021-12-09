@@ -48,7 +48,7 @@
     </tr>
     <tr class="row">
       <td>Age:</td>
-      <td>{{ this.age }}</td>
+      <td>{{ camper.age }}</td>
       <td></td>
     </tr>
     <tr class="row">
@@ -90,11 +90,11 @@
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
-          <p v-if="!newData.familyId">{{ this.camper.familyId }}</p>
-          <p v-if="newData.familyId" class="newValue">{{ this.newData.familyId }}</p>
+          <p v-if="!newData.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</p>
+          <p v-if="newData.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</p>
         </div>
         <select v-model="newData.familyId" v-show="showFamily">
-          <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}} -- {{f.fullName}}</option>
+          <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}}--{{f.fullName}}</option>
         </select>
       </td>
       <td>
@@ -209,6 +209,14 @@ export default {
     camper: Object,
   },
   computed:{
+    newFamilyId(){
+      let newFamily = this.newData.familyId.split('--');
+      return parseInt(newFamily[0]);
+    },
+    newFamilyName(){
+      let newFamily = this.newData.familyId.split('--');
+      return newFamily[1];
+    },
     convertedDateTime() {
       let dob = new Date(this.camper.dob);
       let month = dob.getMonth() + 1;
@@ -229,12 +237,6 @@ export default {
       }
       return '';
     },
-    age() {
-      let birthYear = new Date(this.camper.dob).getFullYear()
-      let currentYear = new Date().getFullYear();
-      let age = currentYear - birthYear;
-      return age;
-    }
   },
   methods: {
     saveChange(formName) {
@@ -311,7 +313,7 @@ export default {
       }
       if(this.newData.familyId)
       {
-        this.camper.familyId = this.newData.familyId;
+        this.camper.familyId = this.newFamilyId;
       }
       if(this.newData.specialNeeds)
       {
@@ -336,14 +338,8 @@ export default {
 table {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  margin-top: 20px;
-  padding: 10px;
-  color: $textDark;
-  font-size: 1.2rem;
-  border: 2px solid $highlight;
-  background-color: $secondary;
-  border-radius: 20px;
+  justify-content: center;
+  width: 130%;
 }
 button {
   background-color: $textDark;
@@ -355,7 +351,7 @@ button {
   text-shadow: 2px 1px 1px black;
   font-size: 1rem;
   font-family: 'Lora', serif;
-  flex-shrink: 2;
+  box-shadow: 1px 0.5px 0px $textLight;
 }
 button:disabled{
   background-color: $secondary;
@@ -364,16 +360,15 @@ button:disabled{
 tr{
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0% 2%;
   height: 66px;
 }
 .row{
   padding: 0% 2%;
-  width: 100%;
+  width: 80%;
 }
 td{
-  width: 100%;
+  width: 70%;
 }
 input, select, textarea{
   font-family: 'Lora', serif;
@@ -392,5 +387,9 @@ button[type='submit']
 {
   margin: 1% 35%;
   width: 30%;
+}
+#app > div > article > section > table > tr > td:nth-child(3)
+{
+  width: 30%
 }
 </style>

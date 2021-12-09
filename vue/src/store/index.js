@@ -37,14 +37,89 @@ export default new Vuex.Store({
       state.user = user;
       localStorage.setItem('user',JSON.stringify(user));
     },
-    SET_FAMILYLIST(state, families)
+    SET_FAMILY_LIST(state, families)
     {
       state.families = families;
-
+      console.log('Got all families', state.families)
     },
-    SET_CAMPERLIST(state, campers)
+    SET_CAMPER_LIST(state, campers)
     {
       state.campers = campers;
+      console.log('Got all families', state.campers)
+    },
+    SET_CAMPER_AGE(state)
+    {
+      state.campers.forEach(c => {
+        let birthYear = new Date(c.dob).getFullYear()
+        let currentYear = new Date().getFullYear();
+        c.age = currentYear - birthYear;
+      })
+      console.log("Set all camper's age", state.campers)
+    },
+    SET_CAMPER_FULL_NAME(state)
+    {
+      state.campers.forEach(c => {
+      let family = state.families.find(f => f.familyId == c.familyId)
+      c.familyName = family.fullName;
+      })
+      console.log("Set all camper's family name", state.campers)
+    },
+    SET_CAMPER_PAYMENT_STATUS(state)
+    {
+      state.campers.forEach(c => c.paymentStatus = c.paymentStatus?'Paid':'Unpaid')
+      console.log("Set all camper's payment status", state.campers)
+    },
+    SET_CAMPER_ACTIVE_STATUS(state)
+    {
+      state.campers.forEach(c => c.activeStatus = c.activeStatus?'Active':'Inactive')
+      console.log("Set all camper's active status", state.campers)
+    },
+    SET_CAMPER_MISSING_DATA(state)
+    {
+      state.campers.forEach(c => {
+        c.missingData = [];
+        if(!c.lastName)
+        {
+          c.missingData.push('Last Name');
+        }
+        if(!c.firstName)
+        {
+          c.missingData.push('First Name');
+        }
+        if(!c.camperCode)
+        {
+          c.missingData.push('Camper Code');
+        }
+        if(!c.dob)
+        {
+          c.missingData.push('Date of Birth');
+        }
+        if(!c.age)
+        {
+          c.missingData.push('Age');
+        }
+        if(!c.paymentStatus)
+        {
+          c.missingData.push('Payment Status');
+        }
+        if(!c.registrar)
+        {
+          c.missingData.push('Registrar');
+        }
+        if(!c.familyId)
+        {
+          c.missingData.push('Family');
+        }
+        if(!c.activeStatus)
+        {
+          c.missingData.push('Active Status');
+        }
+        if(!c.missingData)
+        {
+          c.missingData.push('None');
+        }
+      })
+      console.log("Set all camper's missing info", state.campers)
     },
     LOGOUT(state) {
       localStorage.removeItem('token');

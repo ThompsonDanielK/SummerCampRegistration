@@ -59,7 +59,7 @@
         <td>Payment Status</td>
         <td>Registrar</td>
         <td>Family</td>
-        <td>Missing Data</td>
+        <td>Missing Info</td>
         <td>Active Status</td>
       </tr>
       <tr
@@ -74,7 +74,7 @@
         <td>{{ camper.paymentStatus }}</td>
         <td>{{ camper.registrar }}</td>
         <td>{{ camper.familyId }} {{camper.familyName}}</td>
-        <td>{{camper.missingData}}</td>
+        <td>{{camper.missingData.join(', ')}}</td>
         <td>{{camper.active}}</td>
         <td class="buttons">
           <router-link v-bind:to="{ name: 'camper', params: { camperCode: camper.camperCode },}"><button type="button">Edit</button></router-link>
@@ -107,22 +107,9 @@ export default {
     };
   },
   created() {
-    this.families = this.$store.state.families;
+    this.families = this.$store.state.families; 
     this.campers = this.$store.state.campers;
-    if(!this.campers)
-    {
-      CamperService.getAllCampers()
-      .then((response) => {
-        console.log("Got all campers", response.data);
-        this.$store.commit('SET_CAMPERLIST', response.data);
-        this.campers = this.$store.state.campers;
-      })
-      .catch((response) => {
-        console.error("Problem getting all campers", response);
-      });
-    }
-    this.campers.forEach(c => c.age = this.getAge(c));
-    this.campers.forEach(c => c.familyName = this.getFamilyName(c.familyId));
+
   },
   computed: {
     minNums(){
@@ -210,17 +197,7 @@ export default {
         })
       this.$store.commit("DELETE_camper", camperCode);
     },
-    getAge(camper) {
-      let birthYear = new Date(camper.dob).getFullYear()
-      let currentYear = new Date().getFullYear();
-      let age = currentYear - birthYear;
-      return age;
-    },
-    getFamilyName(familyId){
-      let family = this.$store.state.families.find(f => f.familyId == familyId)
-      return family.fullName;
-    }
-  },
+  }
 }
 </script>
 
@@ -278,5 +255,8 @@ input::placeholder{
 .labels{
   font-weight: bold;
   font-size: 1rem;
+}
+tr{
+  margin: 10%;
 }
 </style>

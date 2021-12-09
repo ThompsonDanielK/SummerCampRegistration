@@ -72,7 +72,6 @@ section{
   background-color: $secondary;
   padding: 10px;
   border-radius: 10px;
-  border: 2px solid black;
   height: 100%;
 }
 h1{
