@@ -19,14 +19,21 @@
           <td>
             <input type="text" v-model="familyIdToFilter" placeholder="Family ID" />
           </td>
+          <td>
+            <input type="text" v-model="minAgeToFilter" placeholder="Min Age" />
+            <input type="text" v-model="maxAgeToFilter" placeholder="Max Age" />
+          </td>
         </tr>
       </thead>
       <tr>
         <td>Camper Code:</td>
         <td>First Name:</td>
         <td>Last Name:</td>
+        <td>Age:</td>
+        <td>Payment Status</td>
+        <td>Registrar:</td>
         <td>Family:</td>
-        <td></td>
+        <td>Missing Data:</td>
       </tr>
       <tr
         v-for="camper in this.filteredCampers"
@@ -36,6 +43,9 @@
         <td>{{ camper.camperCode }}</td>
         <td>{{ camper.firstName }}</td>
         <td>{{ camper.lastName }}</td>
+        <td>{{ camper.age }}</td>
+        <td>{{ camper.paymentStatus }}</td>
+        <td>{{ camper.registrar }}</td>
         <td>{{ camper.familyId }}</td>
         <td>
           <router-link v-bind:to="{ name: 'camper', params: { camperCode: camper.camperCode },}"><button type="button">Edit</button></router-link>
@@ -52,21 +62,33 @@
 
 <script>
 import CamperService from "../services/CamperService.js";
+import FamilyService from '../services/FamilyService.js';
 
 export default {
   data() {
     return {
       campers: [],
+      families: [],
       firstNameToFilter: "",
       lastNameToFilter: "",
       familyIdToFilter: "",
+      minAgeToFilter: '',
+      maxAgeToFilter: '',
     };
   },
   created() {
+    FamilyService.getAllFamilies()
+    .then(response => {
+      this.families = response.data;
+    })
+    .catch(response => {
+      console.error('Problem getting familes', response)
+    }),
     CamperService.getAllCampers()
       .then((response) => {
         console.log("Got all campers", response.data);
         this.campers = response.data;
+        this.campers.forEach(c => c.age = this.getAge(c));
       })
       .catch((response) => {
         console.error("Problem getting all campers", response);
@@ -92,10 +114,28 @@ export default {
           a.familyId.toString().includes(this.familyIdToFilter.toString())
         );
       }
+      if (this.minAgeToFilter && this.maxAgeToFilter) {
+        campersList = campersList.filter((a) =>
+          a.age >= this.minAgeToFilter && a.age <= this.maxAgeToFilter);
+      }
+      if(this.minAgeToFilter && !this.maxAgeToFilter) {
+        campersList = campersList.filter((a) =>
+          a.age >= this.minAgeToFilter);
+      }
+      if(!this.minAgeToFilter && this.maxAgeToFilter) {
+        campersList = campersList.filter((a) =>
+          a.age <= this.maxAgeToFilter);
+      }
       return campersList;
     },
   },
   methods: {
+      getAge(camper) {
+        let birthYear = new Date(camper.dob).getFullYear()
+        let currentYear = new Date().getFullYear();
+        let age = currentYear - birthYear;
+         return age;
+        },
     deleteCamper(camperCode) {
         CamperService.deleteCamper(this.camper.camperCode)
         .then(() => {
@@ -106,9 +146,9 @@ export default {
             console.error('Problem deleting camper', response);
         })
       this.$store.commit("DELETE_camper", camperCode);
-    },
+    }
   },
-};
+}
 </script>
 
 <style scoped lang="scss">

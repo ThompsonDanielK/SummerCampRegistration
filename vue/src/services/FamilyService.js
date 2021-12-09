@@ -7,9 +7,6 @@ export default{
     getFamily(familyId){
         return axios.get(`/camp/family/${familyId}`);
     },
-    addNewFamily(family){
-        return axios.post('/camp/family', family);
-    },
     updateFamily(family, camperCode){
         return axios.put(`/camp/family/${camperCode}`, family);
     },

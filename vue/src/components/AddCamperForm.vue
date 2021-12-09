@@ -10,6 +10,10 @@
       <label for="lastName">Last Name:</label>
       <input v-model="$store.state.CamperFamily.camper.lastName" name="lastName" type="text" />
       </div>
+      <div id="registrar">
+      <label for="registrar">Registrar:</label>
+      <input v-model="$store.state.CamperFamily.camper.registrar" name="registrar" type="text" />
+      </div>
       <div id="dob">
       <label for="dob">Date of Birth:</label>
       <input v-model="$store.state.CamperFamily.camper.dob" name="dob" type="date" />

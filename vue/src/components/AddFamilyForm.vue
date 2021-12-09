@@ -32,7 +32,7 @@
       </div>
       <div id="email">
       <label for="email">Email:</label>
-      <input v-model.number="$store.state.CamperFamily.family.email" name="email" type="text" />
+      <input v-model.number="$store.state.CamperFamily.family.emailAddress" name="email" type="text" />
       </div>
     </form>
   </section>

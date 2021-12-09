@@ -32,7 +32,7 @@ export default {
 }
 .container .page {
   color: $main;
-  padding: 2% 20%;
+  padding: 2% 10%;
   color: $textDark;
   align-items: flex-start;
 }
