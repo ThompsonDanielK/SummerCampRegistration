@@ -5,30 +5,45 @@
       <td>First Name:</td>
       <td>
         <div v-show="!showFirst" class="data">
-          {{ this.camper.firstName }}
-          <p v-show="newData.firstName" class="newValue">{{ this.newData.firstName }}</p>
+          <p v-if="!newData.firstName">{{ this.camper.firstName }}</p>
+          <p v-if="newData.firstName" class="newValue">{{ this.newData.firstName }}</p>
         </div>
         <input type="text" v-model="newData.firstName" v-show="showFirst" />
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('firstName')" v-show="!showFirst">Edit</button>
+        <button type="button" v-on:click.prevent="showFirst = true" v-show="!showFirst">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst">Save</button>
-        <button type="button" id="firstCancel" v-on:click.prevent="newData.firstName = ''; showFirst = false" v-show="showFirst">Cancel</button>
+        <button type="button" v-on:click.prevent="newData.firstName = ''; showFirst = false" v-show="showFirst">Cancel</button>
       </td>
     </tr>
     <tr id="lastName">
       <td>Last Name:</td>
       <td>
         <div v-show="!showLast"  class="data">
-          {{ this.camper.lastName }}
-          <p v-show="newData.lastName" class="newValue">{{ this.newData.lastName }}</p>
+          <p v-if="!newData.lastName"> {{ this.camper.lastName }}</p>
+          <p v-if="newData.lastName" class="newValue">{{ this.newData.lastName }}</p>
         </div>
         <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('lastName')" v-show="!showLast">Edit</button>
+        <button type="button" v-on:click.prevent="showLast = true" v-show="!showLast">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast">Save</button>
-        <button type="button" id="lastCancel" v-on:click.prevent="newData.lastName = ''; showLast = false" v-show="showLast">Cancel</button>
+        <button type="button" v-on:click.prevent="newData.lastName = ''; showLast = false" v-show="showLast">Cancel</button>
+      </td>
+    </tr>
+    <tr id="registrar">
+      <td>Registrar:</td>
+      <td>
+        <div v-show="!showRegistrar"  class="data">
+          <p v-if="!newData.registrar"> {{ this.camper.registrar }}</p>
+          <p v-if="newData.registrar" class="newValue">{{ this.newData.registrar }}</p>
+        </div>
+        <input type="text" v-model="newData.registrar" v-show="showRegistrar" />
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showRegistrar = true" v-show="!showRegistrar">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('registrar')" v-show="showRegistrar">Save</button>
+        <button type="button" v-on:click.prevent="newData.registrar = ''; showRegistrar = false" v-show="showRegistrar">Cancel</button>
       </td>
     </tr>
     <tr id="age">
@@ -40,37 +55,57 @@
       <td>Date of Birth:</td>
       <td>
         <div v-show="!showDOB"  class="data">
-          {{ this.convertedDateTime }}
-          <p v-show="newData.dob" class="newValue">{{ this.newConvertedDateTime }}</p>
+          <p v-if="!newData.dob">{{ this.convertedDateTime }}</p>
+          <p v-if="newData.dob" class="newValue">{{ this.newConvertedDateTime }}</p>
         </div>
         <input type="date" v-model="newData.dob" v-show="showDOB" />
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('dob')" v-show="!showDOB">Edit</button>
+        <button type="button" v-on:click.prevent="showDOB = true" v-show="!showDOB">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('dob')" v-show="showDOB">Save</button>
-        <button type="button" id="dobCancel" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
+        <button type="button" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
+      </td>
+    </tr>
+    <tr id="payment">
+      <td>Payment Status:</td>
+      <td>
+        <div class="data">
+        <p v-if="!showPayment && !newData.paymentStatus">{{ this.camper.paymentStatus }}</p>
+        <p v-if="newData.paymentStatus && !showPayment" class="newValue">{{ this.newData.paymentStatus }}</p>
+        </div>
+        <div v-show="showPayment">
+        <label for="unpaid">Unpaid</label>
+        <input type="radio" id="unpaid" name="unpaid" value="Unpaid" v-model="newData.paymentStatus" checked>
+        <label for="paid">Paid</label>
+        <input type="radio" id="paid" name="paid" value="Paid" v-model="newData.paymentStatus">
+      </div>
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('payment')" v-show="showPayment">Save</button>
+        <button type="button" v-on:click.prevent="newData.paymentStatus = ''; showPayment = false" v-show="showPayment">Cancel</button>
       </td>
     </tr>
     <tr id="familyId">
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
-          {{ this.camper.familyId }}
-          <p v-show="newData.familyId" class="newValue">{{ this.newData.familyId }}</p>
+          <p v-if="!newData.familyId">{{ this.camper.familyId }}</p>
+          <p v-if="newData.familyId" class="newValue">{{ this.newData.familyId }}</p>
         </div>
         <input type="text" v-model="newData.familyId" v-show="showFamily" />
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('familyId')" v-show="!showFamily">Edit</button>
+        <button type="button" v-on:click.prevent="showFamily = true" v-show="!showFamily">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily">Save</button>
-        <button type="button" id="lastCancel" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
+        <button type="button" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
       </td>
     </tr>
     <tr id="allergies">
       <td>Allergies:</td>
       <td>
         <ul class="data">
-          <li v-show="!showAllergies" v-for="line in this.camper.allergies" v-bind:key="line">
+          <li v-show="!showAllergies && !newData.allergies && camper.allergies && camper.allergies != 'None'" v-for="line in this.camper.allergies" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showAllergies && newData.allergies" v-for="line in this.newData.allergies" v-bind:key="line" class="newValue">
@@ -81,18 +116,19 @@
           <input type="text" v-model="newData.allergies" />
           </div>
         </ul>
+        <p v-show="!showAllergies && !newData.allergies && (!camper.allergies || camper.allergies === 'None')">None</p>
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('allergies')" v-show="!showAllergies">Edit</button>
+        <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies">Save</button>
-        <button type="button" id="allergiesCancel" v-on:click.prevent="newData.allergies = ''; showAllergies = false" v-show="showAllergies">Cancel</button>
+        <button type="button" v-on:click.prevent="newData.allergies = ''; showAllergies = false" v-show="showAllergies">Cancel</button>
       </td>
     </tr>
      <tr id="medications">
       <td>Medications:</td>
       <td>
         <ul class="data">
-          <li v-show="!showMedications" v-for="line in this.camper.medications" v-bind:key="line">
+          <li v-show="!showMedications && !newData.medications && camper.medications && !camper.medications === 'None'" v-for="line in this.camper.medications" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showMedications && newData.medications" v-for="line in this.newData.medications" v-bind:key="line" class="newValue">
@@ -103,18 +139,19 @@
           <input type="text" v-model="newData.medications" />
           </div>
         </ul>
+      <p v-show="!showMedications && !newData.medications && (!camper.medications || camper.medications === 'None')">None</p>
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('medications')" v-show="!showMedications">Edit</button>
+        <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications">Save</button>
-        <button type="button" id="medicationsCancel" v-on:click.prevent="newData.medications = ''; showMedications = false" v-show="showMedications">Cancel</button>
+        <button type="button" v-on:click.prevent="newData.medications = ''; showMedications = false" v-show="showMedications">Cancel</button>
       </td>
     </tr>
     <tr id="info">
       <td>Special Needs:</td>
       <td>
         <ul class="data">
-          <li v-show="!showSpecial" v-for="line in this.camper.specialNeeds" v-bind:key="line">
+          <li v-show="!showSpecial && !newData.specialNeeds && camper.specialNeeds && !camper.specialNeeds === 'None'" v-for="line in this.camper.specialNeeds" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showSpecial && newData.specialNeeds" v-for="line in this.newData.specialNeeds" v-bind:key="line" class="newValue">
@@ -125,11 +162,12 @@
           <input type="text" v-model="newData.specialNeeds" />
           </div>
         </ul>
+      <p v-show="!showSpecial && !newData.specialNeeds && (!camper.specialNeeds || camper.specialNeeds === 'None')">None</p>
       </td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('specialNeeds')" v-show="!showSpecial">Edit</button>
+        <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial">Save</button>
-        <button type="button" id="specialCancel" v-on:click.prevent="newData.specialNeeds = ''; showSpecial = false" v-show="showSpecial">Cancel</button>
+        <button type="button" v-on:click.prevent="newData.specialNeeds = ''; showSpecial = false" v-show="showSpecial">Cancel</button>
       </td>
     </tr>
   </table>
@@ -157,6 +195,7 @@ export default {
       showLast: false,
       showAllergies: false,
       showMedications: false,
+      showPayment: false,
       showDOB: false,
       showFamily: false,
       showSpecial: false,
@@ -196,31 +235,6 @@ export default {
     }
   },
   methods: {
-    showHideForm(formName) {
-      switch (formName) {
-        case "firstName":
-          this.showFirst = true;
-          break;
-        case "lastName":
-          this.showLast = true;
-          break;
-          case "dob":
-          this.showDOB = true;
-          break;
-        case "allergies":
-          this.showAllergies = true;
-          break;
-        case "medications":
-          this.showMedications = true;
-          break;
-        case "familyId":
-          this.showFamily = true;
-          break;
-        case "specialNeeds":
-          this.showSpecial = true;
-          break;
-      }
-    },
     saveChange(formName) {
         this.request.camperCode = this.camper.camperCode;
         this.camperToAdd.fieldToBeChanged = formName;
@@ -263,6 +277,15 @@ export default {
           this.camperToAdd.oldValue = this.camper.specialNeeds;
           this.showSpecial = false;
           break;
+        case "payment":
+          this.camperToAdd.newValue = this.newData.paymentStatus;
+          this.camperToAdd.oldValue = this.camper.paymentStatus;
+          this.showPayment = false;
+          break;
+        case "registrar":
+          this.camperToAdd.newValue = this.newData.registrar;
+          this.camperToAdd.oldValue = this.camper.paymentStatus;
+          this.showRegistrar = false;
       }
           this.request.changes.push(this.camperToAdd);
           this.camperToAdd = {};
@@ -314,6 +337,10 @@ export default {
       {
         this.camper.specialNeeds = this.newData.specialNeeds;
       }
+      if(this.newData.paymentStatus)
+      {
+        this.camper.paymentStatus = this.newData.paymentStatus;
+      }
     }
   },
     created() {
@@ -338,7 +365,7 @@ table {
   color: $textDark;
   font-size: 1.4rem;
   border: 2px solid $highlight;
-  background-color: $textLight;
+  background-color: $secondary;
   width: 100%;
   border-radius: 20px;
 }
@@ -357,8 +384,12 @@ button:disabled{
   background-color: $secondary;
   color: black;
 }
-table td .data{
-    padding-left: 1%;
+tr{
+  height: 74px;
+}
+td{
+    padding: 0% 2%;
+    width: 50px;
 }
 input, select, textarea{
   font-family: 'Russo One', sans-serif;

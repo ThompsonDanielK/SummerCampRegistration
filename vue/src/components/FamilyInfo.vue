@@ -219,7 +219,7 @@ table {
   color: $textDark;
   font-size: 1.4rem;
   border: 2px solid $highlight;
-  background-color: $textLight;
+  background-color: $secondary;
   width: 100%;
   border-radius: 20px;
 }
