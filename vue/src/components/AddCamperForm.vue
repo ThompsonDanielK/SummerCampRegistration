@@ -4,35 +4,31 @@
       <form class="form-group">
       <div id="firstName">
       <label for="firstName">First Name:</label>
-      <input v-model="$store.state.CamperFamily.camper.firstName" name="firstName" type="text" />
+      <input v-model="camper.firstName" name="firstName" type="text" />
       </div>
       <div id="lastName">
       <label for="lastName">Last Name:</label>
-      <input v-model="$store.state.CamperFamily.camper.lastName" name="lastName" type="text" />
-      </div>
-      <div id="registrar">
-      <label for="registrar">Registrar:</label>
-      <input v-model="$store.state.CamperFamily.camper.registrar" name="registrar" type="text" />
+      <input v-model="camper.lastName" name="lastName" type="text" />
       </div>
       <div id="dob">
       <label for="dob">Date of Birth:</label>
-      <input v-model="$store.state.CamperFamily.camper.dob" name="dob" type="date" />
+      <input v-model="camper.dob" name="dob" type="date" />
       </div>
       <div id="allergies">
       <label for="allergies">Allergies:</label>
-      <textarea v-model="$store.state.CamperFamily.camper.allergies" name="allergies" />
+      <textarea v-model="camper.allergies" name="allergies" />
       </div>
       <div id="medications">
       <label for="medications">Medications:</label>
-      <textarea v-model="$store.state.CamperFamily.camper.medications" name="medications" />
+      <textarea v-model="camper.medications" name="medications" />
       </div>
       <div id="specialNeeds">
       <label for="specialNeeds">Special Needs:</label>
-      <textarea v-model="$store.state.CamperFamily.camper.specialNeeds" name="specialNeeds" />
+      <textarea v-model="camper.specialNeeds" name="specialNeeds" />
       </div>
       <div  id="family">
       <label for="familyId">Family:</label>
-      <select v-model="$store.state.CamperFamily.camper.familyId" name="familyId">
+      <select v-model="camper.familyId" name="familyId">
           <option v-for="f in families" v-bind:key="f.familyId">{{f.familyId}}</option>
       </select>
       </div>
@@ -49,8 +45,10 @@ export default {
             families: [],
         }
     },
+    props:{
+      camper: Object,
+    },
     created(){
-      this.$store.state.CamperFamily.family.familyId = this.$store.state.CamperFamily.camper.familyId;
         FamilyService.getAllFamilies()
         .then(response => {
             console.log('Got all families', response.data);

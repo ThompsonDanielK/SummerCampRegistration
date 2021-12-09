@@ -7,8 +7,8 @@ export default{
     getFamily(familyId){
         return axios.get(`/camp/family/${familyId}`);
     },
-    updateFamily(family, camperCode){
-        return axios.put(`/camp/family/${camperCode}`, family);
+    updateFamily(family){
+        return axios.put('/update/family', family);
     },
     deleteFamily(familyId){
         return axios.delete(`/camp/family/${familyId}`);

@@ -24,11 +24,8 @@ export default new Vuex.Store({
   state: {
     token: currentToken || '',
     user: currentUser || {}, // If a user is an admin, their user.role will be 'admin'
+    families: [],
     campers: [],
-    CamperFamily: {
-      camper: {},
-      family: {},
-  },
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {
@@ -39,6 +36,15 @@ export default new Vuex.Store({
     SET_USER(state, user) {
       state.user = user;
       localStorage.setItem('user',JSON.stringify(user));
+    },
+    SET_FAMILYLIST(state, families)
+    {
+      state.families = families;
+
+    },
+    SET_CAMPERLIST(state, campers)
+    {
+      state.campers = campers;
     },
     LOGOUT(state) {
       localStorage.removeItem('token');
@@ -53,7 +59,7 @@ export default new Vuex.Store({
     },
     DELETE_CAMPER(state, camperId)
     {
-      state.campers.splice(this.state.campers.indexOf(camperId), 1);
+      state.campers.splice(state.campers.indexOf(camperId), 1);
     },
   }
 })

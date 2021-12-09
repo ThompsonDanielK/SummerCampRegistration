@@ -61,11 +61,11 @@ namespace Capstone.Controllers
         public ActionResult PostCamperAndFamily(CamperFamily camperFamily)
         {
             bool familyExists = false;
-            bool familyCreationSuccess = true;
+            bool familyCreationSuccess = false;
             int familyId = 0;
             string successMessage = "Your camper has been added";
 
-            if (camperFamily.Family.FamilyId == 0)
+            if (camperFamily.Camper.FamilyId == 0)
             {
                 familyId = camp.AddFamily(camperFamily.Family);
 
@@ -84,10 +84,12 @@ namespace Capstone.Controllers
                 familyExists = true;
             }
 
-            if (familyExists || familyCreationSuccess)
+            if (familyCreationSuccess)
             {
                 camperFamily.Camper.FamilyId = familyId;
-
+            }
+            if (familyExists || familyCreationSuccess)
+            { 
                 int camperCode = camp.AddCamper(camperFamily.Camper);
 
                 if (camperCode != 0)

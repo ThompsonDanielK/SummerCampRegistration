@@ -63,14 +63,7 @@ export default {
     };
   },
   created() {
-    FamilyService.getAllFamilies()
-      .then((response) => {
-        console.log("Got all families", response.data);
-        this.families = response.data;
-      })
-      .catch((response) => {
-        console.error("Problem getting all families", response);
-      });
+    this.families = this.$store.state.families;
   },
   computed: {
     filteredFamilies() {

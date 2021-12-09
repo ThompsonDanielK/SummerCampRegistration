@@ -60,7 +60,7 @@ data(){
 .nav #logo{
   height: 13%;
   width: 13%;
-  }
+ }
 .nav .nav-item{
   display: flex;
   justify-content: space-around;
@@ -74,6 +74,7 @@ data(){
   background-color: $textDark;
   padding: 0% 5%;
   margin: 0% 2%;
+  box-shadow: 1.5px 0.5px 0.5px black;
 }
 .nav #navBar{
   display: flex;

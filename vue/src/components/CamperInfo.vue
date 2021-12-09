@@ -1,7 +1,7 @@
 <template>
 <section>
   <table>
-    <tr id="firstName">
+    <tr class="row">
       <td>First Name:</td>
       <td>
         <div v-show="!showFirst" class="data">
@@ -12,11 +12,11 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showFirst = true" v-show="!showFirst">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst" v-bind:disabled="!newData.firstName">Save</button>
         <button type="button" v-on:click.prevent="newData.firstName = ''; showFirst = false" v-show="showFirst">Cancel</button>
       </td>
     </tr>
-    <tr id="lastName">
+    <tr class="row">
       <td>Last Name:</td>
       <td>
         <div v-show="!showLast"  class="data">
@@ -27,11 +27,11 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showLast = true" v-show="!showLast">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast" v-bind:disabled="!newData.lastName">Save</button>
         <button type="button" v-on:click.prevent="newData.lastName = ''; showLast = false" v-show="showLast">Cancel</button>
       </td>
     </tr>
-    <tr id="registrar">
+    <tr class="row">
       <td>Registrar:</td>
       <td>
         <div v-show="!showRegistrar"  class="data">
@@ -42,16 +42,16 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showRegistrar = true" v-show="!showRegistrar">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('registrar')" v-show="showRegistrar">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('registrar')" v-show="showRegistrar" v-bind:disabled="!newData.registrar">Save</button>
         <button type="button" v-on:click.prevent="newData.registrar = ''; showRegistrar = false" v-show="showRegistrar">Cancel</button>
       </td>
     </tr>
-    <tr id="age">
+    <tr class="row">
       <td>Age:</td>
       <td>{{ this.age }}</td>
       <td></td>
     </tr>
-    <tr id="dob">
+    <tr class="row">
       <td>Date of Birth:</td>
       <td>
         <div v-show="!showDOB"  class="data">
@@ -62,11 +62,11 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showDOB = true" v-show="!showDOB">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('dob')" v-show="showDOB">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('dob')" v-show="showDOB" v-bind:disabled="!newData.dob">Save</button>
         <button type="button" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
       </td>
     </tr>
-    <tr id="payment">
+    <tr class="row">
       <td>Payment Status:</td>
       <td>
         <div class="data">
@@ -82,26 +82,28 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('payment')" v-show="showPayment">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('payment')" v-show="showPayment" v-bind:disabled="!newData.paymentStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.paymentStatus = ''; showPayment = false" v-show="showPayment">Cancel</button>
       </td>
     </tr>
-    <tr id="familyId">
+    <tr class="row">
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
           <p v-if="!newData.familyId">{{ this.camper.familyId }}</p>
           <p v-if="newData.familyId" class="newValue">{{ this.newData.familyId }}</p>
         </div>
-        <input type="text" v-model="newData.familyId" v-show="showFamily" />
+        <select v-model="newData.familyId" v-show="showFamily">
+          <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}} -- {{f.fullName}}</option>
+        </select>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showFamily = true" v-show="!showFamily">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily" v-bind:disabled="!newData.familyId">Save</button>
         <button type="button" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
       </td>
     </tr>
-    <tr id="allergies">
+    <tr class="row">
       <td>Allergies:</td>
       <td>
         <ul class="data">
@@ -120,11 +122,11 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies" v-bind:disabled="!newData.allergies">Save</button>
         <button type="button" v-on:click.prevent="newData.allergies = ''; showAllergies = false" v-show="showAllergies">Cancel</button>
       </td>
     </tr>
-     <tr id="medications">
+     <tr class="row">
       <td>Medications:</td>
       <td>
         <ul class="data">
@@ -143,11 +145,11 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications" v-bind:disabled="!newData.medications">Save</button>
         <button type="button" v-on:click.prevent="newData.medications = ''; showMedications = false" v-show="showMedications">Cancel</button>
       </td>
     </tr>
-    <tr id="info">
+    <tr class="row">
       <td>Special Needs:</td>
       <td>
         <ul class="data">
@@ -166,7 +168,7 @@
       </td>
       <td>
         <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial">Save</button>
+        <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial" v-bind:disabled="!newData.specialNeeds">Save</button>
         <button type="button" v-on:click.prevent="newData.specialNeeds = ''; showSpecial = false" v-show="showSpecial">Cancel</button>
       </td>
     </tr>
@@ -181,15 +183,11 @@ import CamperService from "../services/CamperService.js";
 export default {
   data() {
     return {
-      camper: {},
       newData: {},
       camperToAdd: {
         fieldToBeChanged: '',
         oldValue: '',
         newValue: '',
-      },
-      request: {
-        changes: []
       },
       showFirst: false,
       showLast: false,
@@ -199,12 +197,16 @@ export default {
       showDOB: false,
       showFamily: false,
       showSpecial: false,
+      showRegistrar: false,
       states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
                "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",
                "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA",
                "VT", "WA", "WI", "WV", "WY"
               ],
             };
+  },
+  props:{
+    camper: Object,
   },
   computed:{
     convertedDateTime() {
@@ -236,59 +238,37 @@ export default {
   },
   methods: {
     saveChange(formName) {
-        this.request.camperCode = this.camper.camperCode;
-        this.camperToAdd.fieldToBeChanged = formName;
       switch (formName) {
         case "firstName":
-          this.camperToAdd.newValue = this.newData.firstName;
-          this.camperToAdd.oldValue = this.camper.firstName;
           this.showFirst = false;
           break;
         case "lastName":
-          this.camperToAdd.newValue = this.newData.lastName;
-          this.camperToAdd.oldValue = this.camper.oldValue;
           this.showLast = false;
           break;
           case "dob":
-          this.camperToAdd.newValue = this.newData.dob;
-          this.camperToAdd.oldValue = this.camper.dob;
           this.showDOB = false;
           break;
         case "allergies":
           this.newData.allergies = this.newData.allergies.split(',')
-          this.camperToAdd.newValue = this.newData.allergies;
-          this.camperToAdd.oldValue = this.camper.allergies;
           this.showAllergies = false;
           break;
         case "medications":
           this.newData.medications = this.newData.medications.split(',')
-          this.camperToAdd.newValue = this.newData.medications;
-          this.camperToAdd.oldValue = this.camper.medications;
           this.showMedications = false;
           break;
         case "familyId":
-          this.camperToAdd.newValue = this.newData.familyId;
-          this.camperToAdd.oldValue = this.camper.familyId;
           this.showFamily = false;
           break;
         case "specialNeeds":
           this.newData.specialNeeds = this.newData.specialNeeds.split(',');
-          this.camperToAdd.newValue = this.newData.specialNeeds;
-          this.camperToAdd.oldValue = this.camper.specialNeeds;
           this.showSpecial = false;
           break;
         case "payment":
-          this.camperToAdd.newValue = this.newData.paymentStatus;
-          this.camperToAdd.oldValue = this.camper.paymentStatus;
           this.showPayment = false;
           break;
         case "registrar":
-          this.camperToAdd.newValue = this.newData.registrar;
-          this.camperToAdd.oldValue = this.camper.paymentStatus;
           this.showRegistrar = false;
       }
-          this.request.changes.push(this.camperToAdd);
-          this.camperToAdd = {};
     },
     finalizeChanges(){
       this.setCamper();
@@ -303,8 +283,8 @@ export default {
       })
     },
     // logChanges(){
-    //   this.request.action = 'update'
-    //    CamperService.logChanges(this.request)
+    //   this..action = 'update'
+    //    CamperService.logChanges(this.)
     //     .then(response => {
     //       console.log('Logged changes', response.data);
     //     })
@@ -341,18 +321,12 @@ export default {
       {
         this.camper.paymentStatus = this.newData.paymentStatus;
       }
+      if(this.newData.registrar)
+      {
+        this.camper.registrar = this.newData.registrar;
+      }
     }
   },
-    created() {
-      CamperService.getCamper(this.$route.params.camperCode).then((response) => {
-        console.log('Got camper', response.data)
-        this.camper = response.data;
-      })
-      .catch(response =>
-      {
-        console.error('Problem getting camper', response)
-      })
-    },
 };
 </script>
 
@@ -360,45 +334,53 @@ export default {
 @import "../styles/colors.scss";
 
 table {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin-top: 20px;
   padding: 10px;
   color: $textDark;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   border: 2px solid $highlight;
   background-color: $secondary;
-  width: 100%;
   border-radius: 20px;
 }
 button {
   background-color: $textDark;
   border: none;
   color: $textLight;
-  margin-left: 15px;
+  margin: 0% 2%;
   border-radius: 5px;
   border: 2px solid $highlight;
   text-shadow: 2px 1px 1px black;
   font-size: 1rem;
-  font-family: 'Russo One', sans-serif;
+  font-family: 'Lora', serif;
+  flex-shrink: 2;
 }
 button:disabled{
   background-color: $secondary;
-  color: black;
+  color: white;
 }
 tr{
-  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0% 2%;
+  height: 66px;
+}
+.row{
+  padding: 0% 2%;
+  width: 100%;
 }
 td{
-    padding: 0% 2%;
-    width: 50px;
+  width: 100%;
 }
 input, select, textarea{
-  font-family: 'Russo One', sans-serif;
+  font-family: 'Lora', serif;
   border: 1px dotted $highlight;
   border-radius: 10px;
-  padding: 5px;
   background-color: $textDark;
   color: $textLight;
-  width: 60%;
 }
 input::-webkit-input-placeholder{
   color: white;
@@ -410,10 +392,5 @@ button[type='submit']
 {
   margin: 1% 35%;
   width: 30%;
-}
-section{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 </style>

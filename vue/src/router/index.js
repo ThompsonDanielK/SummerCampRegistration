@@ -5,7 +5,7 @@ import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
 import Register from "../views/Register.vue";
 import store from "../store/index";
-import IndividualView from "../views/IndividualView.vue"
+import CamperView from "../views/CamperView.vue"
 import CamperListView from "../views/CamperListView.vue"
 import AddNewView from '../views/AddNewView.vue'
 import FamilyListView from '../views/FamilyListView.vue'
@@ -61,7 +61,7 @@ const router = new Router({
     {
       path: "/camper/:camperCode",
       name: "camper",
-      component: IndividualView,
+      component: CamperView,
       meta: {
         requiresAuth: true,
       },

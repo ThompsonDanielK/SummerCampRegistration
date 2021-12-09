@@ -17,23 +17,50 @@
             <input type="text" v-model="lastNameToFilter" placeholder="Last Name"  />
           </td>
           <td>
+            <select v-model="minAgeToFilter" class="ageFilter">
+            <option>Any</option>
+            <option v-for="num in minNums" v-bind:key="num">{{num}}</option>
+            </select>
+            <select v-model="maxAgeToFilter" class="ageFilter">
+            <option>Any</option>
+            <option v-for="num in maxNums" v-bind:key="num">{{num}}</option>
+            </select>
+            </td>
+            <td>
+              <select v-model="paymentStatusToFilter">
+              <option>All</option>
+              <option>Paid</option>
+              <option>Unpaid</option>
+              </select>
+          </td>
+          <td>
+            <input type="text" v-model="registrarToFilter" placeholder="Registrar ID" />
+          </td>
+          <td>
             <input type="text" v-model="familyIdToFilter" placeholder="Family ID" />
           </td>
           <td>
-            <input type="text" v-model="minAgeToFilter" placeholder="Min Age" />
-            <input type="text" v-model="maxAgeToFilter" placeholder="Max Age" />
+            <input type="text" v-model="missingToFilter" />
+          </td>
+          <td>
+              <select v-model="activeToFilter">
+              <option>All</option>
+              <option>Active</option>
+              <option>Inactive</option>
+              </select>
           </td>
         </tr>
       </thead>
-      <tr>
-        <td>Camper Code:</td>
-        <td>First Name:</td>
-        <td>Last Name:</td>
-        <td>Age:</td>
+      <tr class="labels">
+        <td>Camper Code</td>
+        <td>First Name</td>
+        <td>Last Name</td>
+        <td id="age">Age</td>
         <td>Payment Status</td>
-        <td>Registrar:</td>
-        <td>Family:</td>
-        <td>Missing Data:</td>
+        <td>Registrar</td>
+        <td>Family</td>
+        <td>Missing Data</td>
+        <td>Active Status</td>
       </tr>
       <tr
         v-for="camper in this.filteredCampers"
@@ -43,14 +70,14 @@
         <td>{{ camper.camperCode }}</td>
         <td>{{ camper.firstName }}</td>
         <td>{{ camper.lastName }}</td>
-        <td>{{ camper.age }}</td>
+        <td id="age">{{ camper.age }}</td>
         <td>{{ camper.paymentStatus }}</td>
         <td>{{ camper.registrar }}</td>
-        <td>{{ camper.familyId }}</td>
-        <td>
+        <td>{{ camper.familyId }} {{camper.familyName}}</td>
+        <td>{{camper.missingData}}</td>
+        <td>{{camper.active}}</td>
+        <td class="buttons">
           <router-link v-bind:to="{ name: 'camper', params: { camperCode: camper.camperCode },}"><button type="button">Edit</button></router-link>
-        </td>
-        <td>
           <button type="button" v-on:click="deleteCamper(camper.camperCode)">
             Delete
           </button>
@@ -62,7 +89,6 @@
 
 <script>
 import CamperService from "../services/CamperService.js";
-import FamilyService from '../services/FamilyService.js';
 
 export default {
   data() {
@@ -72,29 +98,58 @@ export default {
       firstNameToFilter: "",
       lastNameToFilter: "",
       familyIdToFilter: "",
-      minAgeToFilter: '',
-      maxAgeToFilter: '',
+      minAgeToFilter: 'Any',
+      maxAgeToFilter: 'Any',
+      paymentStatusToFilter: 'All',
+      registrarToFilter: '',
+      missingToFilter: '',
+      activeToFilter: 'All',
     };
   },
   created() {
-    FamilyService.getAllFamilies()
-    .then(response => {
-      this.families = response.data;
-    })
-    .catch(response => {
-      console.error('Problem getting familes', response)
-    }),
-    CamperService.getAllCampers()
+    this.families = this.$store.state.families;
+    this.campers = this.$store.state.campers;
+    if(!this.campers)
+    {
+      CamperService.getAllCampers()
       .then((response) => {
         console.log("Got all campers", response.data);
-        this.campers = response.data;
-        this.campers.forEach(c => c.age = this.getAge(c));
+        this.$store.commit('SET_CAMPERLIST', response.data);
+        this.campers = this.$store.state.campers;
       })
       .catch((response) => {
         console.error("Problem getting all campers", response);
       });
+    }
+    this.campers.forEach(c => c.age = this.getAge(c));
+    this.campers.forEach(c => c.familyName = this.getFamilyName(c.familyId));
   },
   computed: {
+    minNums(){
+      let list = []
+      for(let num = 1; num < 100; num++)
+      {
+        list.push(num);
+      }
+      return list;
+    },
+    maxNums(){
+      let list = [];
+      let minAge; 
+      if(this.minAgeToFilter == 'Any')
+      {
+        minAge = 1;
+      }
+      else
+      {
+        minAge=parseInt(this.minAgeToFilter);
+      }
+      for(let num = minAge + 1; num < 101; num++)
+      {
+        list.push(num);
+      }
+      return list;
+    },
     filteredCampers() {
       let campersList = this.campers;
       if (this.firstNameToFilter) {
@@ -109,33 +164,41 @@ export default {
           a.lastName.toLowerCase().includes(this.lastNameToFilter.toLowerCase())
         );
       }
+      if (this.paymentStatusToFilter && this.paymentStatusToFilter != 'All') {
+        campersList = campersList.filter((a) =>
+          a.paymentStatus == this.paymentStatusToFilter);
+      }
       if (this.familyIdToFilter) {
         campersList = campersList.filter((a) =>
           a.familyId.toString().includes(this.familyIdToFilter.toString())
         );
       }
-      if (this.minAgeToFilter && this.maxAgeToFilter) {
-        campersList = campersList.filter((a) =>
-          a.age >= this.minAgeToFilter && a.age <= this.maxAgeToFilter);
+      let minAge = 0;
+      let maxAge = 0;
+      if(this.minAgeToFilter != 'Any')
+      {
+        minAge = parseInt(this.minAgeToFilter);
       }
-      if(this.minAgeToFilter && !this.maxAgeToFilter) {
-        campersList = campersList.filter((a) =>
-          a.age >= this.minAgeToFilter);
+      if(this.maxAgeToFilter != 'Any')
+      {
+        maxAge = parseInt(this.maxAgeToFilter);
       }
-      if(!this.minAgeToFilter && this.maxAgeToFilter) {
+      if (minAge && maxAge) {
         campersList = campersList.filter((a) =>
-          a.age <= this.maxAgeToFilter);
+          a.age >= minAge && a.age <= maxAge);
+      }
+      if(minAge && !maxAge) {
+        campersList = campersList.filter((a) =>
+          a.age >= minAge);
+      }
+      if(!minAge && maxAge) {
+        campersList = campersList.filter((a) =>
+          a.age <= maxAge);
       }
       return campersList;
     },
   },
   methods: {
-      getAge(camper) {
-        let birthYear = new Date(camper.dob).getFullYear()
-        let currentYear = new Date().getFullYear();
-        let age = currentYear - birthYear;
-         return age;
-        },
     deleteCamper(camperCode) {
         CamperService.deleteCamper(this.camper.camperCode)
         .then(() => {
@@ -146,6 +209,16 @@ export default {
             console.error('Problem deleting camper', response);
         })
       this.$store.commit("DELETE_camper", camperCode);
+    },
+    getAge(camper) {
+      let birthYear = new Date(camper.dob).getFullYear()
+      let currentYear = new Date().getFullYear();
+      let age = currentYear - birthYear;
+      return age;
+    },
+    getFamilyName(familyId){
+      let family = this.$store.state.families.find(f => f.familyId == familyId)
+      return family.fullName;
     }
   },
 }
@@ -156,15 +229,17 @@ export default {
 
 section {
   background-color: $textLight;
-  padding: 2%;
+  padding: 1%;
   border-radius: 20px;
   border: 2px solid $textDark;
 }
 td{
-  padding-right: 2%;
+  padding-right: 1%;
+  width: 10%;
   }
 table {
-  padding: 2%;
+  padding: 1%;
+  font-size: 90%;
 }
 button {
   background-color: $textDark;
@@ -172,22 +247,36 @@ button {
   border-radius: 10px;
   border: 1px solid $highlight;
   text-shadow: 2px 1px 1px black;
-  font-size: 1rem;
-  font-family: 'Russo One', sans-serif;
+  font-family: 'Lora', serif;
+  box-shadow: 1.5px 1px 1px $secondary;
+  margin-right: 5px;
 }
-input{
+.buttons{
+  display: flex;
+}
+input, select{
   background-color: $textDark;
   color: $textLight;
   border-radius: 10px;
   border: 1px solid $highlight;
-  width: 90%;
-  font-weight: bold;
-  font-size: 1rem;
-  font-family: 'Russo One', sans-serif;
+  width: 100%;
+  font-size: 0.9rem;
+  font-family: 'Lora', serif;
+  box-shadow: 2px 1px 1px $secondary;
+}
+input::placeholder{
+  color: $textLight;
+}
+.ageFilter{
+  width: 50%;
 }
 .tableHead{
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.labels{
+  font-weight: bold;
+  font-size: 1rem;
 }
 </style>
