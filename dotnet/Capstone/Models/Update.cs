@@ -14,8 +14,9 @@ namespace Capstone.Models
         [Required]
         public string FieldToBeChanged { get; set; }
 
-        [Required]
         public int CamperCode { get; set; }
+
+        public int FamilyId { get; set; }
 
         [Required]
         public string Action { get; set; }

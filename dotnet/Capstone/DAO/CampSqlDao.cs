@@ -78,9 +78,19 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@firstName", camper.FirstName);
                     command.Parameters.AddWithValue("@lastName", camper.LastName);
                     command.Parameters.AddWithValue("@dob", camper.DOB);
-                    command.Parameters.AddWithValue("@medications", camper.Medications);
-                    command.Parameters.AddWithValue("@allergies", camper.Allergies);
-                    command.Parameters.AddWithValue("@specialNeeds", camper.SpecialNeeds);
+
+                    if (!camper.Medications.Equals(null))
+                    {
+                        command.Parameters.AddWithValue("@medications", camper.Medications);
+                    }
+                    if (!camper.Allergies.Equals(null))
+                    {
+                        command.Parameters.AddWithValue("@allergies", camper.Allergies);
+                    }
+                    if (!camper.SpecialNeeds.Equals(null))
+                    {
+                        command.Parameters.AddWithValue("@specialNeeds", camper.SpecialNeeds);
+                    }
 
                     camperCode = Convert.ToInt32(command.ExecuteNonQuery());             
                 }

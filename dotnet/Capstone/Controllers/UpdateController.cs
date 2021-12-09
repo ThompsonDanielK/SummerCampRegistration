@@ -26,6 +26,22 @@ namespace Capstone.Controllers
             this.request = request;
         }
 
+        [HttpGet("camperUpdateList")]
+        public ActionResult CamperUpdateList()
+        {
+            List<Update> updateList = request.GetCamperUpdateList(true);
+
+            return Ok(updateList);
+        }
+
+        [HttpGet("familyUpdateList")]
+        public ActionResult FamilyUpdateList()
+        {
+            List<Update> updateList = request.GetCamperUpdateList(false);
+
+            return Ok(updateList);
+        }
+
         [HttpPut("camper")]
         public ActionResult UpdateCamper(Camper camper)
         {
@@ -33,7 +49,7 @@ namespace Capstone.Controllers
             Camper oldCamperData = camp.FetchCamper(camper.CamperCode);
 
             int requestId = request.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
-            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
+            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("camper_updates", requestId);
 
             return Ok();
 
@@ -46,16 +62,23 @@ namespace Capstone.Controllers
             Family oldFamilyData = camp.FetchFamily(family.FamilyId);
 
             int requestId = request.AddNewFamilyUpdateRequest(userId, family, oldFamilyData);
-            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
+            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("family_updates", requestId);
 
             return Ok();
 
         }
 
-        [HttpPut("approval/{requestId}")]
-        public ActionResult UpdateRequestApproved(int requestId)
+        [HttpPut("approval/camper/{requestId}")]
+        public ActionResult UpdateCamperRequestApproved(int requestId)
         {
-            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests(requestId);
+            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("camper_updates", requestId);
+            return Ok();
+        }
+
+        [HttpPut("approval/family/{requestId}")]
+        public ActionResult UpdateFamilyRequestApproved(int requestId)
+        {
+            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("family_updates", requestId);
             return Ok();
         }
     }

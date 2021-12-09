@@ -44,15 +44,17 @@ CREATE TABLE family (
 CREATE TABLE campers (
 	camper_code int IDENTITY(200001, 1) PRIMARY KEY,
 	family_id int NOT NULL,
-	first_name nvarchar(50) NOT NULL,
+	first_name nvarchar(50),
 	last_name nvarchar(50) NOT NULL,
 	dob date NOT NULL,
 	medications nvarchar(200) DEFAULT 'None',
 	allergies nvarchar(200) DEFAULT 'None', 
-	special_needs nvarchar(1000) DEFAULT 'None'
+	special_needs nvarchar(1000) DEFAULT 'None',
+	registrar nvarchar(100),
+	payment_status bit
 )
 
-CREATE TABLE updates (
+CREATE TABLE camper_updates (
 	request_id int NOT NULL,
 	field_to_be_changed nvarchar(50),
 	camper_code int NOT NULL,
@@ -63,7 +65,21 @@ CREATE TABLE updates (
 	status nvarchar(20) NOT NULL,
 	request_date date NOT NULL,
 	finalize_date date
-	CONSTRAINT PK_updates PRIMARY KEY (request_id, field_to_be_changed)
+	CONSTRAINT PK_camper_updates PRIMARY KEY (request_id, field_to_be_changed)
+);
+
+CREATE TABLE family_updates (
+	request_id int NOT NULL,
+	field_to_be_changed nvarchar(50),
+	family_id int NOT NULL,
+	action nvarchar(20) NOT NULL,
+	new_data nvarchar(1000) NOT NULL,
+	old_data nvarchar(1000),
+	requestor nvarchar(100) NOT NULL,
+	status nvarchar(20) NOT NULL,
+	request_date date NOT NULL,
+	finalize_date date
+	CONSTRAINT PK_family_updates PRIMARY KEY (request_id, field_to_be_changed)
 );
 
 GO
@@ -80,8 +96,8 @@ SET IDENTITY_INSERT family OFF;
 GO
 
 SET IDENTITY_INSERT campers ON;
-INSERT INTO campers (camper_code, family_id, first_name, last_name, dob)
-	VALUES(200001, 100001, 'Alex', 'Andrews', '2010-01-01');
+INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status)
+	VALUES(200001, 100001, 'Alex', 'Andrews', '2010-01-01', 'user', 'false');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob)
 	VALUES(200002, 100001, 'Brandy', 'Andrews', '2009-02-03');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob)
@@ -96,6 +112,10 @@ SET IDENTITY_INSERT campers OFF;
 
 ALTER TABLE campers ADD FOREIGN KEY (family_id) REFERENCES family(family_id);
 
-ALTER TABLE updates ADD FOREIGN KEY (camper_code) REFERENCES campers(camper_code);
-ALTER TABLE updates ADD	CONSTRAINT Chk_action CHECK (action IN ('ADD', 'Update', 'Delete'));
-ALTER TABLE updates ADD CONSTRAINT Chk_status CHECK (status IN ('Pending', 'Updated', 'Rejected'));
+ALTER TABLE camper_updates ADD FOREIGN KEY (camper_code) REFERENCES campers(camper_code);
+ALTER TABLE camper_updates ADD	CONSTRAINT Chk_camper_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
+ALTER TABLE camper_updates ADD CONSTRAINT Chk_camper_updates_status CHECK (status IN ('Pending', 'Updated', 'Rejected'));
+
+ALTER TABLE family_updates ADD FOREIGN KEY (family_id) REFERENCES family(family_id);
+ALTER TABLE family_updates ADD	CONSTRAINT Chk_family_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
+ALTER TABLE family_updates ADD CONSTRAINT Chk_family_updates_status CHECK (status IN ('Pending', 'Updated', 'Rejected'));
