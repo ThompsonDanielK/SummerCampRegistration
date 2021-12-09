@@ -51,7 +51,7 @@ namespace Capstone.Controllers
             int requestId = request.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
             if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("camper_updates", requestId);
 
-            return Ok();
+            return Ok(requestId);
 
         }
 
@@ -64,21 +64,23 @@ namespace Capstone.Controllers
             int requestId = request.AddNewFamilyUpdateRequest(userId, family, oldFamilyData);
             if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("family_updates", requestId);
 
-            return Ok();
+            return Ok(requestId);
 
         }
 
         [HttpPut("approval/camper/{requestId}")]
+        [Authorize(Roles = "admin")]
         public ActionResult UpdateCamperRequestApproved(int requestId)
         {
-            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("camper_updates", requestId);
+            updates.ProcessApprovedRequests("camper_updates", requestId);
             return Ok();
         }
 
         [HttpPut("approval/family/{requestId}")]
+        [Authorize(Roles = "admin")]
         public ActionResult UpdateFamilyRequestApproved(int requestId)
         {
-            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("family_updates", requestId);
+            updates.ProcessApprovedRequests("family_updates", requestId);
             return Ok();
         }
     }

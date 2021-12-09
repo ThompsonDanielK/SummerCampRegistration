@@ -18,11 +18,11 @@ namespace Capstone.Models
 
         public DateTime DOB { get; set; }
 
-        public string Medications { get; set; }
+        public string Medications { get; set; } = "";
 
-        public string Allergies { get; set; }
+        public string Allergies { get; set; } = "";
 
-        public string SpecialNeeds { get; set; }
+        public string SpecialNeeds { get; set; } = "";
 
         public string Registrar { get; set; }
 
