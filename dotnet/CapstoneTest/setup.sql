@@ -1,5 +1,3 @@
-BEGIN TRANSACTION
-
 DELETE FROM family_updates
 DELETE FROM camper_updates
 DELETE FROM campers
@@ -28,6 +26,7 @@ VALUES
 
 SET IDENTITY_INSERT users OFF
 
+
 SET IDENTITY_INSERT family ON
 
 INSERT INTO family 
@@ -51,6 +50,7 @@ VALUES
 	(100004, 'Antony Gonzales', 'OH')
 
 SET IDENTITY_INSERT family OFF;
+
 
 SET IDENTITY_INSERT campers ON;
 
@@ -82,9 +82,49 @@ VALUES
 INSERT INTO campers 
 	(camper_code, family_id, last_name, dob, registrar, active_status)
 VALUES
-	(200005, 100004, 'Gonzales', '2009-05-05', 'user', 'false')
+	(200006, 100004, 'Gonzales', '2009-05-05', 'user', 'false')
 
 SET IDENTITY_INSERT campers OFF;
 
-SELECT * FROM family
-ROLLBACK TRANSACTION
+
+INSERT INTO camper_updates 
+	(request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
+VALUES
+	(400001, 'last_name', '200003', 'Update', 'Bowersmith', 'Bowers', 'user', 'Pending', '2021-10-09')
+
+INSERT INTO camper_updates 
+	(request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date, finalize_date)
+VALUES
+	(400002, 'first_name', '200005', 'Update', 'Erica', 'Eric', 'user', 'Approved', '2021-10-08', '2021-10-10')
+
+INSERT INTO camper_updates 
+	(request_id, field_to_be_changed, camper_code, action, new_data, requestor, status, request_date)
+VALUES
+	(400003, 'first_name', '200006', 'ADD', 'Jimmy', 'user', 'Pending', '2021-09-08')
+
+INSERT INTO camper_updates 
+	(request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
+VALUES
+	(400004, 'payment_status', '200005', 'Update', 'True', 'False', 'user', 'Pending', '2021-07-08')
+
+
+INSERT INTO family_updates 
+	(request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
+VALUES
+	(300001, 'address', '100002', 'Update', '200 Secondary Road', '200 Second Ave.', 'user', 'Pending', '2021-10-09')
+
+INSERT INTO family_updates 
+	(request_id, field_to_be_changed, family_id, action, new_data, requestor, status, request_date)
+VALUES
+	(300002, 'email_address', '100004', 'Update', 'gonzales@microsoft.com', 'user', 'Pending', '2021-10-10')
+
+INSERT INTO family_updates 
+	(request_id, field_to_be_changed, family_id, action, new_data, requestor, status, request_date)
+VALUES
+	(300003, 'city', '100004', 'Update', 'Columbus', 'user', 'Pending', '2021-10-10')
+
+INSERT INTO family_updates 
+	(request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date, finalize_date)
+VALUES
+	(300004, 'address', '100002', 'Update', '200 Secondary Road', '200 Secondry Rda', 'user', 'Approved', '2021-10-08', '2021-10-10')
+

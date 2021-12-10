@@ -14,7 +14,7 @@ namespace CapstoneTest
         {
             UserSqlDAO access = new UserSqlDAO(ConnectionString);
 
-            User user = access.GetUser("notauser");
+            User user = access.GetUser("user");
 
             Assert.IsNotNull(user);
 
