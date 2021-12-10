@@ -10,4 +10,7 @@ export default{
     approveRequest(requestId){
         return axios.put(`update/approval/camper/${requestId}`)
     },
+    rejectRequest(requestId){
+        return axios.put(`update/reject/camper/${requestId}`)
+    },
 }

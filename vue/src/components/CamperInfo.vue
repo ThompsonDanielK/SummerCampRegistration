@@ -9,8 +9,8 @@
       <td>First Name:</td>
       <td>
         <div v-show="!showFirst" class="data">
-          <p v-if="!pending.firstName">{{ this.camper.firstName }}</p>
-          <p v-if="pending.firstName" class="newValue">{{ this.pending.firstName }}</p>
+          <span v-if="!pending.firstName">{{ this.camper.firstName }}</span>
+          <span v-if="pending.firstName" class="newValue">{{ this.pending.firstName }}</span>
         </div>
         <input type="text" v-model="newData.firstName" v-show="showFirst" />
       </td>
@@ -24,8 +24,8 @@
       <td>Last Name:</td>
       <td>
         <div v-show="!showLast"  class="data">
-          <p v-if="!pending.lastName"> {{ this.camper.lastName }}</p>
-          <p v-if="pending.lastName" class="newValue">{{ this.pending.lastName }}</p>
+          <span v-if="!pending.lastName"> {{ this.camper.lastName }}</span>
+          <span v-if="pending.lastName" class="newValue">{{ this.pending.lastName }}</span>
         </div>
         <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
@@ -39,8 +39,8 @@
       <td>Registrar:</td>
       <td>
         <div v-show="!showRegistrar"  class="data">
-          <p v-if="!pending.registrar"> {{ this.camper.registrar }}</p>
-          <p v-if="pending.registrar" class="newValue">{{ this.pending.registrar }}</p>
+          <span v-if="!pending.registrar"> {{ this.camper.registrar }}</span>
+          <span v-if="pending.registrar" class="newValue">{{ this.pending.registrar }}</span>
         </div>
         <input type="text" v-model="newData.registrar" v-show="showRegistrar" />
       </td>
@@ -59,8 +59,8 @@
       <td>Date of Birth:</td>
       <td>
         <div v-show="!showDOB"  class="data">
-          <p v-if="!pending.dob">{{ this.convertedDateTime }}</p>
-          <p v-if="pending.dob" class="newValue">{{ this.newConvertedDateTime }}</p>
+          <span v-if="!pending.dob">{{ this.convertedDateTime }}</span>
+          <span v-if="pending.dob" class="newValue">{{ this.pendingConvertedDateTime }}</span>
         </div>
         <input type="date" v-model="newData.dob" v-show="showDOB" />
       </td>
@@ -74,8 +74,8 @@
       <td>Payment Status:</td>
       <td>
         <div class="data">
-        <p v-if="!showPayment && !pending.paymentStatus">{{ this.camper.paymentStatus }}</p>
-        <p v-if="pending.paymentStatus && !showPayment" class="newValue">{{ this.pending.paymentStatus }}</p>
+        <span v-if="!showPayment && !pending.paymentStatus">{{ this.camper.paymentStatus }}</span>
+        <span v-if="pending.paymentStatus && !showPayment" class="newValue">{{ this.pending.paymentStatus }}</span>
         </div>
         <div v-show="showPayment">
         <label for="unpaid">Unpaid</label>
@@ -94,8 +94,8 @@
       <td>Active Status:</td>
       <td>
         <div class="data">
-        <p v-if="!showActive && !pending.activeStatus">{{ this.camper.activeStatus }}</p>
-        <p v-if="pending.activeStatus && !showActive" class="newValue">{{ this.pending.activeStatus }}</p>
+        <span v-if="!showActive && !pending.activeStatus">{{ this.camper.activeStatus }}</span>
+        <span v-if="pending.activeStatus && !showActive" class="newValue">{{ this.pending.activeStatus }}</span>
         </div>
         <div v-show="showActive">
         <label for="Active">Active</label>
@@ -114,8 +114,8 @@
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
-          <p v-if="!pending.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</p>
-          <p v-if="pending.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</p>
+          <span v-if="!pending.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</span>
+          <span v-if="pending.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</span>
         </div>
         <select v-model="newData.familyId" v-show="showFamily">
           <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}}--{{f.fullName}}</option>
@@ -130,8 +130,8 @@
     <tr class="row">
       <td>Allergies:</td>
       <td>
-        <ul class="data">
-          <li v-show="!showAllergies && !pending.allergies && camper.allergies && camper.allergies != 'None'" v-for="line in this.camper.allergies" v-bind:key="line">
+        <ul class="data" v-if="this.camper.allergies">
+          <li v-show="!showAllergies && !pending.allergies && camper.allergies" v-for="line in allergies" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showAllergies && pending.allergies" v-for="line in this.pending.allergies" v-bind:key="line" class="newValue">
@@ -141,7 +141,7 @@
           <input type="text" v-model="newData.allergies" />
           </div>
         </ul>
-        <p v-show="!showAllergies && !pending.allergies && (!camper.allergies || camper.allergies === 'None')">None</p>
+        <span v-show="!showAllergies && !pending.allergies && !camper.allergies">None</span>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies">Edit</button>
@@ -152,8 +152,8 @@
      <tr class="row">
       <td>Medications:</td>
       <td>
-        <ul class="data">
-          <li v-show="!showMedications && !pending.medications && camper.medications && !camper.medications === 'None'" v-for="line in this.camper.medications" v-bind:key="line">
+        <ul class="data" v-if="this.camper.medications">
+          <li v-show="!showMedications && !pending.medications && camper.medications" v-for="line in medications" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showMedications && pending.medications" v-for="line in this.pending.medications" v-bind:key="line" class="newValue">
@@ -163,7 +163,7 @@
           <input type="text" v-model="newData.medications" />
           </div>
         </ul>
-      <p v-show="!showMedications && !pending.medications && (!camper.medications || camper.medications === 'None')">None</p>
+      <span v-show="!showMedications && !pending.medications && !camper.medications">None</span>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications">Edit</button>
@@ -174,8 +174,8 @@
     <tr class="row">
       <td>Special Needs:</td>
       <td>
-        <ul class="data">
-          <li v-show="!showSpecial && !pending.specialNeeds && camper.specialNeeds && !camper.specialNeeds === 'None'" v-for="line in this.camper.specialNeeds" v-bind:key="line">
+        <ul class="data" v-if="this.camper.specialNeeds">
+          <li v-show="!showSpecial && !pending.specialNeeds && camper.specialNeeds" v-for="line in specialNeeds" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showSpecial && pending.specialNeeds" v-for="line in this.pending.specialNeeds" v-bind:key="line" class="newValue">
@@ -185,7 +185,7 @@
           <input type="text" v-model="newData.specialNeeds" />
           </div>
         </ul>
-      <p v-show="!showSpecial && !pending.specialNeeds && (!camper.specialNeeds || camper.specialNeeds === 'None')">None</p>
+      <span v-show="!showSpecial && !pending.specialNeeds && !camper.specialNeeds">None</span>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial">Edit</button>
@@ -224,6 +224,27 @@ export default {
     camper: Object,
   },
   computed:{
+    allergies(){
+      if(typeof(this.camper.allergies) == String)
+      {
+        return this.camper.allergies.split('')
+      }
+        return this.camper.allergies;
+    },
+    medications (){
+      if(typeof(this.camper.medications) == String)
+      {
+        return this.camper.medications.split('')
+      }
+        return this.camper.medications;
+    },
+    specialNeeds (){
+      if(typeof(this.camper.specialNeeds) == String)
+      {
+        return this.camper.specialNeeds.split('')
+      }
+        return this.camper.specialNeeds;
+    },
     newFamilyId(){
       let newFamily = this.newData.familyId.split('--');
       return parseInt(newFamily[0]);
@@ -244,6 +265,18 @@ export default {
       if(this.newData.dob)
       {
         let dob = new Date(this.newData.dob);
+        let month = dob.getMonth() + 1;
+        let day = dob.getDate();
+        let year = dob.getFullYear(); 
+        let formattedDob = `${month}/${day}/${year}`
+        return formattedDob;
+      }
+      return '';
+    },
+    pendingConvertedDateTime() {
+      if(this.pending.dob)
+      {
+        let dob = new Date(this.pending.dob);
         let month = dob.getMonth() + 1;
         let day = dob.getDate();
         let year = dob.getFullYear(); 
@@ -301,20 +334,37 @@ export default {
     setCamper(){
       this.pending.firstName? this.camper.firstName = this.newData.firstName: '';
       this.pending.lastName? this.camper.lastName = this.newData.lastName: '';
-      this.pending.allergies? this.camper.allergies = this.newData.allergies: '';
-      this.pending.medications? this.camper.medications = this.newData.medications: '';
-      this.pending.familyId? this.camper.familyId = this.newFamilyId: '';
-      this.pending.specialNeeds? this.camper.specialNeeds = this.newData.specialNeeds: '';
-      if(this.newData.paymentStatus) 
+      if(this.newData.allergies)
       {
-        this.pending.paymentStatus == 'Unpaid'? this.camper.paymentStatus = false : this.camper.paymentStatus = true;
+        this.pending.allergies? this.camper.allergies = this.newData.allergies.toString(): this.camper.allergies = '';
       }
+      else if (this.camper.allergies)
+      {
+        this.camper.allergies = this.camper.allergies.toString();
+      }
+     if(this.camper.medications)
+      {
+        this.pending.medications? this.camper.medications = this.newData.medications.toString(): this.camper.medications = '';
+      }
+      else if (this.camper.medications)
+      {
+        this.camper.medications = this.camper.medications.toString();
+      }
+      this.pending.familyId? this.camper.familyId = this.newFamilyId: '';
+      if(this.camper.specialNeeds)
+      {
+      this.pending.specialNeeds? this.camper.specialNeeds = this.newData.specialNeeds.toString(): this.camper.specialNeeds = '';
+      }
+      else if (this.camper.specialNeeds)
+      {
+        this.camper.specialNeeds = this.camper.specialNeeds.toString();
+      }
+      this.camper.paymentStatus == this.pending.paymentStatus;
+      this.camper.paymentStatus == 'Unpaid'? this.camper.paymentStatus = false : this.camper.paymentStatus = true;
       this.pending.registrar? this.camper.registrar = this.newData.registrar: '';
       this.pending.dob? this.camper.dob = this.newData.dob: '';
-      if(this.newData.activeStatus) 
-      {
-        this.pending.activeStatus == 'Inactive'? this.camper.activeStatus = false : this.camper.activeStatus = true;
-      }
+      this.camper.activeStatus == this.pending.activeStatus;
+      this.pending.activeStatus == 'Inactive'? this.camper.activeStatus = false : this.camper.activeStatus = true;
     },
     convertToPending(data)
     {
@@ -334,19 +384,19 @@ export default {
         this.pending.registrar = data.newData;
         break;
         case"allergies":
-        this.pending.allergies = data.newData;
+        data.newData? this.pending.allergies = data.newData.split(','): this.pending.allergies;
         break;
         case"medications":
-        this.pending.medications = data.newData;
+        data.newData? this.pending.medications = data.newData.split(','): this.pending.medications = '';
         break;
         case"family_id":
         this.pending.familyId = data.newData;
         break;
         case"special_needs":
-        this.pending.specialNeeds = data.newData;
+        data.newData? this.pending.specialNeeds = data.newData.split(','): this.pending.specialNeeds = '';
         break;
         case"active_status":
-        this.pending.activeStatus = data.newData;
+        data.newData? this.pending.activeStatus = 'Active': this.pending.activeStatus = 'Inactive';
         break;
         case"payment_status":
         data.newData? this.pending.paymentStatus = 'Paid': this.pending.paymentStatus = 'Unpaid';
@@ -366,6 +416,15 @@ export default {
     },
     approveRequest(){
       UpdateService.approveRequest(this.requestId)
+      .then(response => {
+        console.log('Request Approved', response.data)
+      })
+      .catch(response => {
+        console.error('Problem approving request', response);
+      })
+    },
+    rejectRequest(){
+      UpdateService.rejectRequest(this.requestId)
       .then(response => {
         console.log('Request Approved', response.data)
       })
@@ -396,6 +455,7 @@ table {
   display: flex;
   flex-direction: column;
   width: 120%;
+  margin: 1%;
 }
 button {
   background-color: $textDark;
@@ -425,13 +485,15 @@ tr{
 }
 td{
   width: 70%;
+  font-size: 120%;
 }
-input, select, textarea{
+input, select{
   font-family: 'Lora', serif;
   border: 1px dotted $highlight;
   border-radius: 10px;
   background-color: $textDark;
   color: $textLight;
+  width: 60%;
 }
 input::-webkit-input-placeholder{
   color: white;
@@ -451,6 +513,18 @@ button[type='submit']
 }
 tr > td:nth-child(3)
 {
-  width: 30%
+  width: 20%;
+}
+tr > td:nth-child(2)
+{
+  margin-left: 2%;
+  text-align: justify;
+}
+tr > td:first-child
+{
+  width: 40%
+}
+ul{
+  padding: 2%;
 }
 </style>
