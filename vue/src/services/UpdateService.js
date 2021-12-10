@@ -11,6 +11,6 @@ export default{
         return axios.put(`update/approval/camper/${requestId}`)
     },
     rejectRequest(requestId){
-        return axios.put(`update/reject/camper/${requestId}`)
+        return axios.put(`update/rejection/camper/${requestId}`)
     },
 }

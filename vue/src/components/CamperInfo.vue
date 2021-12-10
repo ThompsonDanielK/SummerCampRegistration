@@ -1,8 +1,8 @@
 <template>
 <section>
-  <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'" v-show="!showRegistrar">
-  <button type="button" v-on:click.prevent="approveRequest()">Approve All</button>
-  <button type="button" v-on:click.prevent="rejectRequest()">Reject All</button>
+  <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
+  <button type="button" v-on:click.prevent="approveRequest()" v-bind:disabled="pending">Approve All</button>
+  <button type="button" v-on:click.prevent="rejectRequest()" v-bind:disabled="pending">Reject All</button>
   </div>
   <table>
     <tr class="row">
@@ -14,7 +14,7 @@
         </div>
         <input type="text" v-model="newData.firstName" v-show="showFirst" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showFirst = true" v-show="!showFirst">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst" v-bind:disabled="!newData.firstName">Save</button>
         <button type="button" v-on:click.prevent="newData.firstName = ''; showFirst = false" v-show="showFirst">Cancel</button>
@@ -29,7 +29,7 @@
         </div>
         <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showLast = true" v-show="!showLast">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast" v-bind:disabled="!newData.lastName">Save</button>
         <button type="button" v-on:click.prevent="newData.lastName = ''; showLast = false" v-show="showLast">Cancel</button>
@@ -44,7 +44,7 @@
         </div>
         <input type="text" v-model="newData.registrar" v-show="showRegistrar" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showRegistrar = true" v-show="!showRegistrar">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('registrar')" v-show="showRegistrar" v-bind:disabled="!newData.registrar">Save</button>
         <button type="button" v-on:click.prevent="newData.registrar = ''; showRegistrar = false" v-show="showRegistrar">Cancel</button>
@@ -64,7 +64,7 @@
         </div>
         <input type="date" v-model="newData.dob" v-show="showDOB" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showDOB = true" v-show="!showDOB">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('dob')" v-show="showDOB" v-bind:disabled="!newData.dob">Save</button>
         <button type="button" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
@@ -84,7 +84,7 @@
         <input type="radio" id="paid" name="paid" value="Paid" v-model="newData.paymentStatus">
       </div>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('payment')" v-show="showPayment" v-bind:disabled="!newData.paymentStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.paymentStatus = ''; showPayment = false" v-show="showPayment">Cancel</button>
@@ -104,7 +104,7 @@
         <input type="radio" id="Inactive" name="Inactive" value="Inactive" v-model="newData.activeStatus">
       </div>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showActive = true;" v-show="!showActive">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('active')" v-show="showActive" v-bind:disabled="!newData.activeStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.activeStatus = ''; showActive = false" v-show="showActive">Cancel</button>
@@ -121,7 +121,7 @@
           <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}}--{{f.fullName}}</option>
         </select>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showFamily = true" v-show="!showFamily">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily" v-bind:disabled="!newData.familyId">Save</button>
         <button type="button" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
@@ -143,7 +143,7 @@
         </ul>
         <span v-show="!showAllergies && !pending.allergies && !camper.allergies">None</span>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies" v-bind:disabled="!newData.allergies">Save</button>
         <button type="button" v-on:click.prevent="newData.allergies = ''; showAllergies = false" v-show="showAllergies">Cancel</button>
@@ -165,7 +165,7 @@
         </ul>
       <span v-show="!showMedications && !pending.medications && !camper.medications">None</span>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications" v-bind:disabled="!newData.medications">Save</button>
         <button type="button" v-on:click.prevent="newData.medications = ''; showMedications = false" v-show="showMedications">Cancel</button>
@@ -187,7 +187,7 @@
         </ul>
       <span v-show="!showSpecial && !pending.specialNeeds && !camper.specialNeeds">None</span>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial" v-bind:disabled="!newData.specialNeeds">Save</button>
         <button type="button" v-on:click.prevent="newData.specialNeeds = ''; showSpecial = false" v-show="showSpecial">Cancel</button>
@@ -418,6 +418,7 @@ export default {
       UpdateService.approveRequest(this.requestId)
       .then(response => {
         console.log('Request Approved', response.data)
+        this.pending = {};
       })
       .catch(response => {
         console.error('Problem approving request', response);
@@ -426,10 +427,10 @@ export default {
     rejectRequest(){
       UpdateService.rejectRequest(this.requestId)
       .then(response => {
-        console.log('Request Approved', response.data)
+        console.log('Request rejected', response.data)
       })
       .catch(response => {
-        console.error('Problem approving request', response);
+        console.error('Problem rejecting request', response);
       })
     }
   },
@@ -456,6 +457,12 @@ table {
   flex-direction: column;
   width: 120%;
   margin: 1%;
+  font-size: 130%;
+}
+.adminButtons{
+  display: flex;
+  justify-content: flex-end;
+  margin: 2%;
 }
 button {
   background-color: $textDark;
@@ -465,9 +472,10 @@ button {
   border-radius: 5px;
   border: 2px solid $highlight;
   text-shadow: 2px 1px 1px black;
-  font-size: 1rem;
+  font-size: 1em;
   font-family: 'Lora', serif;
   box-shadow: 1px 0.5px 0px $textLight;
+  width: 30%;
 }
 button:disabled{
   background-color: $secondary;
@@ -494,6 +502,7 @@ input, select{
   background-color: $textDark;
   color: $textLight;
   width: 60%;
+  font-size: 1em;
 }
 input::-webkit-input-placeholder{
   color: white;
@@ -506,14 +515,9 @@ button[type='submit']
   margin: 1% 35%;
   width: 30%;
 }
-.adminButtons{
-  display: flex;
-  justify-content: flex-end;
-  margin: 2%;
-}
 tr > td:nth-child(3)
 {
-  width: 20%;
+  width: 30%;
 }
 tr > td:nth-child(2)
 {
@@ -526,5 +530,11 @@ tr > td:first-child
 }
 ul{
   padding: 2%;
+}
+.editButtons{
+  display: flex;
+}
+.editButtons button{
+  width: 100%;
 }
 </style>
