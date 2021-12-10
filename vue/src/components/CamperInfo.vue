@@ -1,8 +1,8 @@
 <template>
 <section>
   <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
-  <button type="button" v-on:click.prevent="approveRequest()" v-bind:disabled="pending">Approve All</button>
-  <button type="button" v-on:click.prevent="rejectRequest()" v-bind:disabled="pending">Reject All</button>
+  <button type="button" v-on:click.prevent="approveRequest()">Approve All</button>
+  <button type="button" v-on:click.prevent="rejectRequest()">Reject All</button>
   </div>
   <table>
     <tr class="row">

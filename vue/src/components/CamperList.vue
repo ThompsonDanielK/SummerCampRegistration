@@ -169,7 +169,7 @@ export default {
       }
       if (this.familyIdToFilter) {
         campersList = campersList.filter((a) =>
-          a.familyId.toString().includes(this.familyIdToFilter.toString())
+          (a.familyId.toString().includes(this.familyIdToFilter.toString()) || a.familyName.includes(this.familyIdToFilter))
         );
       }
       let minAge = 0;
