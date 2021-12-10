@@ -28,6 +28,8 @@ namespace Capstone.Models
 
         public bool PaymentStatus { get; set; } = false;
 
+        public bool ActiveStatus { get; set; } = true;
+
         public DateTime DateAdded { get; set; }
 
 
