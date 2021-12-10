@@ -52,7 +52,8 @@ CREATE TABLE campers (
 	special_needs nvarchar(1000) DEFAULT 'None',
 	registrar nvarchar(100),
 	payment_status bit,
-	active_status bit DEFAULT 'true'
+	active_status bit DEFAULT 'true',
+	date_added date
 )
 
 CREATE TABLE camper_updates (
