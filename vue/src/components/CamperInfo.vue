@@ -1,20 +1,20 @@
 <template>
 <section>
-  <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'" v-show="!showRegistrar">
-  <button type="button" v-on:click.prevent="approveRequest()">Approve All</button>
-  <button type="button" v-on:click.prevent="rejectRequest()">Reject All</button>
+  <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
+  <button type="button" v-on:click.prevent="approveRequest()" v-bind:disabled="pending">Approve All</button>
+  <button type="button" v-on:click.prevent="rejectRequest()" v-bind:disabled="pending">Reject All</button>
   </div>
   <table>
     <tr class="row">
       <td>First Name:</td>
       <td>
         <div v-show="!showFirst" class="data">
-          <p v-if="!pending.firstName">{{ this.camper.firstName }}</p>
-          <p v-if="pending.firstName" class="newValue">{{ this.pending.firstName }}</p>
+          <span v-if="!pending.firstName">{{ this.camper.firstName }}</span>
+          <span v-if="pending.firstName" class="newValue">{{ this.pending.firstName }}</span>
         </div>
         <input type="text" v-model="newData.firstName" v-show="showFirst" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showFirst = true" v-show="!showFirst">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst" v-bind:disabled="!newData.firstName">Save</button>
         <button type="button" v-on:click.prevent="newData.firstName = ''; showFirst = false" v-show="showFirst">Cancel</button>
@@ -24,12 +24,12 @@
       <td>Last Name:</td>
       <td>
         <div v-show="!showLast"  class="data">
-          <p v-if="!pending.lastName"> {{ this.camper.lastName }}</p>
-          <p v-if="pending.lastName" class="newValue">{{ this.pending.lastName }}</p>
+          <span v-if="!pending.lastName"> {{ this.camper.lastName }}</span>
+          <span v-if="pending.lastName" class="newValue">{{ this.pending.lastName }}</span>
         </div>
         <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showLast = true" v-show="!showLast">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast" v-bind:disabled="!newData.lastName">Save</button>
         <button type="button" v-on:click.prevent="newData.lastName = ''; showLast = false" v-show="showLast">Cancel</button>
@@ -39,12 +39,12 @@
       <td>Registrar:</td>
       <td>
         <div v-show="!showRegistrar"  class="data">
-          <p v-if="!pending.registrar"> {{ this.camper.registrar }}</p>
-          <p v-if="pending.registrar" class="newValue">{{ this.pending.registrar }}</p>
+          <span v-if="!pending.registrar"> {{ this.camper.registrar }}</span>
+          <span v-if="pending.registrar" class="newValue">{{ this.pending.registrar }}</span>
         </div>
         <input type="text" v-model="newData.registrar" v-show="showRegistrar" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showRegistrar = true" v-show="!showRegistrar">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('registrar')" v-show="showRegistrar" v-bind:disabled="!newData.registrar">Save</button>
         <button type="button" v-on:click.prevent="newData.registrar = ''; showRegistrar = false" v-show="showRegistrar">Cancel</button>
@@ -59,12 +59,12 @@
       <td>Date of Birth:</td>
       <td>
         <div v-show="!showDOB"  class="data">
-          <p v-if="!pending.dob">{{ this.convertedDateTime }}</p>
-          <p v-if="pending.dob" class="newValue">{{ this.newConvertedDateTime }}</p>
+          <span v-if="!pending.dob">{{ this.convertedDateTime }}</span>
+          <span v-if="pending.dob" class="newValue">{{ this.pendingConvertedDateTime }}</span>
         </div>
         <input type="date" v-model="newData.dob" v-show="showDOB" />
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showDOB = true" v-show="!showDOB">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('dob')" v-show="showDOB" v-bind:disabled="!newData.dob">Save</button>
         <button type="button" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
@@ -74,8 +74,8 @@
       <td>Payment Status:</td>
       <td>
         <div class="data">
-        <p v-if="!showPayment && !pending.paymentStatus">{{ this.camper.paymentStatus }}</p>
-        <p v-if="pending.paymentStatus && !showPayment" class="newValue">{{ this.pending.paymentStatus }}</p>
+        <span v-if="!showPayment && !pending.paymentStatus">{{ this.camper.paymentStatus }}</span>
+        <span v-if="pending.paymentStatus && !showPayment" class="newValue">{{ this.pending.paymentStatus }}</span>
         </div>
         <div v-show="showPayment">
         <label for="unpaid">Unpaid</label>
@@ -84,7 +84,7 @@
         <input type="radio" id="paid" name="paid" value="Paid" v-model="newData.paymentStatus">
       </div>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('payment')" v-show="showPayment" v-bind:disabled="!newData.paymentStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.paymentStatus = ''; showPayment = false" v-show="showPayment">Cancel</button>
@@ -94,8 +94,8 @@
       <td>Active Status:</td>
       <td>
         <div class="data">
-        <p v-if="!showActive && !pending.activeStatus">{{ this.camper.activeStatus }}</p>
-        <p v-if="pending.activeStatus && !showActive" class="newValue">{{ this.pending.activeStatus }}</p>
+        <span v-if="!showActive && !pending.activeStatus">{{ this.camper.activeStatus }}</span>
+        <span v-if="pending.activeStatus && !showActive" class="newValue">{{ this.pending.activeStatus }}</span>
         </div>
         <div v-show="showActive">
         <label for="Active">Active</label>
@@ -104,7 +104,7 @@
         <input type="radio" id="Inactive" name="Inactive" value="Inactive" v-model="newData.activeStatus">
       </div>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showActive = true;" v-show="!showActive">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('active')" v-show="showActive" v-bind:disabled="!newData.activeStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.activeStatus = ''; showActive = false" v-show="showActive">Cancel</button>
@@ -114,14 +114,14 @@
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
-          <p v-if="!pending.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</p>
-          <p v-if="pending.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</p>
+          <span v-if="!pending.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</span>
+          <span v-if="pending.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</span>
         </div>
         <select v-model="newData.familyId" v-show="showFamily">
           <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}}--{{f.fullName}}</option>
         </select>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showFamily = true" v-show="!showFamily">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily" v-bind:disabled="!newData.familyId">Save</button>
         <button type="button" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
@@ -130,8 +130,8 @@
     <tr class="row">
       <td>Allergies:</td>
       <td>
-        <ul class="data">
-          <li v-show="!showAllergies && !pending.allergies && camper.allergies && camper.allergies != 'None'" v-for="line in this.camper.allergies" v-bind:key="line">
+        <ul class="data" v-if="this.camper.allergies">
+          <li v-show="!showAllergies && !pending.allergies && camper.allergies" v-for="line in allergies" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showAllergies && pending.allergies" v-for="line in this.pending.allergies" v-bind:key="line" class="newValue">
@@ -141,9 +141,9 @@
           <input type="text" v-model="newData.allergies" />
           </div>
         </ul>
-        <p v-show="!showAllergies && !pending.allergies && (!camper.allergies || camper.allergies === 'None')">None</p>
+        <span v-show="!showAllergies && !pending.allergies && !camper.allergies">None</span>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies" v-bind:disabled="!newData.allergies">Save</button>
         <button type="button" v-on:click.prevent="newData.allergies = ''; showAllergies = false" v-show="showAllergies">Cancel</button>
@@ -152,8 +152,8 @@
      <tr class="row">
       <td>Medications:</td>
       <td>
-        <ul class="data">
-          <li v-show="!showMedications && !pending.medications && camper.medications && !camper.medications === 'None'" v-for="line in this.camper.medications" v-bind:key="line">
+        <ul class="data" v-if="this.camper.medications">
+          <li v-show="!showMedications && !pending.medications && camper.medications" v-for="line in medications" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showMedications && pending.medications" v-for="line in this.pending.medications" v-bind:key="line" class="newValue">
@@ -163,9 +163,9 @@
           <input type="text" v-model="newData.medications" />
           </div>
         </ul>
-      <p v-show="!showMedications && !pending.medications && (!camper.medications || camper.medications === 'None')">None</p>
+      <span v-show="!showMedications && !pending.medications && !camper.medications">None</span>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications" v-bind:disabled="!newData.medications">Save</button>
         <button type="button" v-on:click.prevent="newData.medications = ''; showMedications = false" v-show="showMedications">Cancel</button>
@@ -174,8 +174,8 @@
     <tr class="row">
       <td>Special Needs:</td>
       <td>
-        <ul class="data">
-          <li v-show="!showSpecial && !pending.specialNeeds && camper.specialNeeds && !camper.specialNeeds === 'None'" v-for="line in this.camper.specialNeeds" v-bind:key="line">
+        <ul class="data" v-if="this.camper.specialNeeds">
+          <li v-show="!showSpecial && !pending.specialNeeds && camper.specialNeeds" v-for="line in specialNeeds" v-bind:key="line">
             {{ line }}
           </li>
           <li v-show="!showSpecial && pending.specialNeeds" v-for="line in this.pending.specialNeeds" v-bind:key="line" class="newValue">
@@ -185,9 +185,9 @@
           <input type="text" v-model="newData.specialNeeds" />
           </div>
         </ul>
-      <p v-show="!showSpecial && !pending.specialNeeds && (!camper.specialNeeds || camper.specialNeeds === 'None')">None</p>
+      <span v-show="!showSpecial && !pending.specialNeeds && !camper.specialNeeds">None</span>
       </td>
-      <td>
+      <td class="editButtons">
         <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial" v-bind:disabled="!newData.specialNeeds">Save</button>
         <button type="button" v-on:click.prevent="newData.specialNeeds = ''; showSpecial = false" v-show="showSpecial">Cancel</button>
@@ -224,6 +224,27 @@ export default {
     camper: Object,
   },
   computed:{
+    allergies(){
+      if(typeof(this.camper.allergies) == String)
+      {
+        return this.camper.allergies.split('')
+      }
+        return this.camper.allergies;
+    },
+    medications (){
+      if(typeof(this.camper.medications) == String)
+      {
+        return this.camper.medications.split('')
+      }
+        return this.camper.medications;
+    },
+    specialNeeds (){
+      if(typeof(this.camper.specialNeeds) == String)
+      {
+        return this.camper.specialNeeds.split('')
+      }
+        return this.camper.specialNeeds;
+    },
     newFamilyId(){
       let newFamily = this.newData.familyId.split('--');
       return parseInt(newFamily[0]);
@@ -244,6 +265,18 @@ export default {
       if(this.newData.dob)
       {
         let dob = new Date(this.newData.dob);
+        let month = dob.getMonth() + 1;
+        let day = dob.getDate();
+        let year = dob.getFullYear(); 
+        let formattedDob = `${month}/${day}/${year}`
+        return formattedDob;
+      }
+      return '';
+    },
+    pendingConvertedDateTime() {
+      if(this.pending.dob)
+      {
+        let dob = new Date(this.pending.dob);
         let month = dob.getMonth() + 1;
         let day = dob.getDate();
         let year = dob.getFullYear(); 
@@ -301,20 +334,37 @@ export default {
     setCamper(){
       this.pending.firstName? this.camper.firstName = this.newData.firstName: '';
       this.pending.lastName? this.camper.lastName = this.newData.lastName: '';
-      this.pending.allergies? this.camper.allergies = this.newData.allergies: '';
-      this.pending.medications? this.camper.medications = this.newData.medications: '';
-      this.pending.familyId? this.camper.familyId = this.newFamilyId: '';
-      this.pending.specialNeeds? this.camper.specialNeeds = this.newData.specialNeeds: '';
-      if(this.newData.paymentStatus) 
+      if(this.newData.allergies)
       {
-        this.pending.paymentStatus == 'Unpaid'? this.camper.paymentStatus = false : this.camper.paymentStatus = true;
+        this.pending.allergies? this.camper.allergies = this.newData.allergies.toString(): this.camper.allergies = '';
       }
+      else if (this.camper.allergies)
+      {
+        this.camper.allergies = this.camper.allergies.toString();
+      }
+     if(this.camper.medications)
+      {
+        this.pending.medications? this.camper.medications = this.newData.medications.toString(): this.camper.medications = '';
+      }
+      else if (this.camper.medications)
+      {
+        this.camper.medications = this.camper.medications.toString();
+      }
+      this.pending.familyId? this.camper.familyId = this.newFamilyId: '';
+      if(this.camper.specialNeeds)
+      {
+      this.pending.specialNeeds? this.camper.specialNeeds = this.newData.specialNeeds.toString(): this.camper.specialNeeds = '';
+      }
+      else if (this.camper.specialNeeds)
+      {
+        this.camper.specialNeeds = this.camper.specialNeeds.toString();
+      }
+      this.camper.paymentStatus == this.pending.paymentStatus;
+      this.camper.paymentStatus == 'Unpaid'? this.camper.paymentStatus = false : this.camper.paymentStatus = true;
       this.pending.registrar? this.camper.registrar = this.newData.registrar: '';
       this.pending.dob? this.camper.dob = this.newData.dob: '';
-      if(this.newData.activeStatus) 
-      {
-        this.pending.activeStatus == 'Inactive'? this.camper.activeStatus = false : this.camper.activeStatus = true;
-      }
+      this.camper.activeStatus == this.pending.activeStatus;
+      this.pending.activeStatus == 'Inactive'? this.camper.activeStatus = false : this.camper.activeStatus = true;
     },
     convertToPending(data)
     {
@@ -334,19 +384,19 @@ export default {
         this.pending.registrar = data.newData;
         break;
         case"allergies":
-        this.pending.allergies = data.newData;
+        data.newData? this.pending.allergies = data.newData.split(','): this.pending.allergies;
         break;
         case"medications":
-        this.pending.medications = data.newData;
+        data.newData? this.pending.medications = data.newData.split(','): this.pending.medications = '';
         break;
         case"family_id":
         this.pending.familyId = data.newData;
         break;
         case"special_needs":
-        this.pending.specialNeeds = data.newData;
+        data.newData? this.pending.specialNeeds = data.newData.split(','): this.pending.specialNeeds = '';
         break;
         case"active_status":
-        this.pending.activeStatus = data.newData;
+        data.newData? this.pending.activeStatus = 'Active': this.pending.activeStatus = 'Inactive';
         break;
         case"payment_status":
         data.newData? this.pending.paymentStatus = 'Paid': this.pending.paymentStatus = 'Unpaid';
@@ -368,9 +418,19 @@ export default {
       UpdateService.approveRequest(this.requestId)
       .then(response => {
         console.log('Request Approved', response.data)
+        this.pending = {};
       })
       .catch(response => {
         console.error('Problem approving request', response);
+      })
+    },
+    rejectRequest(){
+      UpdateService.rejectRequest(this.requestId)
+      .then(response => {
+        console.log('Request rejected', response.data)
+      })
+      .catch(response => {
+        console.error('Problem rejecting request', response);
       })
     }
   },
@@ -396,6 +456,13 @@ table {
   display: flex;
   flex-direction: column;
   width: 120%;
+  margin: 1%;
+  font-size: 130%;
+}
+.adminButtons{
+  display: flex;
+  justify-content: flex-end;
+  margin: 2%;
 }
 button {
   background-color: $textDark;
@@ -405,9 +472,10 @@ button {
   border-radius: 5px;
   border: 2px solid $highlight;
   text-shadow: 2px 1px 1px black;
-  font-size: 1rem;
+  font-size: 1em;
   font-family: 'Lora', serif;
   box-shadow: 1px 0.5px 0px $textLight;
+  width: 30%;
 }
 button:disabled{
   background-color: $secondary;
@@ -425,13 +493,16 @@ tr{
 }
 td{
   width: 70%;
+  font-size: 120%;
 }
-input, select, textarea{
+input, select{
   font-family: 'Lora', serif;
   border: 1px dotted $highlight;
   border-radius: 10px;
   background-color: $textDark;
   color: $textLight;
+  width: 60%;
+  font-size: 1em;
 }
 input::-webkit-input-placeholder{
   color: white;
@@ -444,13 +515,26 @@ button[type='submit']
   margin: 1% 35%;
   width: 30%;
 }
-.adminButtons{
-  display: flex;
-  justify-content: flex-end;
-  margin: 2%;
-}
 tr > td:nth-child(3)
 {
-  width: 30%
+  width: 30%;
+}
+tr > td:nth-child(2)
+{
+  margin-left: 2%;
+  text-align: justify;
+}
+tr > td:first-child
+{
+  width: 40%
+}
+ul{
+  padding: 2%;
+}
+.editButtons{
+  display: flex;
+}
+.editButtons button{
+  width: 100%;
 }
 </style>
