@@ -31,6 +31,8 @@ namespace Capstone.DAO
             "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates";
         const string sqlGetFamilyUpdateList = "SELECT request_id, field_to_be_changed, family_id, action," +
             " new_data, old_data, requestor, status, request_date, finalize_date FROM family_updates";
+        const string sqlGetUpdatesByCamperCode = "SELECT request_id, field_to_be_changed, camper_code, action, " +
+            "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates WHERE camper_code = @camper_code AND status = 'Pending'";
 
         public List<Update> GetCamperUpdateList(bool isCamperUpdate)
         {
@@ -54,7 +56,7 @@ namespace Capstone.DAO
                         while (reader.Read())
                         {
 
-                            Update update = BuildUpdate(reader);
+                            Update update = BuildUpdate(reader, isCamperUpdate);
 
                             var finalizeDate = reader["finalize_date"];
 
@@ -77,20 +79,56 @@ namespace Capstone.DAO
             return updateList;
         }
 
-        private Update BuildUpdate(SqlDataReader reader)
+        public List<Update> GetCamperUpdatesByCamperCode(int camperCode)
         {
-            return new Update()
+            List<Update> updateList = new List<Update>();
+            using SqlConnection conn = new SqlConnection(connectionString);
+            conn.Open();
+            using SqlCommand cmd = new SqlCommand(sqlGetUpdatesByCamperCode, conn);
+            cmd.Parameters.AddWithValue("@camper_code", camperCode);
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Update update = BuildUpdate(reader, true);
+                if (reader["finalize_date"] != DBNull.Value)
+                {
+                    update.FinalizeDate = Convert.ToDateTime(reader["finalize_date"]);
+                }
+                updateList.Add(update);
+            }
+            return updateList;
+
+        }
+
+        private Update BuildUpdate(SqlDataReader reader, bool isCamper)
+        {
+            Update update = new Update()
             {
                 RequestId = Convert.ToInt32(reader["request_id"]),
                 FieldToBeChanged = Convert.ToString(reader["field_to_be_changed"]),
-                FamilyId = Convert.ToInt32(reader["family_id"]),
                 Action = Convert.ToString(reader["action"]),
                 NewData = Convert.ToString(reader["new_data"]),
-                OldData = Convert.ToString(reader["old_data"]),
                 Requestor = Convert.ToString(reader["requestor"]),
                 Status = Convert.ToString(reader["status"]),
                 RequestDate = Convert.ToDateTime(reader["request_date"]),
             };
+            if (reader["old_data"] != DBNull.Value)
+            {
+                update.OldData = Convert.ToString(reader["old_data"]);
+            }
+            else 
+            {
+                update.OldData = null;
+            }
+            if (isCamper)
+            {
+                update.CamperCode = Convert.ToInt32(reader["camper_code"]);
+            }
+            else 
+            {
+                update.FamilyId = Convert.ToInt32(reader["family_id"]);
+            }
+            return update;
         }
 
         public int GetNextFamilyUpdateRequestId()
@@ -116,7 +154,7 @@ namespace Capstone.DAO
             }
         }
 
-          public int AddNewCamperUpdateRequest(int userId, Camper newCamperData, Camper currentCamperData)
+        public int AddNewCamperUpdateRequest(int userId, Camper newCamperData, Camper currentCamperData)
         {
             int requestId = GetNextCamperUpdateRequestId();
             string user = userId.ToString();
@@ -185,14 +223,28 @@ namespace Capstone.DAO
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "registrar";
                             cmd.Parameters["@newData"].Value = newCamperData.Registrar;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.Registrar;
+                            if (currentCamperData.Registrar == null)
+                            {
+                                cmd.Parameters["@oldData"].Value = DBNull.Value;
+                            }
+                            else
+                            {
+                                cmd.Parameters["@oldData"].Value = currentCamperData.Registrar;
+                            }
                             cmd.ExecuteNonQuery();
                         }
                         if (currentCamperData.PaymentStatus != newCamperData.PaymentStatus)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "payment_status";
                             cmd.Parameters["@newData"].Value = newCamperData.PaymentStatus;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.PaymentStatus;
+                            if (currentCamperData.Registrar == null)
+                            {
+                                cmd.Parameters["@oldData"].Value = DBNull.Value;
+                            }
+                            else
+                            {
+                                cmd.Parameters["@oldData"].Value = currentCamperData.PaymentStatus;
+                            }
                             cmd.ExecuteNonQuery();
                         }
                     }

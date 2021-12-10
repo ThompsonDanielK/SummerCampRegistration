@@ -1,12 +1,16 @@
 <template>
 <section>
+  <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'" v-show="!showRegistrar">
+  <button type="button" v-on:click.prevent="approveRequest()">Approve All</button>
+  <button type="button" v-on:click.prevent="rejectRequest()">Reject All</button>
+  </div>
   <table>
     <tr class="row">
       <td>First Name:</td>
       <td>
         <div v-show="!showFirst" class="data">
-          <p v-if="!newData.firstName">{{ this.camper.firstName }}</p>
-          <p v-if="newData.firstName" class="newValue">{{ this.newData.firstName }}</p>
+          <p v-if="!pending.firstName">{{ this.camper.firstName }}</p>
+          <p v-if="pending.firstName" class="newValue">{{ this.pending.firstName }}</p>
         </div>
         <input type="text" v-model="newData.firstName" v-show="showFirst" />
       </td>
@@ -20,8 +24,8 @@
       <td>Last Name:</td>
       <td>
         <div v-show="!showLast"  class="data">
-          <p v-if="!newData.lastName"> {{ this.camper.lastName }}</p>
-          <p v-if="newData.lastName" class="newValue">{{ this.newData.lastName }}</p>
+          <p v-if="!pending.lastName"> {{ this.camper.lastName }}</p>
+          <p v-if="pending.lastName" class="newValue">{{ this.pending.lastName }}</p>
         </div>
         <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
@@ -35,8 +39,8 @@
       <td>Registrar:</td>
       <td>
         <div v-show="!showRegistrar"  class="data">
-          <p v-if="!newData.registrar"> {{ this.camper.registrar }}</p>
-          <p v-if="newData.registrar" class="newValue">{{ this.newData.registrar }}</p>
+          <p v-if="!pending.registrar"> {{ this.camper.registrar }}</p>
+          <p v-if="pending.registrar" class="newValue">{{ this.pending.registrar }}</p>
         </div>
         <input type="text" v-model="newData.registrar" v-show="showRegistrar" />
       </td>
@@ -55,8 +59,8 @@
       <td>Date of Birth:</td>
       <td>
         <div v-show="!showDOB"  class="data">
-          <p v-if="!newData.dob">{{ this.convertedDateTime }}</p>
-          <p v-if="newData.dob" class="newValue">{{ this.newConvertedDateTime }}</p>
+          <p v-if="!pending.dob">{{ this.convertedDateTime }}</p>
+          <p v-if="pending.dob" class="newValue">{{ this.newConvertedDateTime }}</p>
         </div>
         <input type="date" v-model="newData.dob" v-show="showDOB" />
       </td>
@@ -70,8 +74,8 @@
       <td>Payment Status:</td>
       <td>
         <div class="data">
-        <p v-if="!showPayment && !newData.paymentStatus">{{ this.camper.paymentStatus }}</p>
-        <p v-if="newData.paymentStatus && !showPayment" class="newValue">{{ this.newData.paymentStatus }}</p>
+        <p v-if="!showPayment && !pending.paymentStatus">{{ this.camper.paymentStatus }}</p>
+        <p v-if="pending.paymentStatus && !showPayment" class="newValue">{{ this.pending.paymentStatus }}</p>
         </div>
         <div v-show="showPayment">
         <label for="unpaid">Unpaid</label>
@@ -90,8 +94,8 @@
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
-          <p v-if="!newData.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</p>
-          <p v-if="newData.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</p>
+          <p v-if="!pending.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</p>
+          <p v-if="pending.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</p>
         </div>
         <select v-model="newData.familyId" v-show="showFamily">
           <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}}--{{f.fullName}}</option>
@@ -107,18 +111,17 @@
       <td>Allergies:</td>
       <td>
         <ul class="data">
-          <li v-show="!showAllergies && !newData.allergies && camper.allergies && camper.allergies != 'None'" v-for="line in this.camper.allergies" v-bind:key="line">
+          <li v-show="!showAllergies && !pending.allergies && camper.allergies && camper.allergies != 'None'" v-for="line in this.camper.allergies" v-bind:key="line">
             {{ line }}
           </li>
-          <li v-show="!showAllergies && newData.allergies" v-for="line in this.newData.allergies" v-bind:key="line" class="newValue">
+          <li v-show="!showAllergies && pending.allergies" v-for="line in this.pending.allergies" v-bind:key="line" class="newValue">
             {{ line }}
           </li>
           <div v-show="showAllergies">
-          <small>Seperate items by commas (,) with no spaces</small>
           <input type="text" v-model="newData.allergies" />
           </div>
         </ul>
-        <p v-show="!showAllergies && !newData.allergies && (!camper.allergies || camper.allergies === 'None')">None</p>
+        <p v-show="!showAllergies && !pending.allergies && (!camper.allergies || camper.allergies === 'None')">None</p>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies">Edit</button>
@@ -130,18 +133,17 @@
       <td>Medications:</td>
       <td>
         <ul class="data">
-          <li v-show="!showMedications && !newData.medications && camper.medications && !camper.medications === 'None'" v-for="line in this.camper.medications" v-bind:key="line">
+          <li v-show="!showMedications && !pending.medications && camper.medications && !camper.medications === 'None'" v-for="line in this.camper.medications" v-bind:key="line">
             {{ line }}
           </li>
-          <li v-show="!showMedications && newData.medications" v-for="line in this.newData.medications" v-bind:key="line" class="newValue">
+          <li v-show="!showMedications && pending.medications" v-for="line in this.pending.medications" v-bind:key="line" class="newValue">
             {{ line }}
           </li>
           <div v-show="showMedications">
-          <small>Seperate items by commas (,) with no spaces</small>
           <input type="text" v-model="newData.medications" />
           </div>
         </ul>
-      <p v-show="!showMedications && !newData.medications && (!camper.medications || camper.medications === 'None')">None</p>
+      <p v-show="!showMedications && !pending.medications && (!camper.medications || camper.medications === 'None')">None</p>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications">Edit</button>
@@ -153,18 +155,17 @@
       <td>Special Needs:</td>
       <td>
         <ul class="data">
-          <li v-show="!showSpecial && !newData.specialNeeds && camper.specialNeeds && !camper.specialNeeds === 'None'" v-for="line in this.camper.specialNeeds" v-bind:key="line">
+          <li v-show="!showSpecial && !pending.specialNeeds && camper.specialNeeds && !camper.specialNeeds === 'None'" v-for="line in this.camper.specialNeeds" v-bind:key="line">
             {{ line }}
           </li>
-          <li v-show="!showSpecial && newData.specialNeeds" v-for="line in this.newData.specialNeeds" v-bind:key="line" class="newValue">
+          <li v-show="!showSpecial && pending.specialNeeds" v-for="line in this.pending.specialNeeds" v-bind:key="line" class="newValue">
             {{ line }}
           </li>
           <div v-show="showSpecial">
-          <small>Seperate items by commas (,) with no spaces</small>
           <input type="text" v-model="newData.specialNeeds" />
           </div>
         </ul>
-      <p v-show="!showSpecial && !newData.specialNeeds && (!camper.specialNeeds || camper.specialNeeds === 'None')">None</p>
+      <p v-show="!showSpecial && !pending.specialNeeds && (!camper.specialNeeds || camper.specialNeeds === 'None')">None</p>
       </td>
       <td>
         <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial">Edit</button>
@@ -173,22 +174,19 @@
       </td>
     </tr>
   </table>
-  <button type="submit" v-on:click.prevent="finalizeChanges()" v-bind:disabled="!this.newData">Submit Changes</button>
+  <button type="submit" v-on:click.prevent="finalizeChanges()">Submit Changes</button>
 </section>
 </template>
 
 <script>
-import CamperService from "../services/CamperService.js";
+import UpdateService from '../services/UpdateService.js'
+import CamperService from '../services/CamperService.js'
 
 export default {
   data() {
     return {
       newData: {},
-      camperToAdd: {
-        fieldToBeChanged: '',
-        oldValue: '',
-        newValue: '',
-      },
+      pending: {},
       showFirst: false,
       showLast: false,
       showAllergies: false,
@@ -198,11 +196,7 @@ export default {
       showFamily: false,
       showSpecial: false,
       showRegistrar: false,
-      states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
-               "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",
-               "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA",
-               "VT", "WA", "WI", "WV", "WY"
-              ],
+      requestId: 0,
             };
   },
   props:{
@@ -251,18 +245,18 @@ export default {
           this.showDOB = false;
           break;
         case "allergies":
-          this.newData.allergies = this.newData.allergies.split(',')
+          this.pending.allergies = this.newData.allergies.split(',')
           this.showAllergies = false;
           break;
         case "medications":
-          this.newData.medications = this.newData.medications.split(',')
+          this.pending.medications = this.newData.medications.split(',')
           this.showMedications = false;
           break;
         case "familyId":
           this.showFamily = false;
           break;
         case "specialNeeds":
-          this.newData.specialNeeds = this.newData.specialNeeds.split(',');
+          this.pending.specialNeeds = this.newData.specialNeeds.split(',');
           this.showSpecial = false;
           break;
         case "payment":
@@ -272,63 +266,86 @@ export default {
           this.showRegistrar = false;
       }
     },
+    setCamper(){
+      this.pending.firstName? this.camper.firstName = this.newData.firstName: '';
+      this.pending.lastName? this.camper.lastName = this.newData.lastName: '';
+      this.pending.allergies? this.camper.allergies = this.newData.allergies: '';
+      this.pending.medications? this.camper.medications = this.newData.medications: '';
+      this.pending.familyId? this.camper.familyId = this.newFamilyId: '';
+      this.pending.specialNeeds? this.camper.specialNeeds = this.newData.specialNeeds: '';
+      if(this.newData.paymentStatus) 
+      {
+        this.pending.paymentStatus == 'Unpaid'? this.camper.paymentStatus = false : this.camper.paymentStatus = true;
+      }
+      this.pending.registrar? this.camper.registrar = this.newData.registrar: '';
+      this.pending.dob? this.camper.dob = this.newData.dob: '';
+    },
+    convertToPending(data)
+    {
+      switch(data.fieldToBeChanged)
+      {
+        case"first_name":
+        this.pending.firstName = data.newData;
+        break;
+        case"last_name":
+        this.pending.lastName = data.newData;
+        break;
+        case"dob":
+        this.pending.dob = data.newData;
+        break;
+        case"registrar":
+        this.pending.registrar = data.newData;
+        break;
+        case"allergies":
+        this.pending.allergies = data.newData;
+        break;
+        case"medications":
+        this.pending.medications = data.newData;
+        break;
+        case"family_id":
+        this.pending.familyId = data.newData;
+        break;
+        case"special_needs":
+        this.pending.specialNeeds = data.newData;
+        break;
+        case"payment_status":
+        data.newData? this.pending.paymentStatus = 'Paid': this.pending.paymentStatus = 'Unpaid';
+        break;
+      }
+    },
     finalizeChanges(){
       this.setCamper();
       CamperService.updateCamper(this.camper)
       .then(response => {
         console.log('Updated camper info', response.data);
-        // this.logChanges();
-        this.$router.push('/');
+        this.$store.hotUpdate();
       })
       .catch(response => {
         console.error('Cannot finalize changes', response);
       })
     },
-    // logChanges(){
-    //   this..action = 'update'
-    //    CamperService.logChanges(this.)
-    //     .then(response => {
-    //       console.log('Logged changes', response.data);
-    //     })
-    //     .catch(response => {
-    //       console.warn('Problem logging changes', response);
-    //     })
-    // },
-    setCamper(){
-      if(this.newData.firstName)
-      {
-        this.camper.firstName = this.newData.firstName;
-      }
-      if(this.newData.lastName)
-      {
-        this.camper.lastName = this.newData.lastName;
-      }
-      if(this.newData.allergies)
-      {
-        this.camper.allergies = this.newData.allergies;
-      }
-      if(this.newData.medications)
-      {
-        this.camper.medications = this.newData.medications;
-      }
-      if(this.newData.familyId)
-      {
-        this.camper.familyId = this.newFamilyId;
-      }
-      if(this.newData.specialNeeds)
-      {
-        this.camper.specialNeeds = this.newData.specialNeeds;
-      }
-      if(this.newData.paymentStatus)
-      {
-        this.camper.paymentStatus = this.newData.paymentStatus;
-      }
-      if(this.newData.registrar)
-      {
-        this.camper.registrar = this.newData.registrar;
-      }
+    approveRequest(){
+      UpdateService.approveRequest(this.requestId)
+      .then(response => {
+        console.log('Request Approved', response.data)
+      })
+      .catch(response => {
+        console.error('Problem approving request', response);
+      })
     }
   },
+  created(){
+    UpdateService.getUpdatesByCamperCode(this.$route.params.camperCode)
+    .then(response => {
+      console.log('Got updates', response.data);
+      response.data.forEach(u => this.convertToPending(u));
+      this.requestId = response.data.requestId;
+      this.$forceUpdate();
+    })
+    .catch(response => {
+      console.error('Problem getting updates', response)
+    })
+  }
 };
 </script>
 
@@ -338,8 +355,7 @@ export default {
 table {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 130%;
+  width: 120%;
 }
 button {
   background-color: $textDark;
@@ -388,7 +404,12 @@ button[type='submit']
   margin: 1% 35%;
   width: 30%;
 }
-#app > div > article > section > table > tr > td:nth-child(3)
+.adminButtons{
+  display: flex;
+  justify-content: flex-end;
+  margin: 2%;
+}
+tr > td:nth-child(3)
 {
   width: 30%
 }

@@ -42,20 +42,25 @@ namespace Capstone.Controllers
             return Ok(updateList);
         }
 
-        [HttpPut("camper")]
+        [HttpPost("camper")]
         public ActionResult UpdateCamper(Camper camper)
         {
             int userId = int.Parse(this.User.FindFirst("sub").Value);
             Camper oldCamperData = camp.FetchCamper(camper.CamperCode);
 
             int requestId = request.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
-            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("camper_updates", requestId);
-
+            if (requestId == -1)
+            {
+                return BadRequest("Problem creating update in database");
+            }
+            if (this.User.IsInRole("admin"))
+            { 
+                updates.ProcessApprovedRequests("camper_updates", requestId);
+            } 
             return Ok(requestId);
-
         }
 
-        [HttpPut("family")]
+        [HttpPost("family")]
         public ActionResult UpdateFamily(Family family)
         {
             int userId = int.Parse(this.User.FindFirst("sub").Value);
@@ -82,6 +87,18 @@ namespace Capstone.Controllers
         {
             updates.ProcessApprovedRequests("family_updates", requestId);
             return Ok();
+        }
+
+        [HttpGet("camper/{camperCode}")]
+        public ActionResult GetUpdatesByCamperCode(int camperCode)
+        {
+            List<Update> updates = request.GetCamperUpdatesByCamperCode(camperCode);
+
+            if (updates != null)
+            {
+                return Ok(updates);
+            }
+            return BadRequest();
         }
     }
 }

@@ -26,6 +26,10 @@ export default new Vuex.Store({
     user: currentUser || {}, // If a user is an admin, their user.role will be 'admin'
     families: [],
     campers: [],
+    states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
+    "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",
+    "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA",
+    "VT", "WA", "WI", "WV", "WY"],
   },
   mutations: {
     SET_AUTH_TOKEN(state, token) {

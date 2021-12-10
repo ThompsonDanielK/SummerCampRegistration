@@ -31,11 +31,10 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 .container .page {
   color: $main;
-  margin: 2% 5%;
+  margin: 2% 15%;
   color: $textDark;
   align-items: center;
   box-shadow: 3px 2px 1px $secondary;

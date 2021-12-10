@@ -17,7 +17,7 @@
       <div id="state">
       <label for="state">State:</label>
       <select name="state" v-model="family.state">
-          <option v-for="state in states" v-bind:key="state">
+          <option v-for="state in $store.state.states" v-bind:key="state">
             {{ state }}
           </option>
         </select>
@@ -43,10 +43,6 @@ export default {
     data() {
         return{
             families: [],
-    states: ["AL", "AK", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA",
-               "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH",
-               "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA",
-               "VT", "WA", "WI", "WV", "WY"],
         }
     },
     props: {
