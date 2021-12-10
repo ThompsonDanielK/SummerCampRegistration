@@ -241,7 +241,7 @@ namespace Capstone.DAO
                 Registrar = Convert.ToString(reader["registrar"]),
                 PaymentStatus = Convert.ToBoolean(reader["payment_status"]),
                 ActiveStatus = Convert.ToBoolean(reader["active_status"]),
-                //DateAdded = Convert.ToDateTime(reader["date_added"]),
+                DateAdded = Convert.ToDateTime(reader["date_added"]),
             };
 
             return camper;
