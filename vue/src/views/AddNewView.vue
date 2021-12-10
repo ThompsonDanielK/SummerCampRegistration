@@ -44,7 +44,7 @@ export default {
             {
                 this.CamperFamily.camper.familyId= parseInt(this.CamperFamily.camper.familyId)
             }
-            CamperService.addCamperFamily(this.CamperFamily)
+        CamperService.addCamperFamily(this.CamperFamily)
         .then(response => {
             console.log('New camper added', response.data);
             this.$store.state.CamperFamily = {};
