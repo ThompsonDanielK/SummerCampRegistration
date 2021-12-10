@@ -15,6 +15,7 @@ export default {
   created(){
         this.$store.commit('SET_CAMPER_LIST');
         this.$forceUpdate();
+        console.log(this.$store.state.user.username);
     },
 };
 </script>

@@ -44,7 +44,7 @@ export default {
             {
                 this.CamperFamily.camper.familyId= parseInt(this.CamperFamily.camper.familyId)
             }
-            CamperService.addCamperFamily(this.CamperFamily)
+        CamperService.addCamperFamily(this.CamperFamily)
         .then(response => {
             console.log('New camper added', response.data);
             this.$store.state.CamperFamily = {};
@@ -56,7 +56,7 @@ export default {
     },
     },
     created(){
-        this.camper.registrar = this.$store.state.user.username;
+        this.CamperFamily.camper.registrar = this.$store.state.user.username;
         FamilyService.getAllFamilies()
         .then(response => {
             console.log('Got all families', response.data);

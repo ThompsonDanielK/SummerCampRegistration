@@ -1,9 +1,5 @@
 <template>
 <section>
-  <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
-  <button type="button" v-on:click.prevent="approveRequest()">Approve All</button>
-  <button type="button" v-on:click.prevent="rejectRequest()">Reject All</button>
-  </div>
   <table>
     <tr class="row">
       <td>First Name:</td>
@@ -15,7 +11,7 @@
         <input type="text" v-model="newData.firstName" v-show="showFirst" />
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showFirst = true" v-show="!showFirst">Edit</button>
+        <button type="button" v-on:click.prevent="showFirst = true" v-show="!showFirst" v-bind:disabled="pending.firstName">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('firstName')" v-show="showFirst" v-bind:disabled="!newData.firstName">Save</button>
         <button type="button" v-on:click.prevent="newData.firstName = ''; showFirst = false" v-show="showFirst">Cancel</button>
       </td>
@@ -30,7 +26,7 @@
         <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showLast = true" v-show="!showLast">Edit</button>
+        <button type="button" v-on:click.prevent="showLast = true" v-show="!showLast" v-bind:disabled="pending.lastName">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('lastName')" v-show="showLast" v-bind:disabled="!newData.lastName">Save</button>
         <button type="button" v-on:click.prevent="newData.lastName = ''; showLast = false" v-show="showLast">Cancel</button>
       </td>
@@ -45,7 +41,7 @@
         <input type="text" v-model="newData.registrar" v-show="showRegistrar" />
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showRegistrar = true" v-show="!showRegistrar">Edit</button>
+        <button type="button" v-on:click.prevent="showRegistrar = true" v-show="!showRegistrar" v-bind:disabled="pending.registrar">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('registrar')" v-show="showRegistrar" v-bind:disabled="!newData.registrar">Save</button>
         <button type="button" v-on:click.prevent="newData.registrar = ''; showRegistrar = false" v-show="showRegistrar">Cancel</button>
       </td>
@@ -65,7 +61,7 @@
         <input type="date" v-model="newData.dob" v-show="showDOB" />
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showDOB = true" v-show="!showDOB">Edit</button>
+        <button type="button" v-on:click.prevent="showDOB = true" v-show="!showDOB" v-bind:disabled="pending.dob">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('dob')" v-show="showDOB" v-bind:disabled="!newData.dob">Save</button>
         <button type="button" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
       </td>
@@ -85,7 +81,7 @@
       </div>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment">Edit</button>
+        <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment" v-bind:disabled="pending.paymentStatus">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('payment')" v-show="showPayment" v-bind:disabled="!newData.paymentStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.paymentStatus = ''; showPayment = false" v-show="showPayment">Cancel</button>
       </td>
@@ -105,7 +101,7 @@
       </div>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showActive = true;" v-show="!showActive">Edit</button>
+        <button type="button" v-on:click.prevent="showActive = true;" v-show="!showActive" v-bind:disabled="pending.activeStatus">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('active')" v-show="showActive" v-bind:disabled="!newData.activeStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.activeStatus = ''; showActive = false" v-show="showActive">Cancel</button>
       </td>
@@ -122,7 +118,7 @@
         </select>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showFamily = true" v-show="!showFamily">Edit</button>
+        <button type="button" v-on:click.prevent="showFamily = true" v-show="!showFamily" v-bind:disabled="pending.familyId">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('familyId')" v-show="showFamily" v-bind:disabled="!newData.familyId">Save</button>
         <button type="button" v-on:click.prevent="newData.familyId = ''; showFamily = false" v-show="showFamily">Cancel</button>
       </td>
@@ -144,7 +140,7 @@
         <span v-show="!showAllergies && !pending.allergies && !camper.allergies">None</span>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies">Edit</button>
+        <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies" v-bind:disabled="pending.allergies">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('allergies')" v-show="showAllergies" v-bind:disabled="!newData.allergies">Save</button>
         <button type="button" v-on:click.prevent="newData.allergies = ''; showAllergies = false" v-show="showAllergies">Cancel</button>
       </td>
@@ -166,7 +162,7 @@
       <span v-show="!showMedications && !pending.medications && !camper.medications">None</span>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications">Edit</button>
+        <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications" v-bind:disabled="pending.medications">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('medications')" v-show="showMedications" v-bind:disabled="!newData.medications">Save</button>
         <button type="button" v-on:click.prevent="newData.medications = ''; showMedications = false" v-show="showMedications">Cancel</button>
       </td>
@@ -188,13 +184,17 @@
       <span v-show="!showSpecial && !pending.specialNeeds && !camper.specialNeeds">None</span>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial">Edit</button>
+        <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial" v-bind:disabled="pending.specialNeeds">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('specialNeeds')" v-show="showSpecial" v-bind:disabled="!newData.specialNeeds">Save</button>
         <button type="button" v-on:click.prevent="newData.specialNeeds = ''; showSpecial = false" v-show="showSpecial">Cancel</button>
       </td>
     </tr>
   </table>
-  <button type="submit" v-on:click.prevent="finalizeChanges()">Submit Changes</button>
+  <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
+  <button type="button" v-on:click.prevent="approveRequest()">Approve Changes</button>
+  <button type="button" v-on:click.prevent="rejectRequest()">Reject Changes</button>
+  </div>
+  <button type="submit" v-on:click.prevent="finalizeChanges()" v-if="this.$store.state.user.role != 'admin'">Submit Changes</button>
 </section>
 </template>
 
@@ -459,11 +459,11 @@ table {
   margin: 1%;
   font-size: 130%;
 }
-.adminButtons{
-  display: flex;
-  justify-content: flex-end;
-  margin: 2%;
-}
+// .adminButtons{
+//   display: flex;
+//   justify-content: flex-end;
+//   margin: 2%;
+// }
 button {
   background-color: $textDark;
   border: none;
