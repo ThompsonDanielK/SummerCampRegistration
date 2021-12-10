@@ -88,6 +88,21 @@ namespace Capstone.Controllers
             updates.ProcessApprovedRequests("family_updates", requestId);
             return Ok();
         }
+        [HttpPut("rejection/camper/{requestId}")]
+        [Authorize(Roles = "admin")]
+        public ActionResult UpdateCamperRequestRejected(int requestId)
+        {
+            updates.FinalizeRequest("camper_updates", requestId, "Rejected");
+            return Ok();
+        }
+
+        [HttpPut("rejection/family/{requestId}")]
+        [Authorize(Roles = "admin")]
+        public ActionResult UpdateFamilyRequestRejected(int requestId)
+        {
+            updates.FinalizeRequest("family_updates", requestId, "Rejected");
+            return Ok();
+        }
 
         [HttpGet("camper/{camperCode}")]
         public ActionResult GetUpdatesByCamperCode(int camperCode)

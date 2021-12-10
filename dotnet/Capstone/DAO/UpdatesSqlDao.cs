@@ -87,7 +87,7 @@ namespace Capstone.DAO
                 }
             }
 
-            FinalizeRequest(table, requestId);
+            FinalizeRequest(table, requestId, "Approved");
             return true;
         }
 
@@ -114,7 +114,7 @@ namespace Capstone.DAO
             return true;
         }
 
-        public void FinalizeRequest(string table, int requestId)
+        public bool FinalizeRequest(string table, int requestId, string status)
         {
             string sqlFinalizeRequest = $"UPDATE {table} SET finalize_date = @Now, status = @status WHERE request_id = @requestId";
             // Updates are done, close the request by setting the finalize date
@@ -127,16 +127,18 @@ namespace Capstone.DAO
                     try
                     {
                         cmd.Parameters.AddWithValue("@now", DateTime.Now.Date);
-                        cmd.Parameters.AddWithValue("@status", "Approved");
+                        cmd.Parameters.AddWithValue("@status", status);
                         cmd.Parameters.AddWithValue("@requestId", requestId);
                         cmd.ExecuteNonQuery();
                     }
                     catch (SqlException ex)
                     {
                         Console.WriteLine(ex.Message);
+                        return false;
                     }
                 }
             }
+            return true;
         }
     }
 }
