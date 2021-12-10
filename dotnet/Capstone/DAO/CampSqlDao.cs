@@ -49,12 +49,28 @@ namespace Capstone.DAO
                 using (SqlCommand command = new SqlCommand(sqlAddFamily, conn))
                 {
                     command.Parameters.AddWithValue("@parentGuardianName", family.FullName);
-                    command.Parameters.AddWithValue("@address", family.Address);
-                    command.Parameters.AddWithValue("@emailAddress", family.EmailAddress);
                     command.Parameters.AddWithValue("@city", family.City);
                     command.Parameters.AddWithValue("@state", family.State);
                     command.Parameters.AddWithValue("@zip", family.Zip);
-                    command.Parameters.AddWithValue("@phoneNumber", family.PhoneNumber);
+                    command.Parameters.AddWithValue("@address", family.Address);
+
+                    if (family.PhoneNumber != null)
+                    {
+                        command.Parameters.AddWithValue("@phoneNumber", family.PhoneNumber);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@phoneNumber", DBNull.Value);
+                    }
+
+                    if (family.EmailAddress != null)
+                    {
+                        command.Parameters.AddWithValue("@emailAddress", family.EmailAddress);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@emailAddress", DBNull.Value);
+                    }
 
                     int familyId = Convert.ToInt32(command.ExecuteScalar());
 
@@ -80,7 +96,7 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@registrar", camper.Registrar);
                     command.Parameters.AddWithValue("@payment_status", camper.PaymentStatus);
                     command.Parameters.AddWithValue("@active_status", camper.ActiveStatus);
-                    command.Parameters.AddWithValue("@date_added", camper.DateAdded);
+                    command.Parameters.AddWithValue("@date_added", DateTime.Now);
 
 
                     if (!camper.Medications.Equals(""))
@@ -108,7 +124,7 @@ namespace Capstone.DAO
                         command.Parameters.AddWithValue("@specialNeeds", DBNull.Value);
                     }
 
-                    camperCode = Convert.ToInt32(command.ExecuteNonQuery());             
+                    camperCode = Convert.ToInt32(command.ExecuteNonQuery());
                 }
             }
 

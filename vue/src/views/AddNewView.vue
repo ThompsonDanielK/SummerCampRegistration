@@ -56,7 +56,7 @@ export default {
     },
     },
     created(){
-        this.camper.registrar = this.$store.state.user.username;
+        this.CamperFamily.camper.registrar = this.$store.state.user.username;
         FamilyService.getAllFamilies()
         .then(response => {
             console.log('Got all families', response.data);
