@@ -191,10 +191,10 @@
     </tr>
   </table>
   <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
-  <button type="button" v-on:click.prevent="finalizeChanges()">Approve Changes</button>
+  <button type="button" v-on:click.prevent="approveRequest()">Approve Changes</button>
   <button type="button" v-on:click.prevent="rejectRequest()">Reject Changes</button>
+  <button type="submit" v-on:click.prevent="finalizeChanges()" v-if="this.$store.state.user.role != 'admin' || newDataAdded">Submit Changes</button>
   </div>
-  <button type="submit" v-on:click.prevent="finalizeChanges()" v-if="this.$store.state.user.role != 'admin'">Submit Changes</button>
 </section>
 </template>
 
@@ -224,6 +224,11 @@ export default {
     camper: Object,
   },
   computed:{
+    newDataAdded()
+    {
+      return this.newData.firstName || this.newData.lastName || this.newData.dob || this.newData.registrar || 
+      this.newData.paymentStatus || this.newData.activeStatus || this.newData.familyId || this.newData.allergies || this.newData.medications || this.newData.specialNeeds
+    },
     allergies(){
       if(typeof(this.camper.allergies) == String)
       {
