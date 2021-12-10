@@ -21,7 +21,7 @@ namespace Capstone.DAO
 
         const string sqlAllCampers = "SELECT camper_code, family_id, " +
             "first_name, last_name, dob, " +
-            "medications, allergies, special_needs, registrar, payment_status, active_status FROM campers";
+            "medications, allergies, special_needs, registrar, payment_status, active_status, date_added FROM campers";
         const string sqlAllFamilies = "SELECT family_id, " +
             "parent_guardian_name, address, city, " +
             "state, zip, phone, email_address FROM family";
@@ -30,11 +30,11 @@ namespace Capstone.DAO
             "state, zip, phone, email_address FROM family WHERE family_id = @family_id";
         const string sqlCamper = "SELECT camper_code, family_id, " +
             "first_name, last_name, dob, medications, allergies, special_needs, registrar, " +
-            "payment_status, active_status FROM campers WHERE camper_code = @camper_code";
+            "payment_status, active_status, date_added FROM campers WHERE camper_code = @camper_code";
         const string sqlAddCamper = "INSERT INTO campers " +
-            "(family_id, first_name, last_name, dob, medications, allergies, special_needs) " +
+            "(family_id, first_name, last_name, dob, medications, allergies, special_needs, registrar, payment_status, active_status, date_added ) " +
             "VALUES (@familyId, @firstName, @lastName, @dob, @medications, " +
-            "@allergies, @specialNeeds, @registrar, @payment_status, @active_Status)";
+            "@allergies, @specialNeeds, @registrar, @payment_status, @active_Status, @date_added)";
         const string sqlAddFamily = "INSERT INTO family " +
             "(parent_guardian_name, address, email_address, city, state, zip, phone) " +
             "VALUES " +
@@ -80,6 +80,8 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@registrar", camper.Registrar);
                     command.Parameters.AddWithValue("@payment_status", camper.PaymentStatus);
                     command.Parameters.AddWithValue("@active_status", camper.ActiveStatus);
+                    command.Parameters.AddWithValue("@date_added", camper.DateAdded);
+
 
                     if (!camper.Medications.Equals(""))
                     {
@@ -239,6 +241,7 @@ namespace Capstone.DAO
                 Registrar = Convert.ToString(reader["registrar"]),
                 PaymentStatus = Convert.ToBoolean(reader["payment_status"]),
                 ActiveStatus = Convert.ToBoolean(reader["active_status"]),
+                DateAdded = Convert.ToDateTime(reader["date_added"]),
             };
 
             return camper;
