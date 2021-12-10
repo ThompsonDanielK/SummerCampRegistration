@@ -191,7 +191,7 @@
     </tr>
   </table>
   <div class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
-  <button type="button" v-on:click.prevent="approveRequest()">Approve Changes</button>
+  <button type="button" v-on:click.prevent="finalizeChanges()">Approve Changes</button>
   <button type="button" v-on:click.prevent="rejectRequest()">Reject Changes</button>
   </div>
   <button type="submit" v-on:click.prevent="finalizeChanges()" v-if="this.$store.state.user.role != 'admin'">Submit Changes</button>
