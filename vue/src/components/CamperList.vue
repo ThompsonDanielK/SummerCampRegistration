@@ -9,7 +9,7 @@
     <table>
       <thead>
         <tr>
-          <td>Search:</td>
+          <td style="font-weight: bold">Search:</td>
           <td>
             <input type="text" v-model="firstNameToFilter" placeholder="First Name"  />
           </td>
@@ -21,6 +21,7 @@
             <option>Any</option>
             <option v-for="num in minNums" v-bind:key="num">{{num}}</option>
             </select>
+            -
             <select v-model="maxAgeToFilter" class="ageFilter">
             <option>Any</option>
             <option v-for="num in maxNums" v-bind:key="num">{{num}}</option>
@@ -34,13 +35,10 @@
               </select>
           </td>
           <td>
-            <input type="text" v-model="registrarToFilter" placeholder="Registrar ID" />
+            <input type="text" v-model="registrarToFilter" placeholder="Registrar" />
           </td>
           <td>
-            <input type="text" v-model="familyIdToFilter" placeholder="Family ID" />
-          </td>
-          <td>
-            <input type="text" v-model="missingToFilter" />
+            <input type="text" v-model="familyIdToFilter" placeholder="Family" />
           </td>
           <td>
               <select v-model="activeToFilter">
@@ -48,6 +46,18 @@
               <option>Active</option>
               <option>Inactive</option>
               </select>
+          </td>
+          <td>
+            <select v-model="missingToFilter">
+            <option value="">All</option>
+            <option value="first_name">First Name</option>
+            <option value="last_name">Last Name</option>
+            <option value="age">Age</option>
+            <option value="payment_status">Payment Status</option>
+            <option value="registrar">Registrar</option>
+            <option value="family">Family</option>
+            <option value="active_status">Active Status</option>
+            </select>
           </td>
         </tr>
       </thead>
@@ -59,8 +69,8 @@
         <td>Payment Status</td>
         <td>Registrar</td>
         <td>Family</td>
-        <td>Missing Info</td>
         <td>Active Status</td>
+        <td>Missing Info</td>
       </tr>
       <tr
         v-for="camper in this.filteredCampers"
@@ -73,14 +83,17 @@
         <td id="age">{{ camper.age }}</td>
         <td>{{ camper.paymentStatus }}</td>
         <td>{{ camper.registrar }}</td>
-        <td>{{ camper.familyId }} {{camper.familyName}}</td>
-        <td>{{camper.missingData.join(', ')}}</td>
+        <td>{{ camper.familyId }} --<br>{{camper.familyName}}</td>
         <td>{{camper.activeStatus}}</td>
+        <td>
+          <ul>
+            <li v-for='string in camper.missingData' v-bind:key="string">
+            {{string}}
+            </li>
+          </ul>
+        </td>
         <td class="buttons">
           <router-link v-bind:to="{ name: 'camper', params: { camperCode: camper.camperCode },}"><button type="button">Edit</button></router-link>
-          <button type="button" v-on:click="deleteCamper(camper.camperCode)">
-            Delete
-          </button>
         </td>
       </tr>
     </table>
@@ -185,6 +198,10 @@ export default {
       {
         campersList = campersList.filter(a => a.activeStatus == this.activeToFilter)
       }
+      if(this.missingToFilter)
+      {
+        campersList = campersList.filter(a => a.missingData.includes(this.missingToFilter))
+      }
       return campersList;
     },
   },
@@ -219,7 +236,7 @@ td{
   }
 table {
   padding: 1%;
-  font-size: 90%;
+  font-size: 120%;
 }
 button {
   background-color: $textDark;
@@ -230,9 +247,6 @@ button {
   font-family: 'Lora', serif;
   box-shadow: 1.5px 1px 1px $secondary;
   margin-right: 5px;
-}
-.buttons{
-  display: flex;
 }
 input, select{
   background-color: $textDark;
@@ -248,7 +262,7 @@ input::placeholder{
   color: $textLight;
 }
 .ageFilter{
-  width: 50%;
+  width: 40%;
 }
 .tableHead{
   display: flex;
@@ -261,5 +275,20 @@ input::placeholder{
 }
 tr{
   margin: 10%;
+}
+tr td:last-child{
+  width: 1%;
+}
+tr td:nth-child(6){
+  width: 5%;
+}
+tr td:nth-child(5){
+  width: 5%;
+}
+tr td:nth-child(8){
+  width: 4%;
+}
+tr td:first-child{
+  width: 4%;
 }
 </style>

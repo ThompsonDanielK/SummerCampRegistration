@@ -66,6 +66,30 @@ export default new Vuex.Store({
         c.age = currentYear - birthYear;
         c.paymentStatus = c.paymentStatus?'Paid':'Unpaid';
         c.activeStatus = c.activeStatus?'Active':'Inactive';
+        if(c.medications == 'None')
+        {
+          c.medications = '';
+        }
+        else
+        {
+          c.medications = c.medicationsList;
+        }
+        if(c.allergies == 'None')
+        {
+          c.allergies = '';
+        }
+        else
+        {
+          c.allergies = c.allergiesList;
+        }
+        if(c.specialNeeds == 'None')
+        {
+          c.specialNeeds = '';
+        }
+        else
+        {
+          c.specialNeeds = c.specialNeedsList;
+        }
         c.missingData = [];
           if(!c.lastName)
           {
