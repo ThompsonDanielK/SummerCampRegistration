@@ -195,6 +195,13 @@ namespace Capstone.DAO
                             cmd.Parameters["@oldData"].Value = currentCamperData.PaymentStatus;
                             cmd.ExecuteNonQuery();
                         }
+                        if (currentCamperData.ActiveStatus != newCamperData.ActiveStatus)
+                        {
+                            cmd.Parameters["@fieldToBeChanged"].Value = "active_status";
+                            cmd.Parameters["@newData"].Value = newCamperData.ActiveStatus;
+                            cmd.Parameters["@oldData"].Value = currentCamperData.ActiveStatus;
+                            cmd.ExecuteNonQuery();
+                        }
                     }
                 }
                 catch (SqlException ex)

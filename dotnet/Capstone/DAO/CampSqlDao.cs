@@ -21,7 +21,7 @@ namespace Capstone.DAO
 
         const string sqlAllCampers = "SELECT camper_code, family_id, " +
             "first_name, last_name, dob, " +
-            "medications, allergies, special_needs FROM campers";
+            "medications, allergies, special_needs, registrar, payment_status, active_status FROM campers";
         const string sqlAllFamilies = "SELECT family_id, " +
             "parent_guardian_name, address, city, " +
             "state, zip, phone, email_address FROM family";
@@ -29,17 +29,16 @@ namespace Capstone.DAO
             "parent_guardian_name, address, city, " +
             "state, zip, phone, email_address FROM family WHERE family_id = @family_id";
         const string sqlCamper = "SELECT camper_code, family_id, " +
-            "first_name, last_name, dob, " +
-            "medications, allergies, special_needs FROM campers WHERE camper_code = @camper_code";
+            "first_name, last_name, dob, medications, allergies, special_needs, registrar, " +
+            "payment_status, active_status FROM campers WHERE camper_code = @camper_code";
         const string sqlAddCamper = "INSERT INTO campers " +
             "(family_id, first_name, last_name, dob, medications, allergies, special_needs) " +
             "VALUES (@familyId, @firstName, @lastName, @dob, @medications, " +
-            "@allergies, @specialNeeds)";
+            "@allergies, @specialNeeds, @registrar, @payment_status, @active_Status)";
         const string sqlAddFamily = "INSERT INTO family " +
             "(parent_guardian_name, address, email_address, city, state, zip, phone) " +
             "VALUES " +
             "(@parentGuardianName, @address, @emailAddress, @city, @state, @zip, @phoneNumber); SELECT @@IDENTITY";
-        const string sqlFilterCampers = "Sql Statement";
 
         public int AddFamily(Family family)
         {
@@ -78,6 +77,9 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@firstName", camper.FirstName);
                     command.Parameters.AddWithValue("@lastName", camper.LastName);
                     command.Parameters.AddWithValue("@dob", camper.DOB);
+                    command.Parameters.AddWithValue("@registrar", camper.Registrar);
+                    command.Parameters.AddWithValue("@payment_status", camper.PaymentStatus);
+                    command.Parameters.AddWithValue("@active_status", camper.ActiveStatus);
 
                     if (!camper.Medications.Equals(""))
                     {
@@ -233,8 +235,10 @@ namespace Capstone.DAO
                 DOB = Convert.ToDateTime(reader["dob"]),
                 Medications = Convert.ToString(reader["medications"]),
                 Allergies = Convert.ToString(reader["allergies"]),
-                SpecialNeeds = Convert.ToString(reader["special_needs"])
-
+                SpecialNeeds = Convert.ToString(reader["special_needs"]),
+                Registrar = Convert.ToString(reader["registrar"]),
+                PaymentStatus = Convert.ToBoolean(reader["payment_status"]),
+                ActiveStatus = Convert.ToBoolean(reader["active_status"]),
             };
 
             return camper;
