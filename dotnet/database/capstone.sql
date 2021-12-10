@@ -119,4 +119,4 @@ ALTER TABLE camper_updates ADD CONSTRAINT Chk_camper_updates_status CHECK (statu
 
 ALTER TABLE family_updates ADD FOREIGN KEY (family_id) REFERENCES family(family_id);
 ALTER TABLE family_updates ADD	CONSTRAINT Chk_family_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
-ALTER TABLE family_updates ADD CONSTRAINT Chk_family_updates_status CHECK (status IN ('Pending', 'Updated', 'Rejected'));
+ALTER TABLE family_updates ADD CONSTRAINT Chk_family_updates_status CHECK (status IN ('Pending', 'Approved', 'Updated', 'Rejected'));
