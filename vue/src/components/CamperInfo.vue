@@ -79,7 +79,7 @@
         </div>
         <div v-show="showPayment">
         <label for="unpaid">Unpaid</label>
-        <input type="radio" id="unpaid" name="unpaid" value="Unpaid" v-model="newData.paymentStatus" checked>
+        <input type="radio" id="unpaid" name="unpaid" value="Unpaid" v-model="newData.paymentStatus">
         <label for="paid">Paid</label>
         <input type="radio" id="paid" name="paid" value="Paid" v-model="newData.paymentStatus">
       </div>
@@ -88,6 +88,26 @@
         <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment">Edit</button>
         <button type="button" v-on:click.prevent="saveChange('payment')" v-show="showPayment" v-bind:disabled="!newData.paymentStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.paymentStatus = ''; showPayment = false" v-show="showPayment">Cancel</button>
+      </td>
+    </tr>
+    <tr class="row">
+      <td>Active Status:</td>
+      <td>
+        <div class="data">
+        <p v-if="!showActive && !pending.activeStatus">{{ this.camper.activeStatus }}</p>
+        <p v-if="pending.activeStatus && !showActive" class="newValue">{{ this.pending.activeStatus }}</p>
+        </div>
+        <div v-show="showActive">
+        <label for="Active">Active</label>
+        <input type="radio" id="active" name="active" value="Active" v-model="newData.activeStatus">
+        <label for="Inactive">Inactive</label>
+        <input type="radio" id="Inactive" name="Inactive" value="Inactive" v-model="newData.activeStatus">
+      </div>
+      </td>
+      <td>
+        <button type="button" v-on:click.prevent="showActive = true;" v-show="!showActive">Edit</button>
+        <button type="button" v-on:click.prevent="saveChange('active')" v-show="showActive" v-bind:disabled="!newData.activeStatus">Save</button>
+        <button type="button" v-on:click.prevent="newData.activeStatus = ''; showActive = false" v-show="showActive">Cancel</button>
       </td>
     </tr>
     <tr class="row">
@@ -196,6 +216,7 @@ export default {
       showFamily: false,
       showSpecial: false,
       showRegistrar: false,
+      showActive: false,
       requestId: 0,
             };
   },
@@ -236,12 +257,15 @@ export default {
     saveChange(formName) {
       switch (formName) {
         case "firstName":
+          this.pending.firstName = this.newData.firstName;
           this.showFirst = false;
           break;
         case "lastName":
+          this.pending.lastName = this.newData.lastName;
           this.showLast = false;
           break;
           case "dob":
+          this.pending.dob = this.newData.dob;
           this.showDOB = false;
           break;
         case "allergies":
@@ -253,6 +277,7 @@ export default {
           this.showMedications = false;
           break;
         case "familyId":
+          this.pending.familyId = this.newData.familyId;
           this.showFamily = false;
           break;
         case "specialNeeds":
@@ -260,10 +285,17 @@ export default {
           this.showSpecial = false;
           break;
         case "payment":
+          this.pending.paymentStatus = this.newData.paymentStatus;
           this.showPayment = false;
           break;
         case "registrar":
+          this.pending.registrar = this.newData.registrar;
           this.showRegistrar = false;
+          break;
+        case "active":
+          this.pending.activeStatus = this.newData.activeStatus;
+          this.showActive = false;
+          break;
       }
     },
     setCamper(){
@@ -279,9 +311,14 @@ export default {
       }
       this.pending.registrar? this.camper.registrar = this.newData.registrar: '';
       this.pending.dob? this.camper.dob = this.newData.dob: '';
+      if(this.newData.activeStatus) 
+      {
+        this.pending.activeStatus == 'Inactive'? this.camper.activeStatus = false : this.camper.activeStatus = true;
+      }
     },
     convertToPending(data)
     {
+      this.requestId = data.requestId;
       switch(data.fieldToBeChanged)
       {
         case"first_name":
@@ -307,6 +344,9 @@ export default {
         break;
         case"special_needs":
         this.pending.specialNeeds = data.newData;
+        break;
+        case"active_status":
+        this.pending.activeStatus = data.newData;
         break;
         case"payment_status":
         data.newData? this.pending.paymentStatus = 'Paid': this.pending.paymentStatus = 'Unpaid';
@@ -335,16 +375,16 @@ export default {
     }
   },
   created(){
+    this.$store.commit('SET_CAMPER_LIST');
+    this.$forceUpdate();
     UpdateService.getUpdatesByCamperCode(this.$route.params.camperCode)
     .then(response => {
       console.log('Got updates', response.data);
       response.data.forEach(u => this.convertToPending(u));
-      this.requestId = response.data.requestId;
-      this.$forceUpdate();
     })
     .catch(response => {
       console.error('Problem getting updates', response)
-    })
+    });
   }
 };
 </script>

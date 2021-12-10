@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article :key="$store.state.campers.length">
       <camper-info v-bind:camper="camper"></camper-info>
   </article>
 </template>
@@ -8,16 +8,16 @@
 import CamperInfo from '../components/CamperInfo.vue'
 
 export default {
-    data(){
-        return{
-            camper: {},
-        }
+    computed:{
+        camper(){
+            return this.$store.state.campers.find(c => c.camperCode == this.$route.params.camperCode)
+        },
     },
     components: {
         CamperInfo,
     },
     created() {
-        this.camper = this.$store.state.campers.find(c => c.camperCode == this.$route.params.camperCode)
+    this.$store.commit('SET_CAMPER_LIST')
     },
 }
 </script>

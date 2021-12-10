@@ -75,7 +75,7 @@
         <td>{{ camper.registrar }}</td>
         <td>{{ camper.familyId }} {{camper.familyName}}</td>
         <td>{{camper.missingData.join(', ')}}</td>
-        <td>{{camper.active}}</td>
+        <td>{{camper.activeStatus}}</td>
         <td class="buttons">
           <router-link v-bind:to="{ name: 'camper', params: { camperCode: camper.camperCode },}"><button type="button">Edit</button></router-link>
           <button type="button" v-on:click="deleteCamper(camper.camperCode)">
@@ -93,8 +93,6 @@ import CamperService from "../services/CamperService.js";
 export default {
   data() {
     return {
-      campers: [],
-      families: [],
       firstNameToFilter: "",
       lastNameToFilter: "",
       familyIdToFilter: "",
@@ -106,12 +104,13 @@ export default {
       activeToFilter: 'All',
     };
   },
-  created() {
-    this.families = this.$store.state.families; 
-    this.campers = this.$store.state.campers;
-
-  },
   computed: {
+    campers(){
+      return this.$store.state.campers;
+    },
+    families(){
+      return this.$store.state.families;
+    },
     minNums(){
       let list = []
       for(let num = 1; num < 100; num++)
@@ -181,6 +180,10 @@ export default {
       if(!minAge && maxAge) {
         campersList = campersList.filter((a) =>
           a.age <= maxAge);
+      }
+      if(this.activeToFilter != 'All')
+      {
+        campersList = campersList.filter(a => a.activeStatus == this.activeToFilter)
       }
       return campersList;
     },

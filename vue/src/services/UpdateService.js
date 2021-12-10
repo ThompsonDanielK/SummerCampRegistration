@@ -8,6 +8,6 @@ export default{
         return axios.get('/update/family', familyId);
     },
     approveRequest(requestId){
-        return axios.put(`approval/camper/${requestId}`)
+        return axios.put(`update/approval/camper/${requestId}`)
     },
 }

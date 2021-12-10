@@ -9,31 +9,12 @@
 </template>
 
 <script>
-import CamperService from '../services/CamperService.js'
-import FamilyService from '../services/FamilyService.js'
 
 export default {
   name: "home",
   created(){
-    CamperService.getAllCampers()
-      .then((response) => {
-        this.$store.commit('SET_CAMPER_LIST', response.data);
-        this.$store.commit('SET_CAMPER_AGE');
-        this.$store.commit('SET_CAMPER_PAYMENT_STATUS');
-        this.$store.commit('SET_CAMPER_MISSING_DATA');
-        this.$store.commit('SET_CAMPER_ACTIVE_STATUS');
-        FamilyService.getAllFamilies()
-            .then(response => {
-              this.$store.commit('SET_FAMILY_LIST', response.data);
-              this.$store.commit('SET_CAMPER_FULL_NAME');
-            })
-            .catch(response => {
-                console.error('Problem getting all families', response)
-            });
-      })
-      .catch((response) => {
-        console.error("Problem getting all campers", response);
-      });
+        this.$store.commit('SET_CAMPER_LIST');
+        this.$forceUpdate();
     },
 };
 </script>
