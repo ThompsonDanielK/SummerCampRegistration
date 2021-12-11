@@ -413,7 +413,9 @@ export default {
       })
     },
     approveRequests(){
-      UpdateService.approveAllRequests(this.requests)
+      let requestIds = []
+      this.requests.forEach(r => requestIds.push(r.requestId));
+      UpdateService.approveAllRequests(requestIds)
       .then(response => {
         console.log('All Requests Approved', response.data)
         this.pending = {};
@@ -441,7 +443,9 @@ export default {
       })
     },
     rejectAllRequests(){
-      UpdateService.rejectRequest(this.requests)
+      let requestIds = []
+      this.requests.forEach(r => requestIds.push(r.requestId));
+      UpdateService.rejectAllRequests(requestIds)
       .then(response => {
         console.log('All Requests Rejected', response.data);
         this.$router.go();

@@ -54,7 +54,7 @@ namespace Capstone.Controllers
                 return BadRequest("Problem creating update in database");
             }
             if (this.User.IsInRole("admin"))
-            { 
+            {
                 updates.ProcessApprovedRequests("camper_updates", requestId);
             }
             return Ok(requestId);
@@ -75,9 +75,12 @@ namespace Capstone.Controllers
 
         [HttpPut("approval/camper")]
         [Authorize(Roles = "admin")]
-        public ActionResult UpdateCamperRequestApproved(int requestId)
+        public ActionResult UpdateCamperRequestApproved(int[] requestIds)
         {
-            updates.ProcessApprovedRequests("camper_updates", requestId);
+            foreach (int id in requestIds)
+            {
+                updates.ProcessApprovedRequests("camper_updates", id);
+            }
             return Ok();
         }
 
@@ -88,11 +91,23 @@ namespace Capstone.Controllers
             updates.ProcessApprovedRequests("family_updates", requestId);
             return Ok();
         }
+
         [HttpPut("rejection/camper/{requestId}")]
         [Authorize(Roles = "admin")]
         public ActionResult UpdateCamperRequestRejected(int requestId)
         {
             updates.FinalizeRequest("camper_updates", requestId, "Rejected");
+            return Ok();
+        }
+
+        [HttpPut("rejection/camper")]
+        [Authorize(Roles = "admin")]
+        public ActionResult UpdateCamperRequestsRejected(int[] requestIds)
+        {
+            foreach (int id in requestIds)
+            {
+                updates.FinalizeRequest("camper_updates", id, "Rejected");
+            }
             return Ok();
         }
 
