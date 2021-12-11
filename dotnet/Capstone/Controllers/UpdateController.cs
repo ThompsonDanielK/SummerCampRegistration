@@ -56,7 +56,7 @@ namespace Capstone.Controllers
             if (this.User.IsInRole("admin"))
             { 
                 updates.ProcessApprovedRequests("camper_updates", requestId);
-            } 
+            }
             return Ok(requestId);
         }
 
@@ -73,7 +73,7 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPut("approval/camper/{requestId}")]
+        [HttpPut("approval/camper")]
         [Authorize(Roles = "admin")]
         public ActionResult UpdateCamperRequestApproved(int requestId)
         {

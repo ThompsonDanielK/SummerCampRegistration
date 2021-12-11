@@ -42,9 +42,9 @@
           </td>
           <td>
               <select v-model="activeToFilter">
-              <option>All</option>
               <option>Active</option>
               <option>Inactive</option>
+              <option>All</option>
               </select>
           </td>
           <td>
@@ -62,15 +62,15 @@
         </tr>
       </thead>
       <tr class="labels">
-        <td>Camper Code</td>
+        <td>Id</td>
         <td>First Name</td>
         <td>Last Name</td>
         <td id="age">Age</td>
-        <td>Payment Status</td>
+        <td>Payment</td>
         <td>Registrar</td>
         <td>Family</td>
-        <td>Active Status</td>
-        <td>Missing Info</td>
+        <td>Status</td>
+        <td>Missing</td>
       </tr>
       <tr
         v-for="camper in this.filteredCampers"
@@ -80,7 +80,7 @@
         <td>{{ camper.camperCode }}</td>
         <td>{{ camper.firstName }}</td>
         <td>{{ camper.lastName }}</td>
-        <td id="age">{{ camper.age }}</td>
+        <td>{{ camper.age }}</td>
         <td>{{ camper.paymentStatus }}</td>
         <td>{{ camper.registrar }}</td>
         <td>{{ camper.familyId }} --<br>{{camper.familyName}}</td>
@@ -114,7 +114,7 @@ export default {
       paymentStatusToFilter: 'All',
       registrarToFilter: '',
       missingToFilter: '',
-      activeToFilter: 'All',
+      activeToFilter: 'Active',
     };
   },
   computed: {

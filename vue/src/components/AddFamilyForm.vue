@@ -65,7 +65,6 @@ section{
   background-color: $secondary;
   padding: 10px;
   border-radius: 10px;
-  border: 2px solid black;
 }
 h1{
   margin: 10px;

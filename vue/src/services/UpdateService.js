@@ -7,10 +7,14 @@ export default{
     getUpdatesByFamilyId(familyId){
         return axios.get('/update/family', familyId);
     },
-    approveRequest(requestId){
-        return axios.put(`update/approval/camper/${requestId}`)
+    approveAllRequests(requests){
+        return axios.put('update/approval/camper', requests)
     },
     rejectRequest(requestId){
         return axios.put(`update/rejection/camper/${requestId}`)
     },
+    rejectAllRequests(requests){
+        return axios.put('update/rejection/camper', requests)
+    }
+
 }
