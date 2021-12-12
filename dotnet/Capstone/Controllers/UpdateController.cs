@@ -86,10 +86,13 @@ namespace Capstone.Controllers
 
         [HttpPut("approval/family/{requestId}")]
         [Authorize(Roles = "admin")]
-        public ActionResult UpdateFamilyRequestApproved(int requestId)
+        public ActionResult UpdateFamilyRequestApproved(int[] requestIds)
         {
-            updates.ProcessApprovedRequests("family_updates", requestId);
-            return Ok();
+            foreach (int id in requestIds)
+            {
+                updates.ProcessApprovedRequests("family_updates", id);
+            }
+                return Ok();
         }
 
         [HttpPut("rejection/camper/{requestId}")]

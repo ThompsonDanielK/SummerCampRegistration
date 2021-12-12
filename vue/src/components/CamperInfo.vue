@@ -362,7 +362,9 @@ export default {
     },
     convertToPending(data)
     {
-      this.requests.push(data);
+      if(data.status == 'Pending')
+      {
+        this.requests.push(data);
       switch(data.fieldToBeChanged)
       {
         case"first_name":
@@ -396,12 +398,12 @@ export default {
         data.newData? this.pending.paymentStatus = 'Paid': this.pending.paymentStatus = 'Unpaid';
         break;
       }
+      }
     },
     finalizeChanges(){
       CamperService.updateCamper(this.camper)
       .then(response => {
         console.log('Updated camper info', response.data);
-        this.$router.go();
       })
       .catch(response => {
         console.error('Cannot finalize changes', response);

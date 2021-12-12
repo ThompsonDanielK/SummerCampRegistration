@@ -32,7 +32,7 @@ namespace Capstone.DAO
         const string sqlGetFamilyUpdateList = "SELECT request_id, field_to_be_changed, family_id, action," +
             " new_data, old_data, requestor, status, request_date, finalize_date FROM family_updates";
         const string sqlGetUpdatesByCamperCode = "SELECT request_id, field_to_be_changed, camper_code, action, " +
-            "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates WHERE camper_code = @camper_code AND status = 'Pending'";
+            "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates WHERE camper_code = @camper_code";
 
         public List<Update> GetCamperUpdateList(bool isCamperUpdate)
         {

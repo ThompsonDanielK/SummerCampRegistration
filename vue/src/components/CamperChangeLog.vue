@@ -67,13 +67,34 @@ created(){
 
 table{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     margin: 2% 0;
+    padding: 0 2%;
+    font-size: 0.9rem;
 }
-td{
-    margin: 0px;
-    padding: 0px;
-    border: 1px solid $highlight
+thead{
+    border: 1px solid $highlight;
+}
+td:first-child{
+    width: 7.5%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(2){
+    width: 7.5%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(3){
+    width: 7.5%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(4){
+    width: 10%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(5){
+    width: 6%;
+    border-right: 1px solid $highlight;
 }
 tr{
     border: 1px solid $highlight;
