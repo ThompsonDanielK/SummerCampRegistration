@@ -339,7 +339,7 @@ export default {
           break;
         case "payment_status":
           this.pending.paymentStatus = this.newData.paymentStatus;
-          this.camper.paymentStatus == this.pending.paymentStatus;
+          this.camper.paymentStatus = this.pending.paymentStatus;
           this.showPayment = false;
           break;
         case "registrar":
@@ -358,7 +358,7 @@ export default {
       this.camper.allergies = this.camper.allergies.toString();
       this.camper.medications = this.camper.medications.toString();
       this.camper.specialNeeds = this.camper.specialNeeds.toString();
-      this.finalizeChanges(formName);
+      this.finalizeChanges();
     },
     convertToPending(data)
     {
@@ -397,15 +397,10 @@ export default {
         break;
       }
     },
-    finalizeChanges(formName){
+    finalizeChanges(){
       CamperService.updateCamper(this.camper)
       .then(response => {
         console.log('Updated camper info', response.data);
-        let request = {
-          requestId: response.data,
-          fieldToBeChanged: formName,
-        }
-        this.requests.push(request)
         this.$router.go();
       })
       .catch(response => {
@@ -435,7 +430,6 @@ export default {
       UpdateService.rejectRequest(request.requestId)
       .then(response => {
         console.log('Request Rejected', response.data)
-        this.requests.splice(this.requests.indexOf(request), 1);
         this.$router.go();
       })
       .catch(response => {
@@ -448,6 +442,7 @@ export default {
       UpdateService.rejectAllRequests(requestIds)
       .then(response => {
         console.log('All Requests Rejected', response.data);
+        this.pending = {};
         this.$router.go();
       })
       .catch(response => {

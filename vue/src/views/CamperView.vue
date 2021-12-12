@@ -1,10 +1,12 @@
 <template>
   <article :key="$store.state.campers.length">
       <camper-info v-bind:camper="camper"></camper-info>
+      <camper-change-log> </camper-change-log>
   </article>
 </template>
 
 <script>
+import CamperChangeLog from '../components/CamperChangeLog.vue'
 import CamperInfo from '../components/CamperInfo.vue'
 
 export default {
@@ -15,9 +17,10 @@ export default {
     },
     components: {
         CamperInfo,
+        CamperChangeLog   
     },
     created() {
-    this.$store.commit('SET_CAMPER_LIST')
+        this.$store.commit('SET_CAMPER_LIST')
     },
 }
 </script>

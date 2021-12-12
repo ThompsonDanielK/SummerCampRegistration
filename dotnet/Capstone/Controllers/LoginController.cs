@@ -3,6 +3,7 @@ using Capstone.DAO;
 using Capstone.Models;
 using Capstone.Security;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace Capstone.Controllers
 {
@@ -115,6 +116,13 @@ namespace Capstone.Controllers
             }
 
             return result;
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetUsers()
+        {
+            return BadRequest();
         }
     }
 }

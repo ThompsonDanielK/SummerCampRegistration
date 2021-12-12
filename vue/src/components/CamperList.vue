@@ -9,7 +9,7 @@
     <table>
       <thead>
         <tr>
-          <td style="font-weight: bold">Search:</td>
+          <td class="labels">Search:</td>
           <td>
             <input type="text" v-model="firstNameToFilter" placeholder="First Name"  />
           </td>
@@ -84,7 +84,7 @@
         <td>{{ camper.paymentStatus }}</td>
         <td>{{ camper.registrar }}</td>
         <td>{{ camper.familyId }} --<br>{{camper.familyName}}</td>
-        <td>{{camper.activeStatus}}</td>
+        <td>{{ camper.activeStatus }}</td>
         <td>
           <ul>
             <li v-for='string in camper.missingData' v-bind:key="string">
@@ -101,8 +101,6 @@
 </template>
 
 <script>
-import CamperService from "../services/CamperService.js";
-
 export default {
   data() {
     return {
@@ -205,18 +203,11 @@ export default {
       return campersList;
     },
   },
-  methods: {
-    deleteCamper(camperCode) {
-        CamperService.deleteCamper(this.camper.camperCode)
-        .then(() => {
-            console.log('Removed camper');
-            this.$store.commit("DELETE_CAMPER", this.newCamper.camperCode);
-        })
-        .catch(response => {
-            console.error('Problem deleting camper', response);
-        })
-      this.$store.commit("DELETE_camper", camperCode);
-    },
+  created(){
+    if(!this.$store.state.campers[0])
+    {
+      this.$store.commit('SET_CAMPER_LIST');
+    }
   }
 }
 </script>
@@ -268,10 +259,11 @@ input::placeholder{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 1.2rem;
 }
 .labels{
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 tr{
   margin: 10%;
