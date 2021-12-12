@@ -16,7 +16,6 @@ namespace Capstone.Controllers
     {
         private readonly ICampDao camp;
         //private readonly IUpdatesDao updates;
-        private readonly int userId;
 
         public CampController(ICampDao camp, IUpdatesDao updates)
         {

@@ -57,7 +57,7 @@ CREATE TABLE campers (
 )
 
 CREATE TABLE camper_updates (
-	request_id int NOT NULL,
+	request_id int IDENTITY NOT NULL,
 	field_to_be_changed nvarchar(50),
 	camper_code int NOT NULL,
 	action nvarchar(20) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE camper_updates (
 );
 
 CREATE TABLE family_updates (
-	request_id int NOT NULL,
+	request_id int IDENTITY NOT NULL,
 	field_to_be_changed nvarchar(50),
 	family_id int NOT NULL,
 	action nvarchar(20) NOT NULL,
@@ -86,11 +86,12 @@ CREATE TABLE family_updates (
 
 GO
 
+SET IDENTITY_INSERT camper_updates ON;
 INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
 	VALUES(400001, 'last_name', '200003', 'Update', 'Bowersmith', 'Bowers', 'user', 'Pending', '2021-10-09');
 INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
 	VALUES(300001, 'address', '100002', 'Update', '200 Secondary Road', '200 Second Ave.', 'user', 'Pending', '2021-10-09');
-
+SET IDENTITY_INSERT camper_updates OFF;
 
 SET IDENTITY_INSERT family ON;
 INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone, email_address)

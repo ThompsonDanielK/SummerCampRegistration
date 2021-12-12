@@ -3,7 +3,6 @@
       <thead>
           <tr>
               <td>ID</td>
-              <td>Camper</td>
               <td>Action</td>
               <td>Value</td>
               <td>Current</td>
@@ -14,16 +13,15 @@
               <td>Status</td>
           </tr>
       </thead>
-      <tr v-for="update in updates" v-bind:key="update">
-        <td><router-link v-bind:to="{ name:'camper', params: {camperCode: update.camperCode}}">{{ update.requestId }}</router-link></td>
-        <td>{{update.camperCode}}</td>
+      <tr v-for="update in updates" v-bind:key="update.requestId">
+        <td>{{ update.requestId }}</td>
         <td>{{update.action}}</td>
         <td>{{update.fieldToBeChanged}}</td>
         <td>{{update.oldData}}</td>
         <td>{{update.newData}}</td>
         <td>{{update.requestor}}</td>
         <td>{{update.requestDate}}</td>
-        <td>{{update.finalizeDate}}</td>
+        <td>{{update.finalizedDate}}</td>
         <td>{{update.status}}</td>
       </tr>
   </table>
@@ -53,6 +51,10 @@ created(){
         {
             u.oldData = 'N/A';
         }
+        if(!u.newData)
+        {
+            u.newData = 'N/A';
+        }
         if(!u.finalizeDate)
         {
             u.finalizeDate = 'N/A';
@@ -66,37 +68,49 @@ created(){
 @import "../styles/colors.scss";
 
 table{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     margin: 2% 0;
     padding: 0 2%;
-    font-size: 0.9rem;
-}
-thead{
-    border: 1px solid $highlight;
+    font-size: 0.85rem;
 }
 td:first-child{
-    width: 7.5%;
+    width: 7%;
     border-right: 1px solid $highlight;
 }
 td:nth-child(2){
-    width: 7.5%;
+    width: 7%;
     border-right: 1px solid $highlight;
 }
 td:nth-child(3){
-    width: 7.5%;
+    width: 13%;
     border-right: 1px solid $highlight;
 }
 td:nth-child(4){
-    width: 10%;
+    width: 12%;
     border-right: 1px solid $highlight;
 }
 td:nth-child(5){
-    width: 6%;
+    width: 14%;
     border-right: 1px solid $highlight;
+}
+td:nth-child(6){
+    width: 12%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(7){
+    width: 12%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(8){
+    width: 12%;
+    border-right: 1px solid $highlight;
+}
+td:last-child{
+    width: 8%;
 }
 tr{
     border: 1px solid $highlight;
+}
+thead{
+    font-weight: bold;
 }
 </style>

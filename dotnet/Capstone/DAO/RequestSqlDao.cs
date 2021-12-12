@@ -22,11 +22,11 @@ namespace Capstone.DAO
         const string sqlGetLastFamilyUpdateRequestId = "SELECT TOP 1 request_id FROM family_updates ORDER BY request_id DESC";
         const string sqlGetLastCamperUpdateRequestId = "SELECT TOP 1 request_id FROM camper_updates ORDER BY request_id DESC";
         const string sqlAddNewCamperUpdateRequest = "INSERT INTO camper_updates " +
-                    "(request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date) " +
-                    "VALUES (@requestId, @fieldToBeChanged, @camperCode, @action, @newData, @oldData, @requestor, @status, @requestDate);";
+                    "(field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date) " +
+                    "VALUES (@fieldToBeChanged, @camperCode, @action, @newData, @oldData, @requestor, @status, @requestDate); SELECT @@IDENTITY";
         const string sqlAddNewFamilyUpdateRequest = "INSERT INTO family_updates " +
-                    "(request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date) " +
-                    "VALUES (@requestId, @fieldToBeChanged, @familyId, @action, @newData, @oldData, @requestor, @status, @requestDate);";
+                    "(field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date) " +
+                    "VALUES (@fieldToBeChanged, @familyId, @action, @newData, @oldData, @requestor, @status, @requestDate); SELECT @@IDENTITY";
         const string sqlGetCamperUpdateList = "SELECT request_id, field_to_be_changed, camper_code, action, " +
             "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates";
         const string sqlGetFamilyUpdateList = "SELECT request_id, field_to_be_changed, family_id, action," +
@@ -57,18 +57,6 @@ namespace Capstone.DAO
                         {
 
                             Update update = BuildUpdate(reader, isCamperUpdate);
-
-                            var finalizeDate = reader["finalize_date"];
-
-                            if (isCamperUpdate)
-                            {
-                                update.CamperCode = Convert.ToInt32(reader["camper_code"]);
-                            }
-
-                            if (!finalizeDate.Equals(null))
-                            {
-                                update.FinalizeDate = Convert.ToDateTime(finalizeDate);
-                            }
 
                             updateList.Add(update);
                         }
@@ -102,23 +90,33 @@ namespace Capstone.DAO
 
         private Update BuildUpdate(SqlDataReader reader, bool isCamper)
         {
-            Update update = new Update()
-            {
-                RequestId = Convert.ToInt32(reader["request_id"]),
-                FieldToBeChanged = Convert.ToString(reader["field_to_be_changed"]),
-                Action = Convert.ToString(reader["action"]),
-                NewData = Convert.ToString(reader["new_data"]),
-                Requestor = Convert.ToString(reader["requestor"]),
-                Status = Convert.ToString(reader["status"]),
-                RequestDate = Convert.ToDateTime(reader["request_date"]),
-            };
+            Update update = new Update() { };
+
+            update.RequestId = Convert.ToInt32(reader["request_id"]);
+            update.FieldToBeChanged = Convert.ToString(reader["field_to_be_changed"]);
+            update.Action = Convert.ToString(reader["action"]);
+            update.Requestor = Convert.ToString(reader["requestor"]);
+            update.Status = Convert.ToString(reader["status"]);
+            update.RequestDate = Convert.ToDateTime(reader["request_date"]);
             if (reader["old_data"] != DBNull.Value)
             {
                 update.OldData = Convert.ToString(reader["old_data"]);
             }
             else 
             {
-                update.OldData = null;
+                update.OldData = "";
+            }
+            if (reader["new_data"] != DBNull.Value)
+            {
+                update.NewData = Convert.ToString(reader["new_data"]);
+            }
+            else
+            {
+                update.NewData = "";
+            }
+            if (reader["finalize_date"] != DBNull.Value)
+            {
+                update.FinalizeDate = Convert.ToDateTime(reader["finalize_date"]);
             }
             if (isCamper)
             {
@@ -128,6 +126,7 @@ namespace Capstone.DAO
             {
                 update.FamilyId = Convert.ToInt32(reader["family_id"]);
             }
+
             return update;
         }
 
@@ -142,21 +141,9 @@ namespace Capstone.DAO
                 return nextId;
             }
         }
-        public int GetNextCamperUpdateRequestId()
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sqlGetLastCamperUpdateRequestId, conn);
-                int nextId = (Convert.ToInt32(cmd.ExecuteScalar()) + 1);
-                if (nextId == 1) nextId = 400001; // This will be the first update record.
-                return nextId;
-            }
-        }
 
         public int AddNewCamperUpdateRequest(int userId, Camper newCamperData, Camper currentCamperData)
         {
-            int requestId = GetNextCamperUpdateRequestId();
             string user = userId.ToString();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -167,7 +154,6 @@ namespace Capstone.DAO
 
                     using (SqlCommand cmd = new SqlCommand(sqlAddNewCamperUpdateRequest, conn))
                     {
-                        cmd.Parameters.AddWithValue("@requestId", requestId);
                         cmd.Parameters.AddWithValue("@camperCode", newCamperData.CamperCode);
                         cmd.Parameters.AddWithValue("@action", "Update");
                         cmd.Parameters.AddWithValue("@requestor", user);
@@ -177,47 +163,48 @@ namespace Capstone.DAO
                         cmd.Parameters.Add("@fieldToBeChanged", SqlDbType.NVarChar);
                         cmd.Parameters.Add("@newData", SqlDbType.NVarChar);
                         cmd.Parameters.Add("@oldData", SqlDbType.NVarChar);
+                        int requestId = 0;
                         if (currentCamperData.FirstName != newCamperData.FirstName)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "first_name";
                             cmd.Parameters["@newData"].Value = newCamperData.FirstName;
                             cmd.Parameters["@oldData"].Value = currentCamperData.FirstName;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.LastName != newCamperData.LastName)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "last_name";
                             cmd.Parameters["@newData"].Value = newCamperData.LastName;
                             cmd.Parameters["@oldData"].Value = currentCamperData.LastName;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.DOB != newCamperData.DOB)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "dob";
                             cmd.Parameters["@newData"].Value = newCamperData.DOB;
                             cmd.Parameters["@oldData"].Value = currentCamperData.DOB;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.Medications != newCamperData.Medications)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "medications";
                             cmd.Parameters["@newData"].Value = newCamperData.Medications;
                             cmd.Parameters["@oldData"].Value = currentCamperData.Medications;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.SpecialNeeds != newCamperData.SpecialNeeds)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "special_needs";
                             cmd.Parameters["@newData"].Value = newCamperData.SpecialNeeds;
                             cmd.Parameters["@oldData"].Value = currentCamperData.SpecialNeeds;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.Allergies != newCamperData.Allergies)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "allergies";
                             cmd.Parameters["@newData"].Value = newCamperData.Allergies;
                             cmd.Parameters["@oldData"].Value = currentCamperData.Allergies;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.Registrar != newCamperData.Registrar)
                         {
@@ -231,7 +218,7 @@ namespace Capstone.DAO
                             {
                                 cmd.Parameters["@oldData"].Value = currentCamperData.Registrar;
                             }
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.PaymentStatus != newCamperData.PaymentStatus)
                         {
@@ -245,29 +232,29 @@ namespace Capstone.DAO
                             {
                                 cmd.Parameters["@oldData"].Value = currentCamperData.PaymentStatus;
                             }
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.ActiveStatus != newCamperData.ActiveStatus)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "active_status";
                             cmd.Parameters["@newData"].Value = newCamperData.ActiveStatus;
                             cmd.Parameters["@oldData"].Value = currentCamperData.ActiveStatus;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentCamperData.DateAdded != newCamperData.DateAdded)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "date_added";
                             cmd.Parameters["@newData"].Value = newCamperData.ActiveStatus;
                             cmd.Parameters["@oldData"].Value = currentCamperData.ActiveStatus;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
+                        return requestId;
                     }
                 }
                 catch (SqlException ex)
                 {
                     return -1;
                 }
-                return requestId;
             }
         }
 

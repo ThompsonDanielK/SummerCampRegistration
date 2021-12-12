@@ -10,6 +10,7 @@ import CamperListView from "../views/CamperListView.vue"
 import AddNewView from '../views/AddNewView.vue'
 import FamilyListView from '../views/FamilyListView.vue'
 import FamilyView from '../views/FamilyView.vue'
+import HistoryView from '../views/HistoryView.vue'
 
 Vue.use(Router);
 
@@ -94,6 +95,14 @@ const router = new Router({
       path: "/new",
       name: "new",
       component: AddNewView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/history",
+      name: "history",
+      component: HistoryView,
       meta: {
         requiresAuth: true,
       },

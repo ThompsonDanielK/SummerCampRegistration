@@ -14,7 +14,7 @@
               <td>Status</td>
           </tr>
       </thead>
-      <tr v-for="update in updates" v-bind:key="update">
+      <tr v-for="update in updates" v-bind:key="update.requestId">
         <td><router-link v-bind:to="{ name:'camper', params: {camperCode: update.camperCode}}">{{ update.requestId }}</router-link></td>
         <td>{{update.camperCode}}</td>
         <td>{{update.action}}</td>
@@ -35,7 +35,7 @@ import UpdateService from '../services/UpdateService.js'
 export default {
     data(){
         return{
-            updates: {},
+            updates: [],
         }
     },
 created(){
@@ -48,20 +48,90 @@ created(){
     .catch(response => {
         console.error('Could not get updates', response)
     });
-    this.updates.forEach( u => {
+    if(typeof(this.updates) == Object)
+    {
+        if(!this.updates.oldData)
+        {
+            this.updates.oldData = 'N/A';
+        }
+        if(Date.parse(this.updates.finalizeDate) == Date.parse('0001-01-01T00:00:00'))
+        {
+            this.updates.finalizeDate = 'N/A';
+        }
+    }
+    else
+    {
+        this.updates.forEach( u => {
         if(!u.oldData)
         {
             u.oldData = 'N/A';
         }
-        if(!u.finalizeDate)
+        if(Date.parse(u.finalizeDate) == Date.parse('0001-01-01T00:00:00'))
         {
             u.finalizeDate = 'N/A';
         }
     })
+    }
 },
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "../styles/colors.scss";
 
+table{
+    display: block;
+    margin: 2% 0;
+    padding: 0 2%;
+    font-size: 0.85rem;
+}
+thead{
+    border: 1px solid $highlight;
+}
+td:first-child{
+    width: 7%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(2){
+    width: 7%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(3){
+    width: 13%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(4){
+    width: 12%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(5){
+    width: 14%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(6){
+    width: 12%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(7){
+    width: 12%;
+    border-right: 1px solid $highlight;
+}
+td:nth-child(8){
+    width: 12%;
+    border-right: 1px solid $highlight;
+}
+td:last-child{
+    width: 8%;
+}
+tr{
+    border: 1px solid $highlight;
+}
+thead{
+    font-size: 1.08rem;
+    font-weight: bold;
+}
+a{
+    color: $highlight;
+    text-decoration: none;
+}
 </style>

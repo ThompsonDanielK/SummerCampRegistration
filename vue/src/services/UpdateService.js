@@ -1,6 +1,9 @@
 import axios from "axios"
 
 export default{
+    getAllUpdates(){
+        return axios.get(`/update/camperUpdateList`);
+    },
     getUpdatesByCamperCode(camperId){
         return axios.get(`/update/camper/${camperId}`);
     },

@@ -5,6 +5,7 @@
     <router-link v-bind:to="{ name: 'camper', params: {camperCode: '200001'}}">Camper Example</router-link>
     <router-link v-bind:to="{ name: 'camperList'}">Camper List Example</router-link>
     <router-link v-bind:to="{ name:'familyList' }">Family List Example</router-link>
+    <router-link v-bind:to="{ name:'history' }">Camper Change History</router-link>
   </div>
 </template>
 
