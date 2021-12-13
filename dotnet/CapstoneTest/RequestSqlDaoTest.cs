@@ -117,5 +117,40 @@ namespace CapstoneTest
 
             };
         }
+        
+        [DataTestMethod]
+        [DynamicData(nameof(AddNewFamilyUpdateRequestTestData), DynamicDataSourceType.Method)]
+        public void AddNewFamilyUpdateRequest_ReturnsRequestID(Update data)
+        {
+            //Arrange
+            RequestSqlDao ops = new RequestSqlDao(connectionString);
+
+            //Act
+            int result = ops.AddNewFamilyUpdateRequest(data);
+
+            //Assert
+            Assert.IsNotNull(result);
+        }
+
+        public static IEnumerable<Object[]> AddNewFamilyUpdateRequestTestData()
+        {
+            return new object[][]
+            {
+                new object []
+                {
+                    new Update()
+                    {
+                        OldData = "Molli Carter",
+                        NewData = "Molly carter",
+                        FamilyId = 100003,
+                        Action = "Update",
+                        Requestor = "user",
+                        FieldToBeChanged = "full_name"
+
+                    }
+                }
+
+            };
+        }
     }
 }
