@@ -84,5 +84,55 @@ namespace CapstoneTest
             //Assert
             CollectionAssert.AllItemsAreNotNull(result);
         }
+
+        [TestMethod]
+        public void FetchAllCampers_ReturnsListOfCampers()
+        {
+            //Arrange
+            CampSqlDao ops = new CampSqlDao(connectionString);
+
+            //Act
+            List<Camper> result = ops.FetchAllCampers();
+
+            //Assert
+            CollectionAssert.AllItemsAreNotNull(result);
+        }
+
+        [TestMethod]
+        [DataRow(100001, "Mary Andrews")]
+        [DataRow(100002, "Mike Bowers")]
+        [DataRow(100003, "Molly Carter")]
+        [DataRow(100004, "Antony Gonzales")]
+        public void FetchFamily_ReturnsCorrectFamily(int familyId, string expected)
+        {
+            //Arrange
+            CampSqlDao ops = new CampSqlDao(connectionString);
+
+            //Act
+            Family family = ops.FetchFamily(familyId);
+
+            //Assert
+            Assert.AreEqual(expected, family.FullName);
+
+        }
+
+        [TestMethod]
+        [DataRow(200001, "Andrews")]
+        [DataRow(200002, "Andrews")]
+        [DataRow(200003, "Bowers")]
+        [DataRow(200004, "Carter")]
+        [DataRow(200005, "Carter")]
+        [DataRow(200006, "Gonzales")]
+        public void FetchCamper_ReturnsCorrectCamper(int camperCode, string expected)
+        {
+            //Arrange
+            CampSqlDao ops = new CampSqlDao(connectionString);
+
+            //Act
+            Camper camper = ops.FetchCamper(camperCode);
+
+            //Assert
+            Assert.AreEqual(expected, camper.LastName);
+        }
     }
 }
