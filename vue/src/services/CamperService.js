@@ -7,8 +7,8 @@ export default{
     getAllCampers(){
         return axios.get('/Camp/CamperList');
     },
-    addCamperFamily(CamperFamily){
-        return axios.post('/Camp/Camper', CamperFamily);
+    addCamper(camper){
+        return axios.post('/Camp/Camper', camper);
     },
     deleteCamper(camperCode){
         return axios.delete('/Camp', camperCode);

@@ -151,7 +151,7 @@ namespace Capstone.DAO
 
                     using (SqlCommand cmd = new SqlCommand(sqlAddNewCamperUpdateRequest, conn))
                     {
-                        if (update.OldData == "None")
+                        if (update.OldData == "None" || update.OldData == null)
                         {
                             cmd.Parameters.AddWithValue("@oldData", "");
                         }
@@ -195,19 +195,27 @@ namespace Capstone.DAO
                     using (SqlCommand cmd = new SqlCommand(sqlAddNewFamilyUpdateRequest, conn))
                     {
                         cmd.Parameters.AddWithValue("@familyId", update.FamilyId);
-                        cmd.Parameters.AddWithValue("@action", "Update");
+                        cmd.Parameters.AddWithValue("@action", update.Action);
                         cmd.Parameters.AddWithValue("@requestor", update.Requestor);
                         cmd.Parameters.AddWithValue("@status", "Pending");
                         cmd.Parameters.AddWithValue("@requestDate", DateTime.Now.Date);
                         cmd.Parameters.AddWithValue("@fieldToBeChanged", update.FieldToBeChanged);
                         cmd.Parameters.AddWithValue("@newData", update.NewData);
-                        cmd.Parameters.AddWithValue("@oldData", update.OldData);
+                        if (update.OldData != "" && update.OldData != null)
+                        {
+                            cmd.Parameters.AddWithValue("@oldData", update.OldData);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@oldData", "");
+                        }
                         int requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         return requestId;
                     }
                 }
                 catch (SqlException ex)
                 {
+                    Console.WriteLine(ex.Message);
                     return -1;
                 }
             }

@@ -7,6 +7,9 @@ export default{
     updateFamily(family, username){
         return axios.post(`/update/family/${username}`, family);
     },
+    addFamily(family){
+        return axios.post('/Camp/family', family);
+    },
     deleteFamily(familyId){
         return axios.delete(`/camp/family/${familyId}`);
     },

@@ -34,7 +34,7 @@ namespace Capstone.DAO
         const string sqlAddCamper = "INSERT INTO campers " +
             "(family_id, first_name, last_name, dob, medications, allergies, special_needs, registrar, payment_status, active_status, date_added ) " +
             "VALUES (@familyId, @firstName, @lastName, @dob, @medications, " +
-            "@allergies, @specialNeeds, @registrar, @payment_status, @active_Status, @date_added)";
+            "@allergies, @specialNeeds, @registrar, @payment_status, @active_Status, @date_added); SELECT @@IDENTITY";
         const string sqlAddFamily = "INSERT INTO family " +
             "(parent_guardian_name, address, email_address, city, state, zip, phone) " +
             "VALUES " +
@@ -81,8 +81,6 @@ namespace Capstone.DAO
 
         public int AddCamper(Camper camper)
         {
-            int camperCode = 0;
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -105,7 +103,7 @@ namespace Capstone.DAO
                     }
                     else
                     {
-                        command.Parameters.AddWithValue("@medications", DBNull.Value);
+                        command.Parameters.AddWithValue("@medications", "");
                     }
                     if (!camper.Allergies.Equals(""))
                     {
@@ -113,7 +111,7 @@ namespace Capstone.DAO
                     }
                     else
                     {
-                        command.Parameters.AddWithValue("@allergies", DBNull.Value);
+                        command.Parameters.AddWithValue("@allergies", "");
                     }
                     if (!camper.SpecialNeeds.Equals(""))
                     {
@@ -121,14 +119,12 @@ namespace Capstone.DAO
                     }
                     else
                     {
-                        command.Parameters.AddWithValue("@specialNeeds", DBNull.Value);
+                        command.Parameters.AddWithValue("@specialNeeds", "");
                     }
 
-                    camperCode = Convert.ToInt32(command.ExecuteNonQuery());
+                    return Convert.ToInt32(command.ExecuteScalar());
                 }
             }
-
-            return camperCode;
         }
 
         public List<Camper> FetchAllCampers()
