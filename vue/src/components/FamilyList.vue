@@ -17,15 +17,20 @@
             <input type="text" v-model="cityToFilter" placeholder="City"  />
           </td>
           <td>
-            <input type="text" v-model="stateToFilter" placeholder="State"  />
+            <select v-model="stateToFilter" placeholder="State">
+              <option></option>
+              <option v-for="state in $store.state.states" v-bind:key="state">{{state}}</option>
+            </select>
           </td>
         </tr>
       </thead>
       <tr>
-        <td>Family ID:</td>
+        <td>ID:</td>
         <td>Full Name:</td>
         <td>City:</td>
         <td>State:</td>
+        <td>Campers:</td>
+        <td></td>
       </tr>
       <tr
         v-for="family in this.filteredFamilies"
@@ -36,14 +41,15 @@
         <td>{{ family.fullName }}</td>
         <td>{{ family.city }}</td>
         <td>{{ family.state }}</td>
-
         <td>
-          <router-link v-bind:to="{ name: 'family', params: { familyId: family.familyId },}"><button type="button">Edit</button></router-link>
+          <ul>
+            <li v-for="camper in family.campers" v-bind:key="camper.camperCode">
+            <router-link v-bind:to="{ name: 'camper', params: {camperCode: camper.camperCode}}">{{camper.camperCode}} - {{camper.firstName}} {{camper.lastName}}</router-link>
+            </li>
+          </ul>
         </td>
         <td>
-          <button type="button" v-on:click="deleteFamily(family.familyId)">
-            Delete
-          </button>
+          <router-link v-bind:to="{ name: 'family', params: { familyId: family.familyId },}"><button type="button">Edit</button></router-link>
         </td>
       </tr>
     </table>
@@ -51,11 +57,13 @@
 </template>
 
 <script>
-import FamilyService from "../services/FamilyService.js";
+import CamperService from '../services/CamperService.js'
+import FamilyService from '../services/FamilyService.js'
 
 export default {
   data() {
     return {
+      campers: [],
       families: [],
       fullNameToFilter: "",
       cityToFilter: "",
@@ -63,7 +71,26 @@ export default {
     };
   },
   created() {
-    this.families = this.$store.state.families;
+    CamperService.getAllCampers()
+      .then((response) => {
+        this.campers = response.data;
+        console.log('Got all campers', this.campers)
+        FamilyService.getAllFamilies()
+        .then(response => {
+          this.families = response.data;
+          console.log('Got all families', this.families)
+          this.families.forEach(f => {
+            f.campers = this.campers.filter(c => c.familyId == f.familyId)
+          })
+          this.$store.commit('SET_CAMPER_LIST', this.campers);
+        })
+        .catch(response => {
+        console.error('Problem getting all families', response)
+        });
+      })
+      .catch((response) => {
+      console.error("Problem getting all campers", response);
+      });
   },
   computed: {
     filteredFamilies() {
@@ -88,35 +115,18 @@ export default {
       return campersList;
     },
   },
-  methods: {
-    deleteFamily(familyId) {
-        FamilyService.deleteCamper(familyId)
-        .then(() => {
-            console.log('Removed family');
-            this.$store.commit("DELETE_FAMILY", familyId);
-        })
-        .catch(response => {
-            console.error('Problem deleting family', response);
-        })
-    },
-  },
 };
 </script>
 
 <style scoped lang="scss">
 @import "../styles/colors.scss";
 
-section {
-  background-color: $textLight;
-  padding: 2%;
-  border-radius: 20px;
-  border: 2px solid $textDark;
-}
 td{
   padding-right: 2%;
   }
 table {
   padding: 2%;
+  display: block;
 }
 button {
   background-color: $textDark;
@@ -125,9 +135,9 @@ button {
   border: 2px solid $highlight;
   text-shadow: 2px 1px 1px black;
   font-size: 1rem;
-  font-family: 'Russo One', sans-serif;
+  font-family: "Lora", serif;
 }
-input{
+input, select{
   background-color: $textDark;
   color: $textLight;
   border-radius: 10px;
@@ -135,11 +145,41 @@ input{
   width: 90%;
   font-weight: bold;
   font-size: 1rem;
-  font-family: 'Russo One', sans-serif;
+  font-family: "Lora", serif;
+}
+.tableHead, thead, tr:nth-child(2){
+  font-size: 105%;
+  font-weight: bold;
+}
+td:first-child{
+  width: 10%;
+}
+td:nth-child(2){
+  width: 20%;
+}
+td:nth-child(3){
+  width: 16%;
+}
+td:nth-child(4){
+  width: 10%;
+}
+td:nth-child(5){
+  width: 30%;
+  padding: 0;
+}
+td:last-child{
+  width: 6%;
+}
+input::-webkit-input-placeholder{
+  color: $textLight;
+}
+a{
+  color: $highlight;
+  text-decoration: none;
 }
 .tableHead{
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
 }
 </style>

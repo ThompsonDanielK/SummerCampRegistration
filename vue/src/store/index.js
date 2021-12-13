@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import CamperService from '../services/CamperService.js'
-import FamilyService from '../services/FamilyService.js'
 
 Vue.use(Vuex)
 
@@ -43,29 +41,15 @@ export default new Vuex.Store({
       state.user = user;
       localStorage.setItem('user',JSON.stringify(user));
     },
-    SET_CAMPER_LIST(state)
-    {
-      CamperService.getAllCampers()
-      .then((response) => {
-        state.campers = response.data;
-        console.log('Got all campers', state.campers)
-        FamilyService.getAllFamilies()
-        .then(response => {
-        state.families = response.data;
-        console.log('Got all families', state.families)
-        state.campers.forEach( c=> {
-          let family = state.families.find(f => f.familyId == c.familyId)
-          c.familyName = family.fullName;});
-        })
-        .catch(response => {
-        console.error('Problem getting all families', response)
-        });
-        state.campers.forEach(c => {
+    SET_CAMPER_LIST(state, data)
+    {   
+      state.campers = data;
+      state.campers.forEach(c => {
+        let family = state.families.find(f => f.familyId == c.familyId)
+        c.familyName = family.fullName;
         let birthYear = new Date(c.dob).getFullYear()
         let currentYear = new Date().getFullYear();
         c.age = currentYear - birthYear;
-        c.paymentStatus = c.paymentStatus?'Paid':'Unpaid';
-        c.activeStatus = c.activeStatus?'Active':'Inactive';
         if(!c.medications[0])
         {
           c.medications = 'None';
@@ -111,7 +95,7 @@ export default new Vuex.Store({
           {
             c.missingData.push('Age');
           }
-          if(!c.paymentStatus)
+          if(c.paymentStatus == undefined)
           {
             c.missingData.push('Payment Status');
           }
@@ -123,7 +107,7 @@ export default new Vuex.Store({
           {
             c.missingData.push('Family');
           }
-          if(!c.activeStatus)
+          if(c.activeStatus == undefined)
           {
             c.missingData.push('Active Status');
           }
@@ -131,11 +115,14 @@ export default new Vuex.Store({
           {
             c.missingData.push('None');
           }
-          })
-        })
-      .catch((response) => {
-      console.error("Problem getting all campers", response);
-      });
+        });
+    },
+    SET_FAMILY_LIST(state, data)
+    {
+      state.families = data;
+      state.families.forEach(f => {
+        f.campers = state.campers.filter(c => c.familyId == f.familyId)
+      })
     },
     LOGOUT(state) {
       localStorage.removeItem('token');

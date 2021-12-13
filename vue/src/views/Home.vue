@@ -10,12 +10,9 @@
 </template>
 
 <script>
-
 export default {
   name: "home",
   created(){
-        this.$store.commit('SET_CAMPER_LIST');
-        this.$forceUpdate();
         console.log(this.$store.state.user.username);
     },
 };
@@ -31,6 +28,7 @@ export default {
   border: 2px solid $highlight;
   border-radius: 20px;
   padding: 10px;
+  box-shadow: 3px 2px 1px $secondary;
 }
 a{
   margin-top: 5px;

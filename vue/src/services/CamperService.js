@@ -1,9 +1,6 @@
 import axios from "axios"
 
 export default{
-    getCamper(camperCode){
-        return axios.get(`/Camp/Camper/${camperCode}`);
-    },
     getAllCampers(){
         return axios.get('/Camp/CamperList');
     },

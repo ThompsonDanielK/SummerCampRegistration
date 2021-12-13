@@ -19,8 +19,6 @@ namespace Capstone.DAO
             this.connectionString = connectionString;
         }
 
-        const string sqlGetLastFamilyUpdateRequestId = "SELECT TOP 1 request_id FROM family_updates ORDER BY request_id DESC";
-        const string sqlGetLastCamperUpdateRequestId = "SELECT TOP 1 request_id FROM camper_updates ORDER BY request_id DESC";
         const string sqlAddNewCamperUpdateRequest = "INSERT INTO camper_updates " +
                     "(field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date) " +
                     "VALUES (@fieldToBeChanged, @camperCode, @action, @newData, @oldData, @requestor, @status, @requestDate); SELECT @@IDENTITY";
@@ -33,6 +31,8 @@ namespace Capstone.DAO
             " new_data, old_data, requestor, status, request_date, finalize_date FROM family_updates";
         const string sqlGetUpdatesByCamperCode = "SELECT request_id, field_to_be_changed, camper_code, action, " +
             "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates WHERE camper_code = @camper_code";
+        const string sqlGetUpdatesByFamilyId = "SELECT request_id, field_to_be_changed, family_id, action, " +
+            "new_data, old_data, requestor, status, request_date, finalize_date FROM family_updates WHERE family_id = @family_id";
 
         public List<Update> GetCamperUpdateList(bool isCamperUpdate)
         {
@@ -78,14 +78,25 @@ namespace Capstone.DAO
             while (reader.Read())
             {
                 Update update = BuildUpdate(reader, true);
-                if (reader["finalize_date"] != DBNull.Value)
-                {
-                    update.FinalizeDate = Convert.ToDateTime(reader["finalize_date"]);
-                }
                 updateList.Add(update);
             }
             return updateList;
+        }
 
+        public List<Update> GetFamilyUpdatesByFamilyId(int familyId)
+        {
+            List<Update> updateList = new List<Update>();
+            using SqlConnection conn = new SqlConnection(connectionString);
+            conn.Open();
+            using SqlCommand cmd = new SqlCommand(sqlGetUpdatesByFamilyId, conn);
+            cmd.Parameters.AddWithValue("@family_id", familyId);
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Update update = BuildUpdate(reader, false);
+                updateList.Add(update);
+            }
+            return updateList;
         }
 
         private Update BuildUpdate(SqlDataReader reader, bool isCamper)
@@ -102,7 +113,7 @@ namespace Capstone.DAO
             {
                 update.OldData = Convert.ToString(reader["old_data"]);
             }
-            else 
+            else
             {
                 update.OldData = "";
             }
@@ -122,24 +133,12 @@ namespace Capstone.DAO
             {
                 update.CamperCode = Convert.ToInt32(reader["camper_code"]);
             }
-            else 
+            else
             {
                 update.FamilyId = Convert.ToInt32(reader["family_id"]);
             }
 
             return update;
-        }
-
-        public int GetNextFamilyUpdateRequestId()
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sqlGetLastFamilyUpdateRequestId, conn);
-                int nextId = (Convert.ToInt32(cmd.ExecuteScalar()) + 1);
-                if (nextId == 1) nextId = 300001; // This will be the first update record.
-                return nextId;
-            }
         }
 
         public int AddNewCamperUpdateRequest(int userId, Camper newCamperData, Camper currentCamperData)
@@ -258,9 +257,8 @@ namespace Capstone.DAO
             }
         }
 
-        public int AddNewFamilyUpdateRequest(int userId, Family newFamilyData, Family currentFamilyData)
+        public int AddNewFamilyUpdateRequest(int userId, Family newFamilyData, Family currentFamilyData, string username)
         {
-            int requestId = GetNextFamilyUpdateRequestId();
             string user = userId.ToString();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -269,12 +267,13 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
+                    int requestId = 0;
+
                     using (SqlCommand cmd = new SqlCommand(sqlAddNewFamilyUpdateRequest, conn))
                     {
-                        cmd.Parameters.AddWithValue("@requestId", requestId);
                         cmd.Parameters.AddWithValue("@familyId", newFamilyData.FamilyId);
                         cmd.Parameters.AddWithValue("@action", "Update");
-                        cmd.Parameters.AddWithValue("@requestor", user);
+                        cmd.Parameters.AddWithValue("@requestor", username);
                         cmd.Parameters.AddWithValue("@status", "Pending");
                         cmd.Parameters.AddWithValue("@requestDate", DateTime.Now.Date);
 
@@ -283,60 +282,60 @@ namespace Capstone.DAO
                         cmd.Parameters.Add("@oldData", SqlDbType.NVarChar);
                         if (currentFamilyData.FullName != newFamilyData.FullName)
                         {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "parent_guardian_name";
+                            cmd.Parameters["@fieldToBeChanged"].Value = "full_name";
                             cmd.Parameters["@newData"].Value = newFamilyData.FullName;
                             cmd.Parameters["@oldData"].Value = currentFamilyData.FullName;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentFamilyData.Address != newFamilyData.Address)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "address";
                             cmd.Parameters["@newData"].Value = newFamilyData.Address;
                             cmd.Parameters["@oldData"].Value = currentFamilyData.Address;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentFamilyData.City != newFamilyData.City)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "city";
                             cmd.Parameters["@newData"].Value = newFamilyData.City;
                             cmd.Parameters["@oldData"].Value = currentFamilyData.City;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentFamilyData.State != newFamilyData.State)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "state";
                             cmd.Parameters["@newData"].Value = newFamilyData.State;
                             cmd.Parameters["@oldData"].Value = currentFamilyData.State;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentFamilyData.Zip != newFamilyData.Zip)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "zip";
                             cmd.Parameters["@newData"].Value = newFamilyData.Zip;
                             cmd.Parameters["@oldData"].Value = currentFamilyData.Zip;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentFamilyData.PhoneNumber != newFamilyData.PhoneNumber)
                         {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "phone";
+                            cmd.Parameters["@fieldToBeChanged"].Value = "phone_number";
                             cmd.Parameters["@newData"].Value = newFamilyData.PhoneNumber;
                             cmd.Parameters["@oldData"].Value = currentFamilyData.PhoneNumber;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
                         if (currentFamilyData.EmailAddress != newFamilyData.EmailAddress)
                         {
                             cmd.Parameters["@fieldToBeChanged"].Value = "email_address";
                             cmd.Parameters["@newData"].Value = newFamilyData.EmailAddress;
                             cmd.Parameters["@oldData"].Value = currentFamilyData.EmailAddress;
-                            cmd.ExecuteNonQuery();
+                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
+                        return requestId;
                     }
                 }
                 catch (SqlException ex)
                 {
                     return -1;
                 }
-                return requestId;
             }
         }
 

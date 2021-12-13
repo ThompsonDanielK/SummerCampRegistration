@@ -60,15 +60,17 @@ namespace Capstone.Controllers
             return Ok(requestId);
         }
 
-        [HttpPost("family")]
-        public ActionResult UpdateFamily(Family family)
+        [HttpPost("family/{username}")]
+        public ActionResult UpdateFamily(Family family, string username)
         {
             int userId = int.Parse(this.User.FindFirst("sub").Value);
             Family oldFamilyData = camp.FetchFamily(family.FamilyId);
 
-            int requestId = request.AddNewFamilyUpdateRequest(userId, family, oldFamilyData);
-            if (this.User.IsInRole("admin")) updates.ProcessApprovedRequests("family_updates", requestId);
-
+            int requestId = request.AddNewFamilyUpdateRequest(userId, family, oldFamilyData, username);
+            if (this.User.IsInRole("admin"))
+            {
+                updates.ProcessApprovedRequests("family_updates", requestId);
+            }
             return Ok(requestId);
 
         }
@@ -84,7 +86,7 @@ namespace Capstone.Controllers
             return Ok();
         }
 
-        [HttpPut("approval/family/{requestId}")]
+        [HttpPut("approval/family")]
         [Authorize(Roles = "admin")]
         public ActionResult UpdateFamilyRequestApproved(int[] requestIds)
         {
@@ -126,6 +128,18 @@ namespace Capstone.Controllers
         public ActionResult GetUpdatesByCamperCode(int camperCode)
         {
             List<Update> updates = request.GetCamperUpdatesByCamperCode(camperCode);
+
+            if (updates != null)
+            {
+                return Ok(updates);
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("family/{familyId}")]
+        public ActionResult GetUpdatesByFamilyId(int familyId)
+        {
+            List<Update> updates = request.GetFamilyUpdatesByFamilyId(familyId);
 
             if (updates != null)
             {

@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <article>
       <family-list />
-  </section>
+  </article>
 </template>
 
 <script>
@@ -13,6 +13,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+@import "../styles/colors.scss";
 
+article {
+  background-color: $textLight;
+  padding: 1%;
+  border-radius: 20px;
+  border: 2px solid $textDark;
+  box-shadow: 3px 2px 1px $secondary;
+}
 </style>

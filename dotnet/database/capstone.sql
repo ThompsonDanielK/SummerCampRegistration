@@ -47,9 +47,9 @@ CREATE TABLE campers (
 	first_name nvarchar(50),
 	last_name nvarchar(50) NOT NULL,
 	dob date NOT NULL,
-	medications nvarchar(200) DEFAULT 'None',
-	allergies nvarchar(200) DEFAULT 'None', 
-	special_needs nvarchar(1000) DEFAULT 'None',
+	medications nvarchar(200) DEFAULT '',
+	allergies nvarchar(200) DEFAULT '', 
+	special_needs nvarchar(1000) DEFAULT '',
 	registrar nvarchar(100),
 	payment_status bit,
 	active_status bit DEFAULT 'true',
@@ -57,7 +57,7 @@ CREATE TABLE campers (
 )
 
 CREATE TABLE camper_updates (
-	request_id int IDENTITY NOT NULL,
+	request_id int IDENTITY(400001, 1) NOT NULL PRIMARY KEY,
 	field_to_be_changed nvarchar(50),
 	camper_code int NOT NULL,
 	action nvarchar(20) NOT NULL,
@@ -67,11 +67,10 @@ CREATE TABLE camper_updates (
 	status nvarchar(20) NOT NULL,
 	request_date date NOT NULL,
 	finalize_date date
-	CONSTRAINT PK_camper_updates PRIMARY KEY (request_id, field_to_be_changed)
 );
 
 CREATE TABLE family_updates (
-	request_id int IDENTITY NOT NULL,
+	request_id int IDENTITY(300001, 1) NOT NULL PRIMARY KEY,
 	field_to_be_changed nvarchar(50),
 	family_id int NOT NULL,
 	action nvarchar(20) NOT NULL,
@@ -81,7 +80,6 @@ CREATE TABLE family_updates (
 	status nvarchar(20) NOT NULL,
 	request_date date NOT NULL,
 	finalize_date date
-	CONSTRAINT PK_family_updates PRIMARY KEY (request_id, field_to_be_changed)
 );
 
 GO
@@ -89,9 +87,12 @@ GO
 SET IDENTITY_INSERT camper_updates ON;
 INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
 	VALUES(400001, 'last_name', '200003', 'Update', 'Bowersmith', 'Bowers', 'user', 'Pending', '2021-10-09');
+SET IDENTITY_INSERT camper_updates OFF;
+
+SET IDENTITY_INSERT family_updates ON;
 INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
 	VALUES(300001, 'address', '100002', 'Update', '200 Secondary Road', '200 Second Ave.', 'user', 'Pending', '2021-10-09');
-SET IDENTITY_INSERT camper_updates OFF;
+SET IDENTITY_INSERT family_updates OFF;
 
 SET IDENTITY_INSERT family ON;
 INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone, email_address)

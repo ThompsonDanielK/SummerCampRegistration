@@ -4,205 +4,261 @@
     <tr id="fullName">
       <td>Full Name:</td>
       <td>
-        <div v-show="!showFull" class="data">
-          {{ this.family.fullName }}
-        </div>
+        <span v-show="!showFull && !pending.fullName" class="data">{{ this.family.fullName }}</span>
+        <span v-show="!showFull && pending.fullName" class ="newValue">{{this.pending.fullName}}</span>
         <input type="text" v-model="newData.fullName" v-show="showFull" />
       </td>
-      <td>
-        <button type="button" v-on:click.prevent="showHideForm('fullName')" v-show="!showFull">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('fullName')" v-show="showFull">Save</button>
-        <button type="button" id="cityCancel" v-on:click.prevent="newData.fullName = family.fullName; showFull = false" v-show="showFull">Cancel</button>
+      <td class="editButtons">
+        <button type="button" v-on:click.prevent="showFull = true; newData.fullName = family.fullName" v-show="!showFull" v-bind:disabled="pending.fullName" v-if="!($store.state.user.role == 'admin' && pending.fullName)">Edit</button>
+        <button type="button" v-on:click="rejectRequest('fullName')" v-if="$store.state.user.role == 'admin' && pending.fullName">Reject</button>
+        <button type="submit" v-on:click="saveChange('fullName')" v-show="showFull" v-bind:disabled="!newData.fullName">Save</button>
+        <button type="button" v-on:click.prevent="newData.fullName = []; showFull = false" v-show="showFull">Cancel</button>
       </td>
     </tr>
     <tr id="city">
       <td>City:</td>
       <td>
-        <div v-show="!showCity" class="data">
-          {{ this.family.city }}
-        </div>
+        <span v-show="!showCity && !pending.city" class="data">{{ this.family.city }}</span>
+        <span v-show="!showCity && pending.city" class="newValue">{{ this.pending.city }}</span>
         <input type="text" v-model="newData.city" v-show="showCity" />
       </td>
-      <td>
-        <button type="button" v-on:click.prevent="showHideForm('city')" v-show="!showCity">Edit</button>
-        <button type="button" v-on:click.prevent="saveChange('city')" v-show="showCity">Save</button>
-        <button type="button" id="cityCancel" v-on:click.prevent="newData.city = family.city; showCity = false" v-show="showCity">Cancel</button>
+      <td class="editButtons">
+        <button type="button" v-on:click.prevent="showCity = true; newData.city = family.city" v-show="!showCity" v-bind:disabled="pending.city" v-if="!($store.state.user.role == 'admin' && pending.city)">Edit</button>
+        <button type="button" v-on:click="rejectRequest('city')" v-if="$store.state.user.role == 'admin' && pending.city">Reject</button>
+        <button type="submit" v-on:click="saveChange('city')" v-show="showCity" v-bind:disabled="!newData.city">Save</button>
+        <button type="button" v-on:click.prevent="newData.city = []; showCity = false" v-show="showCity">Cancel</button>
       </td>
     </tr>
     <tr id="state">
       <td>State:</td>
       <td>
-        <div v-show="!showState" class="data">
-          {{ this.family.state }}
-        </div>
+        <span v-show="!showState && !pending.state" class="data">{{ this.family.state }}</span>
+        <span v-show="!showState && pending.state" class="newValue">{{ this.pending.state }}</span>
         <select v-model="newData.state" v-show="showState">
           <option v-for="state in $store.state.states" v-bind:key="state">
             {{ state }}
           </option>
         </select>
       </td>
-      <td>
-        <button type="button" v-on:click.prevent="showHideForm('state')" v-show="!showState">Edit</button>
-        <button type="submit" v-on:click.prevent="saveChange('state')" v-show="showState">Save</button>
-        <button type="button" id="stateCancel" v-on:click.prevent="newData.state = family.state; showState = false" v-show="showState">Cancel</button>
+      <td class="editButtons">
+        <button type="button" v-on:click.prevent="showState = true; newData.state = family.state" v-show="!showState" v-bind:disabled="pending.state" v-if="!($store.state.user.role == 'admin' && pending.state)">Edit</button>
+        <button type="button" v-on:click="rejectRequest('state')" v-if="$store.state.user.role == 'admin' && pending.state">Reject</button>
+        <button type="submit" v-on:click="saveChange('state')" v-show="showState" v-bind:disabled="!newData.state">Save</button>
+        <button type="button" v-on:click.prevent="newData.state = []; showState = false" v-show="showState">Cancel</button>
       </td>
     </tr>
     <tr id="zip">
       <td>Zip:</td>
       <td>
-        <div v-show="!showZip" class="data">
-          {{ this.family.zip }}
-        </div>
+        <span v-show="!showZip && !pending.zip" class="data">{{ this.family.zip }}</span>
+        <span v-show="!showZip && pending.zip" class="newValue">{{ this.pending.zip }}</span>
         <input type="text" v-model.number="newData.zip" v-show="showZip" />
       </td>
-      <td>
-        <button type="button" v-on:click.prevent="showHideForm('zip')" v-show="!showZip">Edit</button>
-        <button type="submit" v-on:click.prevent="saveChange('zip')" v-show="showZip">Save</button>
-        <button type="button" id="zipCancel" v-on:click.prevent="newData.zip = family.zip; showZip = false" v-show="showZip">Cancel</button>
+      <td class="editButtons">
+        <button type="button" v-on:click.prevent="showZip = true; newData.zip = family.zip" v-show="!showZip" v-bind:disabled="pending.zip" v-if="!($store.state.user.role == 'admin' && pending.zip)">Edit</button>
+        <button type="button" v-on:click="rejectRequest('zip')" v-if="$store.state.user.role == 'admin' && pending.zip">Reject</button>
+        <button type="submit" v-on:click="saveChange('zip')" v-show="showZip" v-bind:disabled="!newData.zip">Save</button>
+        <button type="button" v-on:click.prevent="newData.zip = []; showZip = false" v-show="showZip">Cancel</button>
       </td>
     </tr>
     <tr id="phoneNumber">
       <td>Phone Number:</td>
       <td>
-        <div v-show="!showPhone" class="data">
-          {{ this.family.phoneNumber }}
-        </div>
-        <input type="text" v-model.number="newData.phoneNumber" v-show="showPhone" />
+        <span v-show="!showPhone && !pending.phoneNumber" class="data">{{ this.family.phoneNumber }}</span>
+        <span v-show="!showPhone && pending.phoneNumber" class="newValue">{{ this.pending.phoneNumber }}</span>
+        <input type="text" v-model="newData.phoneNumber" v-show="showPhone" />
       </td>
+      <td class="editButtons">
+        <button type="button" v-on:click.prevent="showPhone = true; newData.phoneNumber = family.phoneNumber" v-show="!showPhone" v-bind:disabled="pending.phoneNumber" v-if="!($store.state.user.role == 'admin' && pending.phoneNumber)">Edit</button>
+        <button type="button" v-on:click="rejectRequest('phone_number')" v-if="$store.state.user.role == 'admin' && pending.phoneNumber">Reject</button>
+        <button type="submit" v-on:click="saveChange('phone_number')" v-show="showPhone" v-bind:disabled="!newData.phoneNumber">Save</button>
+        <button type="button" v-on:click.prevent="newData.phoneNumber = []; showPhone = false" v-show="showPhone">Cancel</button>
+      </td>
+    </tr>
+    <tr id="emailAddress">
+      <td>Email:</td>
       <td>
-        <button type="button" v-on:click.prevent="showHideForm('phoneNumber')" v-show="!showPhone">Edit</button>
-        <button type="submit" v-on:click.prevent="saveChange('phoneNumber')" v-show="showPhone">Save</button>
-        <button type="button" id="zipCancel" v-on:click.prevent="newData.phoneNumber = family.phoneNumber; showPhone = false" v-show="showPhone">Cancel</button>
+        <span v-show="!showEmail && !pending.emailAddress" class="data">{{ this.family.emailAddress }}</span>
+        <span v-show="!showEmail && pending.emailAddress" class="newValue">{{ this.pending.emailAddress }}</span>
+        <input type="text" v-model.number="newData.emailAddress" v-show="showEmail" />
+      </td>
+      <td class="editButtons">
+        <button type="button" v-on:click.prevent="showEmail = true; newData.emailAddress = family.emailAddress" v-show="!showEmail" v-bind:disabled="pending.emailAddress" v-if="!($store.state.user.role == 'admin' && pending.emailAddress)">Edit</button>
+        <button type="button" v-on:click="rejectRequest('email_address')" v-if="$store.state.user.role == 'admin' && pending.emailAddress">Reject</button>
+        <button type="submit" v-on:click="saveChange('email_address')" v-show="showEmail" v-bind:disabled="!newData.emailAddress">Save</button>
+        <button type="button" v-on:click.prevent="newData.emailAddress = []; showEmail = false" v-show="showEmail">Cancel</button>
       </td>
     </tr>
     <tr id="campers">
       <td>Campers:</td>
       <td>
-        <div v-show="!showCampers" class="data">
+        <div class="data">
           <ul>
-            <li v-for="camper in this.family.Campers" v-bind:key="camper.camperCode">
-              {{camper.firstName}} {{camper.lastName}}
+            <li v-for="camper in family.campers" v-bind:key="camper.camperCode">
+              <router-link v-bind:to="{name: 'camper', params: {camperCode: camper.camperCode}}">{{camper.firstName}} {{camper.lastName}}</router-link>
             </li>
           </ul>
-          <camper-info v-show="showCampers"> </camper-info>
         </div>
       </td>
-      <td>
-        <button type="button" v-on:click.prevent="showHideForm('phoneNumber')" v-show="!showCampers">Show Details</button>
-      </td>
     </tr>
-    </table>
-      <button type="submit" v-on:click.prevent="finalizeChanges()" v-bind:disabled="!this.newData">Submit Changes</button>
+  </table>
+  <span class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
+    <button type="submit" v-on:click="approveRequests()">Approve All</button>
+    <button type="submit" v-on:click="rejectAllRequests()">Reject All</button>
+  </span>
 </section>
 </template>
 
 <script>
 import FamilyService from '../services/FamilyService.js'
-import CamperInfo from '../components/CamperInfo.vue'
+import UpdateService from '../services/UpdateService.js'
 
 export default {
-  components:{
-    CamperInfo,
+  props:{
+    family: Object,
+    updates: Array,
   },
   data(){
     return{
-      family: {},
       showFull: false,
       showEmail: false,
       showCity: false,
       showState: false,
       showZip: false,
       showPhone: false,
-      showCampers: false,
       newData: {},
+      pending: {},
     }
   },
   methods:{
-    showHideForm(formName) {
-      switch (formName) {
-        case "fullName":
-          this.showFull = true;
-          break;
-        case "email":
-          this.showEmail = true;
-          break;
-        case "city":
-          this.showCity = true;
-          break;
-        case "state":
-          this.showState = true;
-          break;
-        case "zip":
-          this.showZip = true;
-          break;
-        case "phoneNumber":
-          this.Phonecial = true;
-          break;
-      }
-    },
     saveChange(formName) {
-      this.changes.familyId = this.newData.id;
       switch (formName) {
         case "fullName":
-          this.changes.fullName = this.newData.fullName;
+          this.pending.fullName = this.newData.fullName;
           this.family.fullName= this.newData.fullName;
           this.showFull = false;
           break;
         case "city":
-          this.changes.city = this.newData.city;
+          this.pending.city = this.newData.city;
           this.family.city = this.newData.city;
           this.showCity = false;
           break;
         case "state":
-          this.changes.state = this.newData.state;
+          this.pending.state = this.newData.state;
           this.family.state = this.newData.state;
           this.showState = false;
           break;
         case "zip":
-          this.changes.zip = this.newData.zip;
+          this.pending.zip = this.newData.zip;
           this.family.zip = this.newData.zip;
           this.showZip = false;
           break;
-        case "phoneNumber":
+        case "phone_number":
           this.family.phoneNumber = this.newData.phoneNumber;
-          this.changes.phoneNumber = this.newData.phoneNumber;
+          this.pending.phoneNumber = this.newData.phoneNumber;
           this.showPhone = false;
           break;
-        case "email":
-          this.changes.email = this.newData.email;
-          this.family.email= this.newData.email;
+        case "email_address":
+          this.pending.emailAddress = this.newData.emailAddress;
+          this.family.emailAddress = this.newData.emailAddress;
           this.showEmail = false;
           break;
       }
+      this.finalizeChanges()
     },
     finalizeChanges(){
-      FamilyService.updateCamper(this.family, this.family.campers[0].camperCode)
+      FamilyService.updateFamily(this.family, this.$store.state.user.username)
       .then(response => {
         console.log('Updated family info', response.data);
-      //   FamilyService.logChanges(this.changes)
-      //   .then(response => {
-      //     console.log('Logged changes', response.data);
-      //     this.changes = {};
-      //   })
-      //   .catch(response => {
-      //     console.warn('Problem logging changes', response);
-      //   })
       })
       .catch(response => {
-        console.error('Cannot finalize changes', response);
+        console.error('Cannot finalize pending', response);
       })
+      },
+    convertToPending(data)
+    {
+      if(data.status == 'Pending')
+      {
+        this.updates.push(data);
+        switch(data.fieldToBeChanged)
+        {
+          case"full_name":
+          this.pending.fullName = data.newData;
+          break;
+          case"city":
+          this.pending.city = data.newData;
+          break;
+          case"state":
+          this.pending.state = data.newData;
+          break;
+          case"zip":
+          this.pending.zip = data.newData;
+          break;
+          case"phone_number":
+          this.pending.phoneNumber = data.newData;
+          break;
+          case"email_address":
+          this.pending.emailAddress = data.newData;
+          break;
+        }
       }
     },
-    created() {
-      FamilyService.getFamily(this.$route.params.familyId).then((response) => {
-        console.log('Got family', response.data)
-        this.family = response.data;
+    approveRequests(){
+      let requestIds = []
+      this.updates.forEach(r => requestIds.push(r.requestId));
+      UpdateService.approveAllFamilyRequests(requestIds)
+      .then(response => {
+        console.log('All Requests Approved', response.data)
+        this.pending = {};
+        this.$router.go();
       })
-      .catch(response =>
-      {
-        console.error('Problem getting family', response)
+      .catch(response => {
+        console.error('Problem approving request', response);
       })
     },
+    rejectRequest(formName){
+      let request = this.updates.find(r => r.fieldToBeChanged == formName);
+      if(!request)
+      {
+        console.error('Cannot Find Request', request)
+        return '';
+      }
+      UpdateService.rejectFamilyRequest(request.requestId)
+      .then(response => {
+        console.log('Request Rejected', response.data)
+        this.$router.go();
+      })
+      .catch(response => {
+        console.error('Problem Rejecting Request', response);
+      })
+    },
+    rejectAllRequests(){
+      let requestIds = []
+      this.updates.forEach(r => requestIds.push(r.requestId));
+      UpdateService.rejectAllFamilyRequests(requestIds)
+      .then(response => {
+        console.log('All Requests Rejected', response.data);
+        this.pending = {};
+        this.$router.go();
+      })
+      .catch(response => {
+        console.error('Problem Rejecting Request', response);
+      })
+    },
+  },
+  created(){
+    this.newData = {};
+    // UpdateService.getUpdatesByFamilyId(this.$route.params.familyId)
+    // .then(response => {
+    //     console.log('Got all updates', response.data);
+    //     this.updates = response.data;
+        this.updates.forEach(u => this.convertToPending(u));
+        this.$forceUpdate();
+    // })
+    // .catch(response => {
+    //     console.error('Could not get updates', response)
+    // });
+  }
 };
 </script>
 
@@ -210,55 +266,87 @@ export default {
 @import "../styles/colors.scss";
 
 table {
-  margin-top: 20px;
-  padding: 10px;
-  color: $textDark;
-  font-size: 1.4rem;
-  border: 2px solid $highlight;
-  background-color: $secondary;
-  width: 100%;
-  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  margin: 1%;
+  font-size: 130%;
 }
 button {
   background-color: $textDark;
   border: none;
   color: $textLight;
-  margin-left: 15px;
+  margin: 0% 2%;
   border-radius: 5px;
-  text-shadow: 2px 1px 1px black;
   border: 2px solid $highlight;
-  font-size: 1rem;
-  font-family: 'Russo One', sans-serif;
+  text-shadow: 2px 1px 1px black;
+  font-size: 1em;
+  font-family: 'Lora', serif;
+  box-shadow: 1px 0.5px 0px $textLight;
+  width: 100%;
 }
 button:disabled{
   background-color: $secondary;
-  color: black;
+  color: white;
 }
-button[type='submit']
-{
-  margin: 1% 35%;
-  width: 30%;
+tr{
+  display: flex;
+  align-items: center;
+  padding: 0% 2%;
+  margin: 1% 0%;
+  min-height: 66px;
 }
-table tr {
-  padding: 10%;
-  margin-top: 10px;
+.row{
+  padding: 0% 2%;
+  width: 80%;
 }
-table td {
-  margin-bottom: 10px;
+td{
+  font-size: 120%;
+  margin: 0% 1%;
+  padding: 0% 1%;
 }
-table td .data{
-    padding-left: 1%;
-}
-table input, select, textarea{
-  font-family: 'Russo One', sans-serif;
+input, select{
+  font-family: 'Lora', serif;
   border: 1px dotted $highlight;
   border-radius: 10px;
-  padding: 5px;
   background-color: $textDark;
   color: $textLight;
   width: 60%;
+  font-size: 1em;
 }
-input::-webkit-input-placeholder{
-  color: white;
+.newValue{
+  color: $highlight;
+}
+tr > td:nth-child(3)
+{
+  width: 25%;
+}
+tr > td:nth-child(2)
+{
+  margin-left: 2%;
+  width: 50%;
+  text-align: justify;
+}
+tr > td:first-child
+{
+  width: 25%
+}
+ul{
+  padding: 0;
+}
+.editButtons{
+  display: flex;
+}
+.editButtons button{
+  width: 100%;
+}
+.adminButtons{
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  margin: 2% 0%;
+}
+a{
+  color: $textDark;
+  text-decoration: none;
 }
 </style>

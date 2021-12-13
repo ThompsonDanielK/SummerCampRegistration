@@ -37,7 +37,6 @@ export default {
   margin: 2% 15%;
   color: $textDark;
   align-items: center;
-  box-shadow: 3px 2px 1px $secondary;
   border-radius: 20px;
 }
 @media only screen and (max-width:768px){

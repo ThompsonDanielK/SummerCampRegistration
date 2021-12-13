@@ -40,7 +40,7 @@ namespace Capstone.Controllers
             return Ok(familyList);
         }
 
-        [HttpGet("Camper/{camperCode}")]
+        /*[HttpGet("Camper/{camperCode}")]
         public ActionResult GetCamper(int camperCode)
         {
             Camper camper = camp.FetchCamper(camperCode);
@@ -54,7 +54,7 @@ namespace Capstone.Controllers
             Family family = camp.FetchFamily(familyId);
 
             return Ok(family);
-        }
+        }*/
 
         [HttpPost("Camper")]
         public ActionResult PostCamperAndFamily(CamperFamily camperFamily)
