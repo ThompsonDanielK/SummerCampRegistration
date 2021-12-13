@@ -83,19 +83,19 @@ namespace CapstoneTest
 
         }
 
-        //[DataTestMethod]
-        //[DynamicData(nameof(AddNewCamperUpdateRequestTestData), DynamicDataSourceType.Method)]
-        //public void AddNewCamperUpdateRequest_ReturnsRequestID(Camper userId, Camper newData, Camper currentData)
-        //{
-        //    //Arrange
-        //    RequestSqlDao ops = new RequestSqlDao(connectionString);
+        [DataTestMethod]
+        [DynamicData(nameof(AddNewCamperUpdateRequestTestData), DynamicDataSourceType.Method)]
+        public void AddNewCamperUpdateRequest_ReturnsRequestID(Update data)
+        {
+            //Arrange
+            RequestSqlDao ops = new RequestSqlDao(connectionString);
 
-        //    //Act
-        //    int result = ops.AddNewCamperUpdateRequest(userId.CamperCode, newData, currentData);
+            //Act
+            int result = ops.AddNewCamperUpdateRequest(data);
 
-        //    //Assert
-        //    Assert.IsNotNull(result);
-        //}
+            //Assert
+            Assert.IsNotNull(result);
+        }
 
         public static IEnumerable<Object[]> AddNewCamperUpdateRequestTestData()
         {
@@ -103,20 +103,16 @@ namespace CapstoneTest
             {
                 new object []
                 {
-                    new Camper()
+                    new Update()
                     {
-                        CamperCode = 1
-                    },
+                        OldData = "Brandi",
+                        NewData = "Brandy",
+                        CamperCode = 200002,
+                        Action = "Update",
+                        Requestor = "admin",
+                        FieldToBeChanged = "first_name"
 
-                    new Camper()
-                    {
-                         FirstName = "Johnny"
-                    },
-
-                    new Camper()
-                    {
-                        FirstName = "Jonny"
-                    },
+                    }
                 }
 
             };
