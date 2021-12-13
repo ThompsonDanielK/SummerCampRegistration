@@ -82,7 +82,7 @@ namespace CapstoneTest
             List<Family> result = ops.FetchAllFamilies();
 
             //Assert
-            CollectionAssert.AllItemsAreUnique(result);
+            CollectionAssert.AllItemsAreNotNull(result);
         }
     }
 }
