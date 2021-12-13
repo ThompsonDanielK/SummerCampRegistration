@@ -63,7 +63,7 @@ namespace CapstoneTest
             }
 
         }
-        
+
         [TestMethod]
         [DataRow(100002)]
         [DataRow(100004)]
@@ -81,6 +81,45 @@ namespace CapstoneTest
                 Assert.AreEqual(familyId, update.FamilyId);
             }
 
+        }
+
+        //[DataTestMethod]
+        //[DynamicData(nameof(AddNewCamperUpdateRequestTestData), DynamicDataSourceType.Method)]
+        //public void AddNewCamperUpdateRequest_ReturnsRequestID(Camper userId, Camper newData, Camper currentData)
+        //{
+        //    //Arrange
+        //    RequestSqlDao ops = new RequestSqlDao(connectionString);
+
+        //    //Act
+        //    int result = ops.AddNewCamperUpdateRequest(userId.CamperCode, newData, currentData);
+
+        //    //Assert
+        //    Assert.IsNotNull(result);
+        //}
+
+        public static IEnumerable<Object[]> AddNewCamperUpdateRequestTestData()
+        {
+            return new object[][]
+            {
+                new object []
+                {
+                    new Camper()
+                    {
+                        CamperCode = 1
+                    },
+
+                    new Camper()
+                    {
+                         FirstName = "Johnny"
+                    },
+
+                    new Camper()
+                    {
+                        FirstName = "Jonny"
+                    },
+                }
+
+            };
         }
     }
 }
