@@ -35,19 +35,19 @@ VALUES
 	(100001, 'Mary Andrews', '100 First St.', 'Columbus', 'OH', '43111', '614-222-3333', 'mary@mary.com')
 
 INSERT INTO family 
-	(family_id, parent_guardian_name, address, city, state, zip, phone, email_address)
+	(family_id, parent_guardian_name, address, city, state, zip, email_address)
 VALUES 
-	(100002, 'Mike Bowers', '200 Second Ave.', 'Dublin', 'OH', '43222', '614-444-5555', 'mike@mike.com')
+	(100002, 'Mike Bowers', '200 Second Ave.', 'Dublin', 'OH', '43222', 'mike@mike.com')
 
 INSERT INTO family 
-	(family_id, parent_guardian_name, address, city, state, zip, phone, email_address)
+	(family_id, parent_guardian_name, address, city, state, zip, phone)
 VALUES 
-	(100003, 'Molly Carter', '300 Third St.', 'Hilliard', 'OH', '43333', '614-666-7777', 'molly@molly.com')
+	(100003, 'Molly Carter', '300 Third St.', 'Hilliard', 'OH', '43333', '614-666-7777')
 
 INSERT INTO family 
-	(family_id, parent_guardian_name, state)
+	(family_id, parent_guardian_name, address, city, state, zip, email_address)
 VALUES 
-	(100004, 'Antony Gonzales', 'OH')
+	(100004, 'Antony Gonzales', '400 Fourth St.', 'Bexley',  'OH', '43209', 'tony@tony.com')
 
 SET IDENTITY_INSERT family OFF;
 
@@ -80,9 +80,9 @@ VALUES
 	(200005, 100003, 'Erica', 'Carter', '2009-05-05', 'user', 'true', 'false')
 
 INSERT INTO campers 
-	(camper_code, family_id, last_name, dob, registrar, active_status)
+	(camper_code, family_id, last_name, dob, registrar, payment_status, active_status)
 VALUES
-	(200006, 100004, 'Gonzales', '2009-05-05', 'user', 'false')
+	(200006, 100004, 'Gonzales', '2009-05-05', 'user', 'false', 'false')
 
 SET IDENTITY_INSERT campers OFF;
 
