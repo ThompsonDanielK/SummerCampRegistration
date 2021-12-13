@@ -55,24 +55,24 @@ SET IDENTITY_INSERT family OFF;
 SET IDENTITY_INSERT campers ON;
 
 INSERT INTO campers 
-	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status)
+	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 VALUES
-	(200001, 100001, 'Alex', 'Andrews', '2010-01-01', 'user', 'false', 'true')
+	(200001, 100001, 'Alex', 'Andrews', '2010-01-01', 'user', 'false', 'true', '2021-01-20')
 
 INSERT INTO campers 
-	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status)
+	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 VALUES
-	(200002, 100001, 'Brandy', 'Andrews', '2009-02-03', 'user', 'false', 'true')
+	(200002, 100001, 'Brandy', 'Andrews', '2009-02-03', 'user', 'false', 'true', '2021-01-21')
 
 INSERT INTO campers 
-	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status)
+	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 VALUES
-	(200003, 100002, 'Cathy', 'Bowers', '2011-03-03', 'user', 'false', 'true')
+	(200003, 100002, 'Cathy', 'Bowers', '2011-03-03', 'user', 'false', 'true', '2021-02-14')
 
 INSERT INTO campers 
-	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, medications, allergies, special_needs)
+	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, medications, allergies, special_needs, date_added)
 VALUES
-	(200004, 100003, 'David', 'Carter', '2010-04-04', 'user', 'false', 'true', 'Asprin', 'Bees, Nuts, Grass', 'Likes Bedtime Stories, Nightlight')
+	(200004, 100003, 'David', 'Carter', '2010-04-04', 'user', 'false', 'true', 'Asprin', 'Bees, Nuts, Grass', 'Likes Bedtime Stories, Nightlight', '2020-11-25')
 
 INSERT INTO campers 
 	(camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status)
@@ -86,6 +86,7 @@ VALUES
 
 SET IDENTITY_INSERT campers OFF;
 
+SET IDENTITY_INSERT camper_updates ON;
 
 INSERT INTO camper_updates 
 	(request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
@@ -107,6 +108,10 @@ INSERT INTO camper_updates
 VALUES
 	(400004, 'payment_status', '200005', 'Update', 'True', 'False', 'user', 'Pending', '2021-07-08')
 
+SET IDENTITY_INSERT camper_updates OFF;
+
+
+SET IDENTITY_INSERT family_updates ON;
 
 INSERT INTO family_updates 
 	(request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
@@ -127,4 +132,7 @@ INSERT INTO family_updates
 	(request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date, finalize_date)
 VALUES
 	(300004, 'address', '100002', 'Update', '200 Secondary Road', '200 Secondry Rda', 'user', 'Approved', '2021-10-08', '2021-10-10')
+
+SET IDENTITY_INSERT family_updates OFF;
+
 

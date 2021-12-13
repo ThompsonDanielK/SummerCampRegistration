@@ -34,7 +34,7 @@ namespace CapstoneTest
         [TestCleanup]
         public void Cleanup()
         {
-            transaction.Dispose();
+            transaction?.Dispose();
         }
     }
 }
