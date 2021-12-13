@@ -10,6 +10,7 @@ import FamilyChangeLog from '../components/FamilyChangeLog.vue';
 import FamilyInfo from '../components/FamilyInfo.vue'
 import FamilyService from '../services/FamilyService.js'
 import UpdateService from '../services/UpdateService.js'
+import CamperService from '../services/CamperService.js'
 
 export default {
   data(){
@@ -27,16 +28,23 @@ export default {
       }
     },
     created(){
-      FamilyService.getAllFamilies()
+       CamperService.getAllCampers()
       .then((response) => {
+        console.log('Got all campers', response.data)
+        this.$store.commit('SET_CAMPERS', response.data);
+        FamilyService.getAllFamilies()
+        .then((response) => {
         console.log('Got family', response.data)
-        this.families = response.data;
-        this.$store.commit('SET_FAMILY_LIST', this.families)
+        this.$store.commit('SET_FAMILY_LIST', response.data);
         this.$forceUpdate();
+        })
+        .catch(response =>
+        {
+          console.error('Problem getting family', response)
+        })
       })
-      .catch(response =>
-      {
-        console.error('Problem getting family', response)
+        .catch((response) => {
+      console.error("Problem getting all campers", response);
       });
     UpdateService.getUpdatesByFamilyId(this.$route.params.familyId)
     .then(response => {
@@ -46,8 +54,8 @@ export default {
     })
     .catch(response => {
         console.error('Could not get updates', response)
-    });
-    },
+    })
+  },
 };
 </script>
 

@@ -43,12 +43,9 @@ namespace Capstone.Controllers
         }
 
         [HttpPost("camper")]
-        public ActionResult UpdateCamper(Camper camper)
+        public ActionResult UpdateCamper(Update update)
         {
-            int userId = int.Parse(this.User.FindFirst("sub").Value);
-            Camper oldCamperData = camp.FetchCamper(camper.CamperCode);
-
-            int requestId = request.AddNewCamperUpdateRequest(userId, camper, oldCamperData);
+            int requestId = request.AddNewCamperUpdateRequest(update);
             if (requestId == -1)
             {
                 return BadRequest("Problem creating update in database");
@@ -60,13 +57,14 @@ namespace Capstone.Controllers
             return Ok(requestId);
         }
 
-        [HttpPost("family/{username}")]
-        public ActionResult UpdateFamily(Family family, string username)
+        [HttpPost("family")]
+        public ActionResult UpdateFamily(Update update)
         {
-            int userId = int.Parse(this.User.FindFirst("sub").Value);
-            Family oldFamilyData = camp.FetchFamily(family.FamilyId);
-
-            int requestId = request.AddNewFamilyUpdateRequest(userId, family, oldFamilyData, username);
+            int requestId = request.AddNewFamilyUpdateRequest(update);
+            if (requestId == -1)
+            {
+                return BadRequest("Problem creating update in database");
+            }
             if (this.User.IsInRole("admin"))
             {
                 updates.ProcessApprovedRequests("family_updates", requestId);

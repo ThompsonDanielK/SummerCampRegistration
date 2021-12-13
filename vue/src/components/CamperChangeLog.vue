@@ -71,10 +71,12 @@ table{
     margin: 2% 0;
     padding: 0 2%;
     font-size: 0.85rem;
+    width: 100%;
 }
 td:first-child{
     width: 7%;
     border-right: 1px solid $highlight;
+    border-left: 1px solid $highlight;
 }
 td:nth-child(2){
     width: 7%;
@@ -93,22 +95,23 @@ td:nth-child(5){
     border-right: 1px solid $highlight;
 }
 td:nth-child(6){
-    width: 12%;
+    width: 10%;
     border-right: 1px solid $highlight;
 }
 td:nth-child(7){
-    width: 12%;
+    width: 14%;
     border-right: 1px solid $highlight;
 }
 td:nth-child(8){
-    width: 12%;
+    width: 14%;
     border-right: 1px solid $highlight;
 }
 td:last-child{
-    width: 8%;
+    width: 10%;
+    border-right: 1px solid $highlight;
 }
-tr{
-    border: 1px solid $highlight;
+td{
+    padding-left: 0.5%;
 }
 thead{
     font-weight: bold;

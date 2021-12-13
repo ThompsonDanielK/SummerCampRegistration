@@ -116,10 +116,10 @@ import UpdateService from '../services/UpdateService.js'
 export default {
   props:{
     family: Object,
-    updates: Array,
   },
   data(){
     return{
+      updates: [],
       showFull: false,
       showEmail: false,
       showCity: false,
@@ -128,53 +128,58 @@ export default {
       showPhone: false,
       newData: {},
       pending: {},
+      updateToSend: {},
     }
   },
   methods:{
     saveChange(formName) {
+      this.updateToSend.fieldToBeChanged = formName;
       switch (formName) {
         case "fullName":
+          this.updateToSend.oldData= this.family.fullName;
+          this.updateToSend.newData = this.newData.fullName;
           this.pending.fullName = this.newData.fullName;
           this.family.fullName= this.newData.fullName;
           this.showFull = false;
           break;
         case "city":
+          this.updateToSend.oldData= this.family.city;
+          this.updateToSend.newData = this.newData.city;
           this.pending.city = this.newData.city;
           this.family.city = this.newData.city;
           this.showCity = false;
           break;
         case "state":
+          this.updateToSend.oldData= this.family.state;
+          this.updateToSend.newData = this.newData.state;
           this.pending.state = this.newData.state;
           this.family.state = this.newData.state;
           this.showState = false;
           break;
         case "zip":
+          this.updateToSend.oldData= this.family.zip;
+          this.updateToSend.newData = this.newData.zip;
           this.pending.zip = this.newData.zip;
           this.family.zip = this.newData.zip;
           this.showZip = false;
           break;
         case "phone_number":
+          this.updateToSend.oldData= this.family.phoneNumber;
+          this.updateToSend.newData = this.newData.phoneNumber;
           this.family.phoneNumber = this.newData.phoneNumber;
           this.pending.phoneNumber = this.newData.phoneNumber;
           this.showPhone = false;
           break;
         case "email_address":
+          this.updateToSend.oldData= this.family.emailAddress;
+          this.updateToSend.newData = this.newData.emailAddress;
           this.pending.emailAddress = this.newData.emailAddress;
           this.family.emailAddress = this.newData.emailAddress;
           this.showEmail = false;
           break;
       }
-      this.finalizeChanges()
+      this.logChanges()
     },
-    finalizeChanges(){
-      FamilyService.updateFamily(this.family, this.$store.state.user.username)
-      .then(response => {
-        console.log('Updated family info', response.data);
-      })
-      .catch(response => {
-        console.error('Cannot finalize pending', response);
-      })
-      },
     convertToPending(data)
     {
       if(data.status == 'Pending')
@@ -245,19 +250,34 @@ export default {
         console.error('Problem Rejecting Request', response);
       })
     },
+    createUpdate(){
+      this.updateToSend.action = 'Update';
+      this.updateToSend.familyId = parseInt(this.$route.params.familyId);
+      this.updateToSend.requestor = this.$store.state.user.username;
+      },
+    logChanges(formName){
+      this.createUpdate(formName);
+       FamilyService.logChanges(this.updateToSend)
+        .then(response => {
+          console.log('Logged changes', response.data);
+        })
+        .catch(response => {
+          console.warn('Problem logging changes', response);
+        })
+    }
   },
   created(){
     this.newData = {};
-    // UpdateService.getUpdatesByFamilyId(this.$route.params.familyId)
-    // .then(response => {
-    //     console.log('Got all updates', response.data);
-    //     this.updates = response.data;
+    UpdateService.getUpdatesByFamilyId(this.$route.params.familyId)
+    .then(response => {
+        console.log('Got all updates', response.data);
+        this.updates = response.data;
         this.updates.forEach(u => this.convertToPending(u));
         this.$forceUpdate();
-    // })
-    // .catch(response => {
-    //     console.error('Could not get updates', response)
-    // });
+    })
+    .catch(response => {
+        console.error('Could not get updates', response)
+    });
   }
 };
 </script>

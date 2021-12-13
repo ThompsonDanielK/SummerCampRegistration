@@ -9,5 +9,8 @@ export default{
     },
     deleteFamily(familyId){
         return axios.delete(`/camp/family/${familyId}`);
-    }
+    },
+    logChanges(update){
+        return axios.post('update/family', update)
+    },
 }

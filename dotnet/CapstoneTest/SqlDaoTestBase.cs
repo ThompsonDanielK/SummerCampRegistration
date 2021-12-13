@@ -8,6 +8,7 @@ using System.Transactions;
 
 namespace CapstoneTest
 {
+    [TestClass]
     public abstract class SqlDaoTestBase
     {
         protected string ConnectionString = @"Server=.\SQLEXPRESS;Database=final_capstone;Trusted_Connection=True;";

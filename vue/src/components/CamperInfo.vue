@@ -13,7 +13,7 @@
       <td class="editButtons">
         <button type="button" v-on:click.prevent="showFirst = true; newData.firstName = camper.firstName" v-show="!showFirst" v-bind:disabled="pending.firstName" v-if="!($store.state.user.role == 'admin' && pending.firstName)">Edit</button>
         <button type="button" v-on:click="rejectRequest('first_name')" v-if="$store.state.user.role == 'admin' && pending.firstName">Reject</button>
-        <button type="submit" v-on:click="saveChange('first_name')" v-show="showFirst" v-bind:disabled="newData.firstName == camper.firstName">Save</button>
+        <button type="submit" v-on:click="saveChange('first_name')" v-show="showFirst">Save</button>
         <button type="button" v-on:click.prevent="newData.firstName = ''; showFirst = false" v-show="showFirst">Cancel</button>
       </td>
     </tr>
@@ -27,7 +27,7 @@
         <input type="text" v-model="newData.lastName" v-show="showLast" />
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showLast = true" v-show="!showLast" v-bind:disabled="pending.lastName" v-if="!($store.state.user.role == 'admin' && pending.lastName)">Edit</button>
+        <button type="button" v-on:click.prevent="showLast = true; newData.lastName = camper.lastName" v-show="!showLast" v-bind:disabled="pending.lastName" v-if="!($store.state.user.role == 'admin' && pending.lastName)">Edit</button>
         <button type="button" v-on:click="rejectRequest('last_name')" v-if="$store.state.user.role == 'admin' && pending.lastName">Reject</button>
         <button type="submit" v-on:click="saveChange('last_name')" v-show="showLast" v-bind:disabled="!newData.lastName">Save</button>
         <button type="button" v-on:click.prevent="newData.lastName = ''; showLast = false" v-show="showLast">Cancel</button>
@@ -64,7 +64,7 @@
         <input type="date" v-model="newData.dob" v-show="showDOB" />
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showDOB = true" v-show="!showDOB" v-bind:disabled="pending.dob" v-if="!($store.state.user.role == 'admin' && pending.dob)">Edit</button>
+        <button type="button" v-on:click.prevent="showDOB = true; newData.dob = camper.dob" v-show="!showDOB" v-bind:disabled="pending.dob" v-if="!($store.state.user.role == 'admin' && pending.dob)">Edit</button>
         <button type="button" v-on:click="rejectRequest('dob')" v-if="$store.state.user.role == 'admin' && pending.dob">Reject</button>
         <button type="submit" v-on:click="saveChange('dob')" v-show="showDOB" v-bind:disabled="!newData.dob">Save</button>
         <button type="button" v-on:click.prevent="newData.dob = ''; showDOB = false" v-show="showDOB">Cancel</button>
@@ -85,9 +85,9 @@
       </div>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showPayment = true;" v-show="!showPayment" v-bind:disabled="pending.paymentStatus" v-if="!($store.state.user.role == 'admin' && pending.paymentStatus)">Edit</button>
+        <button type="button" v-on:click.prevent="showPayment = true; newData.paymentStatus = camper.paymentStatus" v-show="!showPayment" v-bind:disabled="pending.paymentStatus != undefined" v-if="!($store.state.user.role == 'admin' && pending.paymentStatus)">Edit</button>
         <button type="button" v-on:click="rejectRequest('payment_status')" v-if="$store.state.user.role == 'admin' && pending.paymentStatus">Reject</button>
-        <button type="submit" v-on:click="saveChange('payment_status')" v-show="showPayment" v-bind:disabled="!newData.paymentStatus">Save</button>
+        <button type="submit" v-on:click="saveChange('payment_status')" v-show="showPayment" v-bind:disabled="newData.paymentStatus == camper.paymentStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.paymentStatus = ''; showPayment = false" v-show="showPayment">Cancel</button>
       </td>
     </tr>
@@ -95,7 +95,7 @@
       <td>Active Status:</td>
       <td>
         <div class="data">
-        <span v-if="!showActive && pending.activeStatus == undefined">Active</span>
+        <span v-if="!showActive && pending.activeStatus == undefined && camper.activeStatus">Active</span>
         <span v-if="!showActive && pending.activeStatus == undefined && !camper.activeStatus">Inactive</span>
         <span v-if="pending.activeStatus && !showActive" class="newValue">Active</span>
         <span v-if="!pending.activeStatus && !showActive && pending.activeStatus != undefined" class="newValue">Inactive</span>
@@ -106,7 +106,7 @@
       </div>
       </td>
       <td class="editButtons">
-        <button type="button" v-on:click.prevent="showActive = true;" v-show="!showActive" v-bind:disabled="pending.activeStatus != undefined" v-if="!($store.state.user.role == 'admin' && pending.activStatus)">Edit</button>
+        <button type="button" v-on:click.prevent="showActive = true;" v-show="!showActive" v-bind:disabled="pending.activeStatus != undefined" v-if="!($store.state.user.role == 'admin' && pending.activeStatus)">Edit</button>
         <button type="button" v-on:click="rejectRequest('active_status')" v-if="$store.state.user.role == 'admin' && pending.activeStatus">Reject</button>
         <button type="submit" v-on:click="saveChange('active_status')" v-show="showActive" v-bind:disabled="newData.activeStatus == camper.activeStatus">Save</button>
         <button type="button" v-on:click.prevent="newData.activeStatus = ''; showActive = false" v-show="showActive">Cancel</button>
@@ -116,8 +116,8 @@
       <td>Family: </td>
       <td>
         <div v-show="!showFamily"  class="data">
-          <span v-if="!pending.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</span>
-          <span v-if="pending.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</span>
+          <router-link v-bind:to="{name: 'family', params: {familyId: camper.familyId}}" v-if="!pending.familyId">{{ this.camper.familyId }}--{{this.camper.familyName}}</router-link>
+          <router-link v-bind:to="{name: 'family', params: {familyId: newFamilyId}}" v-if="pending.familyId" class="newValue">{{ this.newFamilyId }}--{{ this.newFamilyName }}</router-link>
         </div>
         <select v-model="newData.familyId" v-show="showFamily">
           <option v-for="f in $store.state.families" v-bind:key="f.familyId">{{f.familyId}}--{{f.fullName}}</option>
@@ -141,7 +141,8 @@
             {{ line }}
           </li>
         </ul>
-        <span v-show="!showAllergies && allergies == 'None' && !pending.allergies">None</span>
+        <span v-show="!showAllergies && allergies == 'None' && !pending.allergies && pending.allergies != ''">None</span>
+        <span class='newValue' v-show="!showAllergies && allergies == 'None' && pending.allergies == ''">None</span>
         <div v-show="showAllergies">
         <input type="text" v-model="newData.allergies" />
         </div>
@@ -149,14 +150,14 @@
       <td class="editButtons">
         <button type="button" v-on:click.prevent="showAllergies = true" v-show="!showAllergies" v-bind:disabled="pending.allergies" v-if="!($store.state.user.role == 'admin' && pending.allergies)">Edit</button>
         <button type="button" v-on:click="rejectRequest('allergies')" v-if="$store.state.user.role == 'admin' && pending.allergies">Reject</button>
-        <button type="submit" v-on:click="saveChange('allergies')" v-show="showAllergies" v-bind:disabled="!newData.allergies">Save</button>
+        <button type="submit" v-on:click="saveChange('allergies')" v-show="showAllergies">Save</button>
         <button type="button" v-on:click.prevent="newData.allergies = []; showAllergies = false" v-show="showAllergies">Cancel</button>
       </td>
     </tr>
      <tr class="row">
       <td>Medications:</td>
       <td>
-        <ul class="data" v-if="!showMedications && (medications != 'None' || pending.medications)">
+        <ul class="data" v-if="!showMedications && (medications != 'None' || pending.medications) && typeof(medications) != String">
           <li v-show="!showMedications && !pending.medications" v-for="line in medications" v-bind:key="line">
             {{ line }}
           </li>
@@ -164,7 +165,8 @@
             {{ line }}
           </li>
         </ul>
-        <span v-if="medications == 'None' && !pending.medications && !showMedications">None</span>
+        <span v-if="medications == 'None' && !pending.medications && pending.medications != '' && !showMedications">None</span>
+        <span class='newValue' v-show="!showMedications && medications == 'None' && pending.medications == ''">None</span>
         <div v-show="showMedications">
         <input type="text" v-model="newData.medications" />
         </div>
@@ -172,14 +174,14 @@
       <td class="editButtons">
         <button type="button" v-on:click.prevent="showMedications = true" v-show="!showMedications" v-bind:disabled="pending.medications" v-if="!($store.state.user.role == 'admin' && pending.medications)">Edit</button>
         <button type="button" v-on:click="rejectRequest('medications')" v-if="$store.state.user.role == 'admin' && pending.medications">Reject</button>
-        <button type="submit" v-on:click="saveChange('medications')" v-show="showMedications" v-bind:disabled="!newData.medications">Save</button>
+        <button type="submit" v-on:click="saveChange('medications')" v-show="showMedications">Save</button>
         <button type="button" v-on:click.prevent="newData.medications = []; showMedications = false" v-show="showMedications">Cancel</button>
       </td>
     </tr>
     <tr class="row">
       <td>Special Needs:</td>
       <td>
-        <ul class="data" v-if="!showSpecial && (specialNeeds != 'None' || pending.specialNeeds)">
+        <ul class="data" v-if="!showSpecial && (specialNeeds != 'None' || pending.specialNeeds) && typeof(specialNeeds) != String">
           <li v-show="!showSpecial && !pending.specialNeeds" v-for="line in specialNeeds" v-bind:key="line">
             {{ line }}
           </li>
@@ -187,7 +189,8 @@
             {{ line }}
           </li>
         </ul>
-        <span v-if="specialNeeds == 'None' && !pending.specialNeeds && !showSpecial">None</span>
+        <span v-if="specialNeeds == 'None' && !pending.specialNeeds && pending.specialNeeds != '' && !showSpecial">None</span>
+        <span class='newValue' v-show="!showSpecial && specialNeeds == 'None' && pending.specialNeeds == ''">None</span>
         <div v-show="showSpecial">
         <input type="text" v-model="newData.specialNeeds" />
         </div>
@@ -195,7 +198,7 @@
       <td class="editButtons">
         <button type="button" v-on:click.prevent="showSpecial = true" v-show="!showSpecial" v-bind:disabled="pending.specialNeeds" v-if="!($store.state.user.role == 'admin' && pending.specialNeeds)">Edit</button>
         <button type="button" v-on:click="rejectRequest('special_needs')" v-if="$store.state.user.role == 'admin' && pending.specialNeeds">Reject</button>
-        <button type="submit" v-on:click="saveChange('special_needs')" v-show="showSpecial" v-bind:disabled="!newData.specialNeeds">Save</button>
+        <button type="submit" v-on:click="saveChange('special_needs')" v-show="showSpecial">Save</button>
         <button type="button" v-on:click.prevent="newData.specialNeeds = []; showSpecial = false" v-show="showSpecial">Cancel</button>
       </td>
     </tr>
@@ -216,6 +219,7 @@ export default {
     return {
       newData: {},
       pending: {},
+      updateToSend: {},
       showFirst: false,
       showLast: false,
       showAllergies: false,
@@ -238,23 +242,23 @@ export default {
       return this.pending.firstName || this.pending.lastName || this.pending.dob || this.pending.registrar || this.pending.paymentStatus || this.pending.activeStatus || this.pending.familyId || this.pending.allergies || this.pending.medications || this.pending.specialNeeds
     },
     allergies(){
-      if(typeof(this.camper.allergies) == String)
+     if(typeof(this.camper.allergies) == 'string')
       {
-        return this.camper.allergies.split('')
+        return this.camper.allergies.split(',')
       }
-      return this.camper.allergies;
+        return this.camper.allergies;
     },
     medications (){
-      if(typeof(this.camper.medications) == String)
+      if(typeof(this.camper.medications) == 'string')
       {
-        return this.camper.medications.split('')
+        return this.camper.medications.split(',')
       }
         return this.camper.medications;
     },
     specialNeeds (){
-      if(typeof(this.camper.specialNeeds) == String)
+      if(typeof(this.camper.specialNeeds) == 'string')
       {
-        return this.camper.specialNeeds.split('')
+        return this.camper.specialNeeds.split(',')
       }
         return this.camper.specialNeeds;
     },
@@ -301,53 +305,95 @@ export default {
   },
   methods: {
     saveChange(formName) {
+      this.updateToSend.fieldToBeChanged = formName;
       switch (formName) {
         case "first_name":
+          this.updateToSend.oldData= this.camper.firstName;
+          this.updateToSend.newData = this.newData.firstName;
           this.pending.firstName = this.newData.firstName;
           this.camper.firstName = this.newData.firstName;
           this.showFirst = false;
           break;
         case "last_name":
+          this.updateToSend.oldData= this.camper.lastName;
+          this.updateToSend.newData = this.newData.lastName;
           this.pending.lastName = this.newData.lastName;
           this.camper.lastName = this.newData.lastName;
           this.showLast = false;
           break;
           case "dob":
+          this.updateToSend.oldData= this.camper.dob;
+          this.updateToSend.newData = this.newData.dob;
           this.pending.dob = this.newData.dob;
           this.camper.dob = this.newData.dob;
           this.showDOB = false;
           break;
         case "allergies":
+          if(this.newData.allergies == undefined)
+          {
+            this.newData.allergies = 'None';
+          }
+          this.updateToSend.oldData= this.camper.allergies.toString()
+          this.updateToSend.newData = this.newData.allergies.toString();
+          if(this.pending.allergies != 'None')
+          {
           this.pending.allergies = this.newData.allergies.split(',')
+          }
           this.camper.allergies = this.newData.allergies;
           this.showAllergies = false;
           break;
         case "medications":
+          if(this.newData.medications == undefined)
+          {
+            this.newData.medications = 'None';
+          }
+          this.updateToSend.oldData= this.camper.medications.toString();
+          this.updateToSend.newData = this.newData.medications.toString();
+          if(this.pending.medications != 'None')
+          {
           this.pending.medications = this.newData.medications.split(',')
+          }
           this.camper.medications = this.newData.medications;
           this.showMedications = false;
           break;
         case "family_id":
+          this.updateToSend.oldData= this.camper.familyId;
+          this.updateToSend.newData = this.newData.familyId;
           this.pending.familyId = this.newData.familyId;
           this.camper.familyId = this.newFamilyId;
           this.showFamily = false;
           break;
         case "special_needs":
-          this.pending.specialNeeds = this.newData.specialNeeds.split(',');
+          if(this.newData.specialNeeds == undefined)
+          {
+            this.newData.specialNeeds = 'None';
+          }
+          this.updateToSend.oldData= this.camper.specialNeeds.toString();
+          this.updateToSend.newData = this.newData.specialNeeds.toString();
+          if(this.pending.specialNeeds != 'None')
+          {
+            this.pending.specialNeeds = this.newData.specialNeeds.split(',');
+          }
           this.camper.specialNeeds = this.newData.specialNeeds;
           this.showSpecial = false;
           break;
         case "payment_status":
+          this.updateToSend.oldData= this.camper.paymentStatus;
+          this.updateToSend.newData = this.newData.paymentStatus;
           this.pending.paymentStatus = this.newData.paymentStatus;
           this.camper.paymentStatus = this.pending.paymentStatus;
           this.showPayment = false;
           break;
         case "registrar":
+          this.updateToSend.oldData= this.camper.registrar;
+          this.updateToSend.newData = this.newData.registrar;
           this.pending.registrar = this.newData.registrar;
           this.camper.registrar = this.newData.registrar;
           this.showRegistrar = false;
           break;
         case "active_status":
+          this.updateToSend.oldData= this.camper.activeStatus;
+          this.updateToSend.newData = this.newData.activeStatus;
           this.pending.activeStatus = this.newData.activeStatus;
           this.camper.activeStatus = this.pending.activeStatus; 
           this.showActive = false;
@@ -356,13 +402,13 @@ export default {
       this.camper.allergies = this.camper.allergies.toString();
       this.camper.medications = this.camper.medications.toString();
       this.camper.specialNeeds = this.camper.specialNeeds.toString();
-      this.finalizeChanges();
+      this.logChanges(formName);
     },
     convertToPending(data)
     {
       if(data.status == 'Pending')
       {
-        this.requests.push(data);
+        this.requests.push(data.requestId);
         switch(data.fieldToBeChanged)
         {
           case"first_name":
@@ -398,20 +444,13 @@ export default {
         }
       }
     },
-    finalizeChanges(){
-      CamperService.updateCamper(this.camper)
-      .then(response => {
-        console.log('Updated camper info', response.data);
-        this.$forceUpdate();
-      })
-      .catch(response => {
-        console.error('Cannot finalize changes', response);
-      })
-    },
+    createUpdate(){
+      this.updateToSend.action = 'Update';
+      this.updateToSend.camperCode = parseInt(this.$route.params.camperCode);
+      this.updateToSend.requestor = this.$store.state.user.username;
+      },
     approveRequests(){
-      let requestIds = []
-      this.requests.forEach(r => requestIds.push(r.requestId));
-      UpdateService.approveAllRequests(requestIds)
+      UpdateService.approveAllRequests(this.requests)
       .then(response => {
         console.log('All Requests Approved', response.data)
         this.pending = {};
@@ -450,6 +489,16 @@ export default {
         console.error('Problem Rejecting Request', response);
       })
     },
+    logChanges(formName){
+      this.createUpdate(formName);
+       CamperService.logChanges(this.updateToSend)
+        .then(response => {
+          console.log('Logged changes', response.data);
+        })
+        .catch(response => {
+          console.warn('Problem logging changes', response);
+        })
+    },
   },
   created(){
     this.newData = {};
@@ -463,7 +512,7 @@ export default {
     .catch(response => {
       console.error('Problem getting updates', response)
     });
-  }
+  },
 };
 </script>
 
@@ -535,7 +584,8 @@ tr > td:nth-child(2)
 }
 tr > td:first-child
 {
-  width: 40%
+  width: 30%;
+  margin-right: 2%;
 }
 ul{
   padding: 1%;
@@ -551,5 +601,9 @@ ul{
   width: 100%;
   justify-content: center;
   margin: 2% 0%;
+}
+a{
+  color: $textDark;
+  text-decoration: none;
 }
 </style>

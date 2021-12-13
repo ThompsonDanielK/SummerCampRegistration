@@ -39,6 +39,7 @@ export default {
             console.log("Got all families", this.families);
             this.$store.commit("SET_FAMILY_LIST", this.families);
             this.$store.commit("SET_CAMPER_LIST", this.campers);
+            this.$forceUpdate();
           })
           .catch((response) => {
             console.error("Problem getting all families", response);

@@ -117,6 +117,10 @@ export default new Vuex.Store({
           }
         });
     },
+    SET_CAMPERS(state, data)
+    {
+      state.campers = data;
+    },
     SET_FAMILY_LIST(state, data)
     {
       state.families = data;

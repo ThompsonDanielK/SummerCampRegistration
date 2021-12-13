@@ -211,10 +211,16 @@ namespace Capstone.DAO
                 Address = Convert.ToString(reader["address"]),
                 City = Convert.ToString(reader["city"]),
                 State = Convert.ToString(reader["state"]),
-                Zip = Convert.ToInt32(reader["zip"]),
-                PhoneNumber = Convert.ToString(reader["phone"]),
-                EmailAddress = Convert.ToString(reader["email_address"])
+                Zip = Convert.ToInt32(reader["zip"])
             };
+            if (reader["phone"] != DBNull.Value)
+            {
+                family.PhoneNumber = Convert.ToString(reader["phone"]);
+            }
+            if (reader["email_address"] != DBNull.Value)
+            {
+                family.EmailAddress = Convert.ToString(reader["email_address"]);
+            }
             return family;
         }
 
@@ -251,14 +257,35 @@ namespace Capstone.DAO
                 FirstName = Convert.ToString(reader["first_name"]),
                 LastName = Convert.ToString(reader["last_name"]),
                 DOB = Convert.ToDateTime(reader["dob"]),
-                Medications = Convert.ToString(reader["medications"]),
-                Allergies = Convert.ToString(reader["allergies"]),
-                SpecialNeeds = Convert.ToString(reader["special_needs"]),
                 Registrar = Convert.ToString(reader["registrar"]),
                 PaymentStatus = Convert.ToBoolean(reader["payment_status"]),
                 ActiveStatus = Convert.ToBoolean(reader["active_status"]),
                 DateAdded = Convert.ToDateTime(reader["date_added"]),
             };
+            if (reader["special_needs"] != DBNull.Value)
+            {
+                camper.Medications = Convert.ToString(reader["medications"]);
+            }
+            else
+            {
+                camper.Medications = "";
+            }
+            if (reader["special_needs"] != DBNull.Value)
+            {
+                camper.Allergies = Convert.ToString(reader["allergies"]);
+            }
+            else
+            {
+                camper.Allergies = "";
+            }
+            if (reader["special_needs"] != DBNull.Value)
+            {
+                camper.SpecialNeeds = Convert.ToString(reader["special_needs"]);
+            }
+            else 
+            {
+                camper.SpecialNeeds = "";
+            }
 
             return camper;
         }

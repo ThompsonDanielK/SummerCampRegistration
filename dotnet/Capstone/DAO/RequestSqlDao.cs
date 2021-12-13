@@ -141,10 +141,8 @@ namespace Capstone.DAO
             return update;
         }
 
-        public int AddNewCamperUpdateRequest(int userId, Camper newCamperData, Camper currentCamperData)
+        public int AddNewCamperUpdateRequest(Update update)
         {
-            string user = userId.ToString();
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
@@ -153,100 +151,29 @@ namespace Capstone.DAO
 
                     using (SqlCommand cmd = new SqlCommand(sqlAddNewCamperUpdateRequest, conn))
                     {
-                        cmd.Parameters.AddWithValue("@camperCode", newCamperData.CamperCode);
-                        cmd.Parameters.AddWithValue("@action", "Update");
-                        cmd.Parameters.AddWithValue("@requestor", user);
+                        if (update.OldData == "None")
+                        {
+                            cmd.Parameters.AddWithValue("@oldData", "");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@oldData", update.OldData);
+                        }
+                        if (update.NewData == "None")
+                        {
+                            cmd.Parameters.AddWithValue("@newData", "");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@newData", update.NewData);
+                        }
+                        cmd.Parameters.AddWithValue("@camperCode", update.CamperCode);
+                        cmd.Parameters.AddWithValue("@action", update.Action);
+                        cmd.Parameters.AddWithValue("@requestor", update.Requestor);
                         cmd.Parameters.AddWithValue("@status", "Pending");
                         cmd.Parameters.AddWithValue("@requestDate", DateTime.Now.Date);
-
-                        cmd.Parameters.Add("@fieldToBeChanged", SqlDbType.NVarChar);
-                        cmd.Parameters.Add("@newData", SqlDbType.NVarChar);
-                        cmd.Parameters.Add("@oldData", SqlDbType.NVarChar);
-                        int requestId = 0;
-                        if (currentCamperData.FirstName != newCamperData.FirstName)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "first_name";
-                            cmd.Parameters["@newData"].Value = newCamperData.FirstName;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.FirstName;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.LastName != newCamperData.LastName)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "last_name";
-                            cmd.Parameters["@newData"].Value = newCamperData.LastName;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.LastName;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.DOB != newCamperData.DOB)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "dob";
-                            cmd.Parameters["@newData"].Value = newCamperData.DOB;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.DOB;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.Medications != newCamperData.Medications)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "medications";
-                            cmd.Parameters["@newData"].Value = newCamperData.Medications;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.Medications;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.SpecialNeeds != newCamperData.SpecialNeeds)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "special_needs";
-                            cmd.Parameters["@newData"].Value = newCamperData.SpecialNeeds;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.SpecialNeeds;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.Allergies != newCamperData.Allergies)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "allergies";
-                            cmd.Parameters["@newData"].Value = newCamperData.Allergies;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.Allergies;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.Registrar != newCamperData.Registrar)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "registrar";
-                            cmd.Parameters["@newData"].Value = newCamperData.Registrar;
-                            if (currentCamperData.Registrar == null)
-                            {
-                                cmd.Parameters["@oldData"].Value = DBNull.Value;
-                            }
-                            else
-                            {
-                                cmd.Parameters["@oldData"].Value = currentCamperData.Registrar;
-                            }
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.PaymentStatus != newCamperData.PaymentStatus)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "payment_status";
-                            cmd.Parameters["@newData"].Value = newCamperData.PaymentStatus;
-                            if (currentCamperData.Registrar == null)
-                            {
-                                cmd.Parameters["@oldData"].Value = DBNull.Value;
-                            }
-                            else
-                            {
-                                cmd.Parameters["@oldData"].Value = currentCamperData.PaymentStatus;
-                            }
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.ActiveStatus != newCamperData.ActiveStatus)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "active_status";
-                            cmd.Parameters["@newData"].Value = newCamperData.ActiveStatus;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.ActiveStatus;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentCamperData.DateAdded != newCamperData.DateAdded)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "date_added";
-                            cmd.Parameters["@newData"].Value = newCamperData.ActiveStatus;
-                            cmd.Parameters["@oldData"].Value = currentCamperData.ActiveStatus;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
+                        cmd.Parameters.AddWithValue("@fieldToBeChanged", update.FieldToBeChanged);
+                        int requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         return requestId;
                     }
                 }
@@ -257,78 +184,25 @@ namespace Capstone.DAO
             }
         }
 
-        public int AddNewFamilyUpdateRequest(int userId, Family newFamilyData, Family currentFamilyData, string username)
+        public int AddNewFamilyUpdateRequest(Update update)
         {
-            string user = userId.ToString();
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
 
-                    int requestId = 0;
-
                     using (SqlCommand cmd = new SqlCommand(sqlAddNewFamilyUpdateRequest, conn))
                     {
-                        cmd.Parameters.AddWithValue("@familyId", newFamilyData.FamilyId);
+                        cmd.Parameters.AddWithValue("@familyId", update.FamilyId);
                         cmd.Parameters.AddWithValue("@action", "Update");
-                        cmd.Parameters.AddWithValue("@requestor", username);
+                        cmd.Parameters.AddWithValue("@requestor", update.Requestor);
                         cmd.Parameters.AddWithValue("@status", "Pending");
                         cmd.Parameters.AddWithValue("@requestDate", DateTime.Now.Date);
-
-                        cmd.Parameters.Add("@fieldToBeChanged", SqlDbType.NVarChar);
-                        cmd.Parameters.Add("@newData", SqlDbType.NVarChar);
-                        cmd.Parameters.Add("@oldData", SqlDbType.NVarChar);
-                        if (currentFamilyData.FullName != newFamilyData.FullName)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "full_name";
-                            cmd.Parameters["@newData"].Value = newFamilyData.FullName;
-                            cmd.Parameters["@oldData"].Value = currentFamilyData.FullName;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentFamilyData.Address != newFamilyData.Address)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "address";
-                            cmd.Parameters["@newData"].Value = newFamilyData.Address;
-                            cmd.Parameters["@oldData"].Value = currentFamilyData.Address;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentFamilyData.City != newFamilyData.City)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "city";
-                            cmd.Parameters["@newData"].Value = newFamilyData.City;
-                            cmd.Parameters["@oldData"].Value = currentFamilyData.City;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentFamilyData.State != newFamilyData.State)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "state";
-                            cmd.Parameters["@newData"].Value = newFamilyData.State;
-                            cmd.Parameters["@oldData"].Value = currentFamilyData.State;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentFamilyData.Zip != newFamilyData.Zip)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "zip";
-                            cmd.Parameters["@newData"].Value = newFamilyData.Zip;
-                            cmd.Parameters["@oldData"].Value = currentFamilyData.Zip;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentFamilyData.PhoneNumber != newFamilyData.PhoneNumber)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "phone_number";
-                            cmd.Parameters["@newData"].Value = newFamilyData.PhoneNumber;
-                            cmd.Parameters["@oldData"].Value = currentFamilyData.PhoneNumber;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
-                        if (currentFamilyData.EmailAddress != newFamilyData.EmailAddress)
-                        {
-                            cmd.Parameters["@fieldToBeChanged"].Value = "email_address";
-                            cmd.Parameters["@newData"].Value = newFamilyData.EmailAddress;
-                            cmd.Parameters["@oldData"].Value = currentFamilyData.EmailAddress;
-                            requestId = Convert.ToInt32(cmd.ExecuteScalar());
-                        }
+                        cmd.Parameters.AddWithValue("@fieldToBeChanged", update.FieldToBeChanged);
+                        cmd.Parameters.AddWithValue("@newData", update.NewData);
+                        cmd.Parameters.AddWithValue("@oldData", update.OldData);
+                        int requestId = Convert.ToInt32(cmd.ExecuteScalar());
                         return requestId;
                     }
                 }

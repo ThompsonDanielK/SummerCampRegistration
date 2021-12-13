@@ -109,13 +109,13 @@ SET IDENTITY_INSERT campers ON;
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 	VALUES(200001, 100001, 'Alex', 'Andrews', '2010-01-01', 'user', 'false', 'true', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
-	VALUES(200002, 100001, 'Brandy', 'Andrews', '2009-02-03', 'user', 'false', 'true', '2021-12-10');
+	VALUES(200002, 100001, 'Brandy', 'Andrews', '2009-02-03', 'user', 'true', 'true', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 	VALUES(200003, 100002, 'Cathy', 'Bowers', '2011-03-03', 'user', 'false', 'true', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, medications, allergies, special_needs, date_added)
 	VALUES(200004, 100003, 'David', 'Carter', '2010-04-04', 'user', 'false', 'true', 'Asprin', 'Bees, Nuts, Grass', 'Likes Bedtime Stories, Nightlight', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
-	VALUES(200005, 100003, 'Erica', 'Carter', '2009-05-05', 'user', 'true', 'false', '2021-12-10');
+	VALUES(200005, 100003, 'Erica', 'Carter', '2009-05-05', 'user', 'false', 'false', '2021-12-10');
 SET IDENTITY_INSERT campers OFF;
 
 
