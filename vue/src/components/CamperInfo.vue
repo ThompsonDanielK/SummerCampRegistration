@@ -1024,7 +1024,9 @@ export default {
       this.updateToSend.requestor = this.$store.state.user.username;
     },
     approveRequests() {
-      UpdateService.approveAllRequests(this.requests)
+      let requestIds = [];
+      this.requests.forEach((r) => requestIds.push(r.requestId));
+      UpdateService.approveAllRequests(requestIds)
         .then((response) => {
           console.log("All Requests Approved", response.data);
           this.pending = {};

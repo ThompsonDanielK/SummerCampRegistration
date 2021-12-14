@@ -77,14 +77,30 @@ export default {
       {
         updateList = updateList.filter(u => u.camperCode == this.camperToFilter)
       }
-      
-      
-      // actionToFilter
-      // fieldToFilter
-      // currentToFilter
-      // newToFilter
-      // userToFilter
-      // statusToFilter
+      if(this.actionToFilter)
+      {
+        updateList = updateList.filter(u => u.camperCode == this.actionToFilter)
+      }
+      if(this.fieldToFilter)
+      {
+        updateList = updateList.filter(u => u.camperCode == this.fieldToFilter)
+      }
+      if(this.currentToFilter)
+      {
+        updateList = updateList.filter(u => u.camperCode == this.currentToFilter)
+      }
+      if(this.newToFilter)
+      {
+        updateList = updateList.filter(u => u.camperCode == this.newToFilter)
+      }
+      if(this.userToFilter)
+      {
+        updateList = updateList.filter(u => u.camperCode == this.userToFilter)
+      }
+      if(this.statusToFilter)
+      {
+        updateList = updateList.filter(u => u.camperCode == this.statusToFilter)
+      }
       return updateList
     },
   },
