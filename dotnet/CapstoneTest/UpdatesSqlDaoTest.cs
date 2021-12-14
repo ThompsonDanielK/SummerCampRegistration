@@ -21,7 +21,7 @@ namespace CapstoneTest
             CampSqlDao secretOps = new CampSqlDao(connectionString);
 
             //Act
-            bool result = ops.ProcessApprovedRequests(table, requestId);
+            ops.ProcessApprovedRequests(table, requestId);
             Camper verfication = secretOps.FetchCamper(camperOrFamilyId);
 
             //Assert

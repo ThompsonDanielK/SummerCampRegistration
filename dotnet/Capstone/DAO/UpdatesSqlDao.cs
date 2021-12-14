@@ -91,29 +91,6 @@ namespace Capstone.DAO
             return true;
         }
 
-        public bool UnenrollCamper(int camperCode)
-        {
-            string sqlUnenrollCamper = "UPDATE campers SET active = false WHERE camper_code = @camperCode";
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sqlUnenrollCamper, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@camperCode", camperCode);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch (SqlException ex)
-                {
-                    // deal with exception
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public bool FinalizeRequest(string table, int requestId, string status)
         {
             string sqlFinalizeRequest = $"UPDATE {table} SET finalize_date = @Now, status = @status WHERE request_id = @requestId";

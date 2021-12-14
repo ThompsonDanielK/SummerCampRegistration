@@ -369,11 +369,11 @@ namespace Capstone.DAO
                         }
                         if (note.InputType != null)
                         {
-                            command.Parameters.AddWithValue("@possible_value", note.PossibleValues);
+                            command.Parameters.AddWithValue("@possible_values", note.PossibleValues);
                         }
                         else
                         {
-                            command.Parameters.AddWithValue("@possible_value", "");
+                            command.Parameters.AddWithValue("@possible_values", "");
                         }
                         command.ExecuteNonQuery();
                     }
