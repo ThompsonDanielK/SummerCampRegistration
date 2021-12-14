@@ -244,7 +244,7 @@
             >
           </div>
           <div v-show="showPayment">
-            <label for="unpaid">Paid</label>
+            <label for="unpaid">Paid?</label>
             <input
               type="checkbox"
               id="unpaid"
@@ -276,7 +276,6 @@
             type="submit"
             v-on:click="saveChange('payment_status')"
             v-show="showPayment"
-            v-bind:disabled="newData.paymentStatus == camper.paymentStatus"
           >
             Save
           </button>
@@ -326,7 +325,7 @@
             >
           </div>
           <div v-show="showActive">
-            <label for="Active">Active</label>
+            <label for="Active">Active?</label>
             <input type="checkbox" id="active" v-model="newData.activeStatus" />
           </div>
         </td>
@@ -936,7 +935,7 @@ export default {
           this.camper.activeStatus = this.pending.activeStatus;
           this.showActive = false;
           break;
-        case "parameter":
+        case "ad_hoc_notes":
           this.updateToSend.oldData = "";
           this.updateToSend.newData = this.note.parameter;
           this.pending.notes = this.note;
@@ -1064,13 +1063,14 @@ export default {
         });
     },
     logChanges(formName) {
-      if (formName == "ad_hoc_notes") {
+      if (formName == "parameter") {
         CamperService.logNotes(this.camper.notes.parameter)
           .then((response) => {
             console.log("Logged new note parameter", response.data);
             CamperService.logNotes(this.camper.notes.value)
               .then((response) => {
                 console.log("Logged new note value", response.data);
+                this.$forceUpdate();
               })
               .catch((response) => {
                 console.error("Problem logging note", response);
@@ -1084,6 +1084,7 @@ export default {
         CamperService.logChanges(this.updateToSend)
           .then((response) => {
             console.log("Logged changes", response.data);
+            this.$forceUpdate();
           })
           .catch((response) => {
             console.warn("Problem logging changes", response);
@@ -1149,7 +1150,8 @@ td {
   font-size: 120%;
 }
 input,
-select {
+select,
+input [type=checkbox] {
   font-family: "Lora", serif;
   border: 1px dotted $highlight;
   border-radius: 10px;

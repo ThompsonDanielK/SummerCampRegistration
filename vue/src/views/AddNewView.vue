@@ -53,7 +53,7 @@ export default {
         this.family.state &&
         this.family.zip &&
         (this.family.phoneNumber || this.family.emailAddress);
-      return camperFilled && (!this.showFamilyForm || familyFilled);
+      return camperFilled && ((!this.showFamilyForm && this.camper.familyId) || familyFilled);
     },
   },
   components: {
@@ -132,7 +132,7 @@ export default {
           CamperService.logChanges(update)
             .then((response) => {
               console.log("Camper update created", response.data);
-              this.$router.push(`/camp/camper/${response.data}`);
+              this.$router.push(`/camper/${response.data}`);
             })
             .catch((response) => {
               console.error("Problem logging new camper update", response);

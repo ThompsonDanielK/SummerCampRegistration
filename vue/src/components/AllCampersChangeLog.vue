@@ -14,6 +14,18 @@
         <td>Status</td>
       </tr>
     </thead>
+    <tr>
+        <td><input type ="text" v-model="idToFilter"></td>
+        <td><input type ="text" v-model="camperToFilter"></td>
+        <td><input type ="text" v-model="actionToFilter"></td>
+        <td><input type ="text" v-model="fieldToFilter"></td>
+        <td><input type ="text" v-model="currentToFilter"></td>
+        <td><input type ="text" v-model="newToFilter"></td>
+        <td><input type ="text" v-model="userToFilter"></td>
+        <td></td>
+        <td></td>
+        <td><input type ="text" v-model="statusToFilter"></td>
+      </tr>
     <tr v-for="update in updates" v-bind:key="update.requestId">
       <td>
         <router-link
@@ -44,7 +56,18 @@ export default {
   data() {
     return {
       updates: [],
+      idToFilter: 0,
+      camperToFilter: 0,
+      actionToFilter: '',
+      fieldToFilter: '',
+      currentToFilter: '',
+      newToFilter: '',
+      userToFilter: '',
+      statusToFilter: '',
     };
+  },
+  computed: {
+    
   },
   created() {
     UpdateService.getAllUpdates()
