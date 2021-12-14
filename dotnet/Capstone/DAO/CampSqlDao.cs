@@ -276,7 +276,7 @@ namespace Capstone.DAO
                 }
                 using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
                 {
-                    cmd.Parameters.AddWithValue("@camperCode", camperCode);
+                    cmd.Parameters.AddWithValue("@camper_code", camperCode);
                     using SqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -376,11 +376,11 @@ namespace Capstone.DAO
                         }
                         if (note.InputType != null)
                         {
-                            command.Parameters.AddWithValue("@possible_value", note.PossibleValues);
+                            command.Parameters.AddWithValue("@possible_values", note.PossibleValues);
                         }
                         else
                         {
-                            command.Parameters.AddWithValue("@possible_value", "");
+                            command.Parameters.AddWithValue("@possible_values", "");
                         }
                         command.ExecuteNonQuery();
                     }
