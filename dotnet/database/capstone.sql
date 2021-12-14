@@ -82,6 +82,15 @@ CREATE TABLE family_updates (
 	finalize_date date
 );
 
+CREATE TABLE ad_hoc_notes(
+	note_id int IDENTITY(500001, 1) NOT NULL PRIMARY KEY,
+	camper_code int NOT NULL,
+	parameter nvarchar(1000) NOT NULL,
+	value nvarchar(1000) NOT NULL,
+	input_type nvarchar(100),
+	possible_values nvarchar(1000)
+);
+
 GO
 
 SET IDENTITY_INSERT camper_updates ON;

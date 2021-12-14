@@ -39,6 +39,10 @@ namespace Capstone.DAO
             "(parent_guardian_name, address, email_address, city, state, zip, phone) " +
             "VALUES " +
             "(@parentGuardianName, @address, @emailAddress, @city, @state, @zip, @phoneNumber); SELECT @@IDENTITY";
+        const string sqlGetAdHocNotes = "SELECT note_id, camper_code, parameter, value, input_type, possible_values " +
+            "FROM ad_hoc_notes WHERE camperCode = @camperCode";
+        const string sqlAddAdHocNotes = "INSERT INTO ad_hoc_notes (camper_code, parameter, value, input_type, possible_values) " +
+            "VALUES (@camper_code, @parameter, @value, @input_type, @possible_values)";
 
         public int AddFamily(Family family)
         {
@@ -141,8 +145,21 @@ namespace Capstone.DAO
                     {
                         while (reader.Read())
                         {
-                            camperList.Add(BuildCamperFromReader(reader));
+                            Camper camper = BuildCamperFromReader(reader);
+                            using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
+                            {
+                                cmd.Parameters.AddWithValue("@camperCode", camper.CamperCode);
+                                using SqlDataReader rdr = cmd.ExecuteReader();
+                                while (rdr.Read())
+                                {
+                                    if (rdr.HasRows)
+                                    {
+                                        camper.Notes.Add(BuildNoteFromReader(rdr));
+                                    }
+                                }
+                            }
                             //Add Camper to list
+                            camperList.Add(camper);
                         }
                     }
                 }
@@ -213,7 +230,7 @@ namespace Capstone.DAO
             {
                 family.PhoneNumber = Convert.ToString(reader["phone"]);
             }
-            else 
+            else
             {
                 family.PhoneNumber = "";
             }
@@ -231,23 +248,49 @@ namespace Capstone.DAO
         public Camper FetchCamper(int camperCode)
         {
             Camper camper = new Camper();
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
 
-                using (SqlCommand command = new SqlCommand(sqlCamper, conn))
+            using SqlConnection conn = new SqlConnection(connectionString);
+            conn.Open();
+
+            using (SqlCommand command = new SqlCommand(sqlCamper, conn))
+            {
+                command.Parameters.AddWithValue("@camper_code", camperCode);
+
+                using SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    command.Parameters.AddWithValue("@camper_code", camperCode);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            camper = BuildCamperFromReader(reader);
-                        }
-                    }
-                    return camper;
+                    camper = BuildCamperFromReader(reader);
                 }
             }
+            using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
+            {
+                cmd.Parameters.AddWithValue("@camperCode", camperCode);
+                using SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    if (rdr.HasRows)
+                    {
+                        camper.Notes.Add(BuildNoteFromReader(rdr));
+                    }
+                }
+            }
+            return camper;
+        }
+
+        private AdHocNote BuildNoteFromReader(SqlDataReader rdr)
+        {
+
+            AdHocNote note = new AdHocNote()
+            {
+                NoteId = Convert.ToInt32(rdr["note_id"]),
+                CamperCode = Convert.ToInt32(rdr["camper_code"]),
+                Parameter = Convert.ToString(rdr["parameter"]),
+                Value = Convert.ToString(rdr["value"]),
+                InputType = Convert.ToString(rdr["input_type"]),
+                PossibleValues = Convert.ToString(rdr["possible_values"])
+            };
+            return note;
         }
 
         // return type needs set to a camper
@@ -299,5 +342,42 @@ namespace Capstone.DAO
             return camper;
         }
 
+        public bool AddAdHocNote(AdHocNote note)
+        {   try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand command = new SqlCommand(sqlAddAdHocNotes, conn))
+                    {
+                        command.Parameters.AddWithValue("@camper_code", note.CamperCode);
+                        command.Parameters.AddWithValue("@parameter", note.Parameter);
+                        command.Parameters.AddWithValue("", note.Value);
+                        if (note.InputType != null)
+                        {
+                            command.Parameters.AddWithValue("@input_type", note.InputType);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@input_type", "");
+                        }
+                        if (note.InputType != null)
+                        {
+                            command.Parameters.AddWithValue("@possible_value", note.PossibleValues);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@possible_value", "");
+                        }
+                        command.ExecuteNonQuery();
+                    }
+                    return true;
+                }
+            }
+            catch (SqlException ex)
+            { 
+                return false;
+            }
+        }
     }
 }

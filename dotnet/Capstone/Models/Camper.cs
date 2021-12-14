@@ -32,7 +32,7 @@ namespace Capstone.Models
 
         public DateTime DateAdded { get; set; }
 
-
+        public List<AdHocNote> Notes { get; set; }
 
         public List<string> MedicationsList 
         {

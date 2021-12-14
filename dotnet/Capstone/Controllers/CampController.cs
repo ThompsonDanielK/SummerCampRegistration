@@ -47,8 +47,7 @@ namespace Capstone.Controllers
 
             if (camperCode != 0)
             {
-                string successMessage = "Your camper has been added";
-                return Created(successMessage, camperCode);
+                return Created($"camper/{camperCode}", camperCode);
             }
 
             return BadRequest(new { message = "This request could not be completed." });
@@ -60,10 +59,19 @@ namespace Capstone.Controllers
             int familyId = camp.AddFamily(family);
             if (familyId > 0)
             {
-                string successMessage = "Your family has been added";
-                return Created(successMessage, familyId);
+                return Created($"Family/{familyId}", familyId);
             }
             return BadRequest(new { message = "This request could not be completed." });
+        }
+
+        [HttpPost("camper/note")]
+        public ActionResult PostNote(AdHocNote note)
+        {
+            if (camp.AddAdHocNote(note))
+            {
+                return Created($"camper/note", note);
+            }
+            return BadRequest("Problem adding note to camper");
         }
     }
 }
