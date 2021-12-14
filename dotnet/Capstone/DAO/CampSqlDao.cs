@@ -269,7 +269,7 @@ namespace Capstone.DAO
                 }
                 using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
                 {
-                    cmd.Parameters.AddWithValue("@camperCode", camperCode);
+                    cmd.Parameters.AddWithValue("@camper_code", camperCode);
                     using SqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {

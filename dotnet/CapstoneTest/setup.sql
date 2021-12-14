@@ -1,3 +1,4 @@
+DELETE FROM ad_hoc_notes
 DELETE FROM family_updates
 DELETE FROM camper_updates
 DELETE FROM campers
