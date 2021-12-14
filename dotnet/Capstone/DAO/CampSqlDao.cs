@@ -358,7 +358,7 @@ namespace Capstone.DAO
                     {
                         command.Parameters.AddWithValue("@camper_code", note.CamperCode);
                         command.Parameters.AddWithValue("@parameter", note.Parameter);
-                        command.Parameters.AddWithValue("", note.Value);
+                        command.Parameters.AddWithValue("@value", note.Value);
                         if (note.InputType != null)
                         {
                             command.Parameters.AddWithValue("@input_type", note.InputType);
