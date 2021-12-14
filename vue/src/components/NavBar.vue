@@ -48,9 +48,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0.3% 0.3%;
-  margin: 1% 15% 0% 15%;
-  border-radius: 250px;
+  padding: 0;
   background-image: url("../../images/DanHeader.jpg");
   background-size: 100%;
   background-repeat: no-repeat;
@@ -78,6 +76,7 @@ export default {
 .nav #navBar {
   display: flex;
   padding-right: 20%;
+  margin-bottom: 1%;
 }
 @media only screen and (max-width: 768px) {
   .nav-item {

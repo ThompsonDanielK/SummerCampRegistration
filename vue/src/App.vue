@@ -26,10 +26,28 @@ export default {
      Any valid CSS or SCSS is allowable here. See https://sass-lang.com/documentation/style-rules for info on SCSS -->
 <style lang="scss">
 @import "./styles/colors.scss";
-
+html{
+  background: #43281e;
+  background: -moz-linear-gradient(
+    -45deg,
+    #43281e 0%,
+    #c49c79 68%,
+    #ffffff 100%
+  );
+  background: -webkit-linear-gradient(
+    -45deg,
+    #43281e 0%,
+    #c49c79 68%,
+    #ffffff 100%
+  );
+  background: linear-gradient(135deg, #43281e 0%, #c49c79 68%, #ffffff 100%);
+  height: 1rem;
+}
 .container {
   display: flex;
   flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 .container .page {
   color: $main;
@@ -48,7 +66,8 @@ export default {
 }
 @media only screen and (max-width: 425px) {
   #navBar,
-  .container, .page {
+  .container,
+  .page {
     padding: 0%;
     border-radius: 0;
     margin: 1% 0%;

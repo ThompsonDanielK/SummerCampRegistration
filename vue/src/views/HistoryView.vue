@@ -1,6 +1,6 @@
 <template>
   <section>
-    <all-campers-change-log></all-campers-change-log>
+    <all-campers-change-log id="history"></all-campers-change-log>
   </section>
 </template>
 
@@ -11,5 +11,13 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "../styles/colors.scss";
+
+section{
+  background-color: $textLight;
+  padding: 1%;
+  border-radius: 20px;
+  border: 2px solid $textDark;
+}
 </style>
