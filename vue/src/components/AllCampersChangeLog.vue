@@ -67,7 +67,26 @@ export default {
     };
   },
   computed: {
-    
+    filteredUpdates(){
+      let updateList = this.updates.slice();
+      if(this.idToFilter)
+      {
+        updateList = updateList.filter(u => u.requestId == this.idToFilter)
+      }
+      if(this.camperToFilter)
+      {
+        updateList = updateList.filter(u => u.camperCode == this.camperToFilter)
+      }
+      
+      
+      // actionToFilter
+      // fieldToFilter
+      // currentToFilter
+      // newToFilter
+      // userToFilter
+      // statusToFilter
+      return updateList
+    },
   },
   created() {
     UpdateService.getAllUpdates()
