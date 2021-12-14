@@ -19,7 +19,7 @@
       >
       <button
         type="button"
-        v-on:click.prevent="showFamilyForm = true"
+        v-on:click.prevent="showFamilyForm = true; camper.familyId = ''"
         v-show="!showFamilyForm"
       >
         Add New Family

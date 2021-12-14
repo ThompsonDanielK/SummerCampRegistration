@@ -971,7 +971,7 @@ export default {
     },
     convertToPending(data) {
       if (data.status == "Pending") {
-        this.requests.push(data.requestId);
+        this.requests.push(data);
         switch (data.fieldToBeChanged) {
           case "first_name":
             this.pending.firstName = data.newData;
