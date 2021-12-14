@@ -25,6 +25,9 @@ namespace Capstone.DAO
         const string sqlAddNewFamilyUpdateRequest = "INSERT INTO family_updates " +
                     "(field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date) " +
                     "VALUES (@fieldToBeChanged, @familyId, @action, @newData, @oldData, @requestor, @status, @requestDate); SELECT @@IDENTITY";
+        const string sqlAddNewNoteUpdateRequest = "INSERT INTO camper_updates " +
+                   "(field_to_be_changed, note_id, action, new_data, old_data, requestor, status, request_date) " +
+                   "VALUES (@fieldToBeChanged, @note_id, @action, @newData, @oldData, @requestor, @status, @requestDate); SELECT @@IDENTITY";
         const string sqlGetCamperUpdateList = "SELECT request_id, field_to_be_changed, camper_code, action, " +
             "new_data, old_data, requestor, status, request_date, finalize_date FROM camper_updates";
         const string sqlGetFamilyUpdateList = "SELECT request_id, field_to_be_changed, family_id, action," +
@@ -221,6 +224,47 @@ namespace Capstone.DAO
             }
         }
 
+        public int AddNewNoteUpdateRequest(Update update)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
 
+                    using (SqlCommand cmd = new SqlCommand(sqlAddNewNoteUpdateRequest, conn))
+                    {
+                        if (update.OldData == "None" || update.OldData == null)
+                        {
+                            cmd.Parameters.AddWithValue("@oldData", "");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@oldData", update.OldData);
+                        }
+                        if (update.NewData == "None")
+                        {
+                            cmd.Parameters.AddWithValue("@newData", "");
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@newData", update.NewData);
+                        }
+                        cmd.Parameters.AddWithValue("@note_id", update.NoteId);
+                        cmd.Parameters.AddWithValue("@action", update.Action);
+                        cmd.Parameters.AddWithValue("@requestor", update.Requestor);
+                        cmd.Parameters.AddWithValue("@status", "Pending");
+                        cmd.Parameters.AddWithValue("@requestDate", DateTime.Now.Date);
+                        cmd.Parameters.AddWithValue("@fieldToBeChanged", update.FieldToBeChanged);
+                        int requestId = Convert.ToInt32(cmd.ExecuteScalar());
+                        return requestId;
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    return -1;
+                }
+            }
+        }
     }
 }

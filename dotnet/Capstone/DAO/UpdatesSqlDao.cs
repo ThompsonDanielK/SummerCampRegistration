@@ -55,6 +55,12 @@ namespace Capstone.DAO
                                     indexValue = Convert.ToInt32(reader["camper_code"]);
                                     tableToUpdate = "campers";
                                 }
+                                if (table == "ad_hoc_notes")
+                                {
+                                    indexField = "note_id";
+                                    indexValue = Convert.ToInt32(reader["note_id"]);
+                                    tableToUpdate = "ad_hoc_notes";
+                                }
                                 firstIteration = false;
                             }
                             else
@@ -88,29 +94,6 @@ namespace Capstone.DAO
             }
 
             FinalizeRequest(table, requestId, "Approved");
-            return true;
-        }
-
-        public bool UnenrollCamper(int camperCode)
-        {
-            string sqlUnenrollCamper = "UPDATE campers SET active = false WHERE camper_code = @camperCode";
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sqlUnenrollCamper, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@camperCode", camperCode);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch (SqlException ex)
-                {
-                    // deal with exception
-                    return false;
-                }
-            }
             return true;
         }
 

@@ -681,6 +681,63 @@
         </td>
       </tr>
     </table>
+    <h2>Additional Information</h2>
+    <table id="adHoc">
+      <tr>
+        <td></td>
+        <td></td>
+        <td>
+          <button
+            id="newNotes"
+            type="button"
+            v-on:click.prevent="showNotes = true"
+            v-show="!showNotes"
+            v-bind:disabled="pending.notes"
+            v-if="!($store.state.user.role == 'admin' && pending.notes)"
+          >
+            Add Additional Info
+          </button>
+        </td>
+      </tr>
+      <tr v-for="note in camper.notes" v-bind:key="note.noteId">
+        <td>{{ note.parameter }}</td>
+        <td>{{ note.value }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td v-if="showNotes"><input type="text" v-model="note.parameter" placeholder="Parameter" /></td>
+        <td v-if="showNotes"><input type="text" v-model="note.value" placeholder="Value" /></td>
+        <td>
+          <span class="editButtons">
+            <button
+              type="button"
+              v-on:click="rejectRequest('ad_hoc_notes')"
+              v-if="$store.state.user.role == 'admin' && pending.notes"
+            >
+              Reject
+            </button>
+            <button
+              type="submit"
+              v-on:click="saveChange('ad_hoc_notes')"
+              v-show="showNotes"
+              v-bind:disabled="!(note.parameter && note.value)"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              v-on:click.prevent="
+                this.note = {};
+                showNotes = false;
+              "
+              v-show="showNotes"
+            >
+              Cancel
+            </button>
+          </span>
+        </td>
+      </tr>
+    </table>
     <span class="adminButtons" v-if="this.$store.state.user.role == 'admin'">
       <button
         type="submit"
@@ -720,27 +777,15 @@ export default {
       showSpecial: false,
       showRegistrar: false,
       showActive: false,
+      showNotes: false,
       requests: [],
+      note: {},
     };
   },
   props: {
     camper: Object,
   },
   computed: {
-    newDataAdded() {
-      return (
-        this.pending.firstName ||
-        this.pending.lastName ||
-        this.pending.dob ||
-        this.pending.registrar ||
-        this.pending.paymentStatus ||
-        this.pending.activeStatus ||
-        this.pending.familyId ||
-        this.pending.allergies ||
-        this.pending.medications ||
-        this.pending.specialNeeds
-      );
-    },
     allergies() {
       if (typeof this.camper.allergies == "string") {
         return this.camper.allergies.split(",");
@@ -887,10 +932,33 @@ export default {
           this.camper.activeStatus = this.pending.activeStatus;
           this.showActive = false;
           break;
+        case "ad_hoc_notes":
+          if(this.camper.notes != undefined)
+          {
+            this.updateToSend.oldData = this.camper.notes.toString();
+          }
+          else
+          {
+            this.updateToSend.oldData = '';
+          }
+          this.updateToSend.newData = this.note.parameter + ',' + this.note.value;
+          this.pending.notes = this.note;
+          if(this.camper.notes != undefined)
+          {
+            this.camper.notes.push(this.note);
+          }
+          else
+          {
+            this.camper.notes = [];
+            this.camper.notes.push(this.note);
+          }
+          this.showNotes = false;
+          break;
       }
       this.camper.allergies = this.camper.allergies.toString();
       this.camper.medications = this.camper.medications.toString();
       this.camper.specialNeeds = this.camper.specialNeeds.toString();
+      this.camper.notes = this.camper.notes.toString();
       this.logChanges(formName);
     },
     convertToPending(data) {
@@ -932,6 +1000,12 @@ export default {
             break;
           case "payment_status":
             this.pending.paymentStatus = data.newData;
+            break;
+          case "parameter":
+            this.pending.notes.parameter = data.newData;
+            break;
+          case "value":
+            this.pending.notes.parameter = data.newData;
             break;
         }
       }
@@ -982,13 +1056,33 @@ export default {
     },
     logChanges(formName) {
       this.createUpdate(formName);
-      CamperService.logChanges(this.updateToSend)
-        .then((response) => {
-          console.log("Logged changes", response.data);
+      if(formName == 'ad_hoc_notes')
+      {
+        CamperService.logNotes(this.camper.notes.parameter)
+        .then(response => {
+          console.log('Logged new note parameter', response.data);
+          CamperService.logNotes(this.camper.notes.value)
+        .then(response => {
+          console.log('Logged new note value', response.data);
         })
-        .catch((response) => {
-          console.warn("Problem logging changes", response);
-        });
+        .catch(response => {
+          console.error ('Problem logging note', response);
+        })
+        })
+        .catch(response => {
+          console.error ('Problem logging note', response);
+        })
+      }
+      else
+      {
+        CamperService.logChanges(this.updateToSend)
+          .then((response) => {
+            console.log("Logged changes", response.data);
+          })
+          .catch((response) => {
+            console.warn("Problem logging changes", response);
+          });
+      }
     },
   },
   created() {
@@ -1059,7 +1153,7 @@ select {
   font-size: 1em;
 }
 input::-webkit-input-placeholder {
-  color: white;
+  color: $textLight;
 }
 .newValue {
   color: $highlight;
@@ -1094,5 +1188,12 @@ ul {
 a {
   color: $textDark;
   text-decoration: none;
+}
+#adHoc {
+  width: 100%;
+}
+#newNotes {
+  width: 100%;
+  font-size: 66%;
 }
 </style>

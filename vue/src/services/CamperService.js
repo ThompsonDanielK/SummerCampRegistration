@@ -4,6 +4,9 @@ export default {
     logChanges(update) {
         return axios.post('update/camper', update)
     },
+    logNote(update) {
+        return axios.post('update/notes', update)
+    },
     getAllCampers() {
         return axios.get('/Camp/CamperList');
     },

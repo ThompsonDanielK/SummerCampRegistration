@@ -18,6 +18,8 @@ namespace Capstone.Models
 
         public int FamilyId { get; set; }
 
+        public int NoteId { get; set; }
+
         [Required]
         public string Action { get; set; }
 

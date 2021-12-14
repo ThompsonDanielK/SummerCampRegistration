@@ -10,5 +10,6 @@ namespace Capstone.DAO
         List<Update> GetCamperUpdatesByCamperCode(int camperCode);
         List<Update> GetCamperUpdateList(bool isCamperUpdate);
         List<Update> GetFamilyUpdatesByFamilyId(int familyId);
+        int AddNewNoteUpdateRequest(Update update);
     }
 }

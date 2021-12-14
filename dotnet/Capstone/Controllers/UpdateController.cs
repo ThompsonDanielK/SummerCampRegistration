@@ -57,6 +57,21 @@ namespace Capstone.Controllers
             return Ok(requestId);
         }
 
+        [HttpPost("notes")]
+        public ActionResult UpdateNotes(Update update)
+        {
+            int requestId = request.AddNewNoteUpdateRequest(update);
+            if (requestId == -1)
+            {
+                return BadRequest("Problem creating update in database");
+            }
+            if (this.User.IsInRole("admin"))
+            {
+                updates.ProcessApprovedRequests("ad_hoc_notes", requestId);
+            }
+            return Ok(requestId);
+        }
+
         [HttpPost("family")]
         public ActionResult UpdateFamily(Update update)
         {

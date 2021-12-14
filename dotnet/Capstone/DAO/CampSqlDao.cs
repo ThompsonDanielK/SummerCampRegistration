@@ -134,7 +134,6 @@ namespace Capstone.DAO
         public List<Camper> FetchAllCampers()
         {
             List<Camper> camperList = new List<Camper>();
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -156,12 +155,19 @@ namespace Capstone.DAO
                     {
                         cmd.Parameters.AddWithValue("@camper_code", camper.CamperCode);
                         using SqlDataReader rdr = cmd.ExecuteReader();
-                        while (rdr.Read())
+                        try
                         {
-                            if (rdr.HasRows)
+                            while (rdr.Read())
                             {
-                                camper.Notes.Add(BuildNoteFromReader(rdr));
+                                if (rdr.HasRows)
+                                {
+                                    camper.Notes.Add(BuildNoteFromReader(rdr));
+                                }
                             }
+                        }
+                        catch (SqlException ex)
+                        {
+                            Console.WriteLine(ex.Message);
                         }
                     }
                 }
@@ -169,6 +175,7 @@ namespace Capstone.DAO
             }
             // return list of campers
             return camperList;
+
         }
 
         public List<Family> FetchAllFamilies()
@@ -358,7 +365,7 @@ namespace Capstone.DAO
                     {
                         command.Parameters.AddWithValue("@camper_code", note.CamperCode);
                         command.Parameters.AddWithValue("@parameter", note.Parameter);
-                        command.Parameters.AddWithValue("", note.Value);
+                        command.Parameters.AddWithValue("@value", note.Value);
                         if (note.InputType != null)
                         {
                             command.Parameters.AddWithValue("@input_type", note.InputType);
