@@ -128,11 +128,12 @@ export default {
         this.camper.familyId = parseInt(this.camper.familyId);
         CamperService.addCamper(this.camper).then((response) => {
           console.log("New camper added", response.data);
+          this.camper.camperCode = response.data;
           let update = this.createUpdate("camper");
           CamperService.logChanges(update)
             .then((response) => {
               console.log("Camper update created", response.data);
-              this.$router.push(`/camper/${response.data}`);
+              this.$router.push(`/camper/${this.camper.camperCode}`);
             })
             .catch((response) => {
               console.error("Problem logging new camper update", response);
