@@ -20,8 +20,8 @@ namespace Capstone.Controllers
         public CampController(ICampDao camp, IUpdatesDao updates)
         {
             this.camp = camp;
-          //  this.updates = updates;
-            
+            //  this.updates = updates;
+
         }
 
         [HttpGet("CamperList")]
@@ -40,67 +40,30 @@ namespace Capstone.Controllers
             return Ok(familyList);
         }
 
-        /*[HttpGet("Camper/{camperCode}")]
-        public ActionResult GetCamper(int camperCode)
-        {
-            Camper camper = camp.FetchCamper(camperCode);
-
-            return Ok(camper);
-        }
-
-        [HttpGet("family/{familyId}")]
-        public ActionResult GetFamily(int familyId)
-        {
-            Family family = camp.FetchFamily(familyId);
-
-            return Ok(family);
-        }*/
-
         [HttpPost("Camper")]
-        public ActionResult PostCamperAndFamily(CamperFamily camperFamily)
+        public ActionResult PostCamper(Camper camper)
         {
-            bool familyExists = false;
-            bool familyCreationSuccess = false;
-            int familyId = 0;
-            string successMessage = "Your camper has been added";
+            int camperCode = camp.AddCamper(camper);
 
-            if (camperFamily.Camper.FamilyId == 0)
+            if (camperCode != 0)
             {
-                familyId = camp.AddFamily(camperFamily.Family);
-
-                if (!familyId.Equals(null))
-                {
-                    familyExists = familyCreationSuccess = true;
-                }
-
-                if (familyCreationSuccess)
-                {
-                    successMessage = "Your camper and family has been added";
-                }
-            }
-            else
-            {
-                familyExists = true;
-            }
-
-            if (familyCreationSuccess)
-            {
-                camperFamily.Camper.FamilyId = familyId;
-            }
-            if (familyExists || familyCreationSuccess)
-            { 
-                int camperCode = camp.AddCamper(camperFamily.Camper);
-
-                if (camperCode != 0)
-                {
-
-                    return Created(successMessage, camperCode);
-                }
+                string successMessage = "Your camper has been added";
+                return Created(successMessage, camperCode);
             }
 
             return BadRequest(new { message = "This request could not be completed." });
         }
 
- 
+        [HttpPost("Family")]
+        public ActionResult PostFamily(Family family)
+        {
+            int familyId = camp.AddFamily(family);
+            if (familyId > 0)
+            {
+                string successMessage = "Your family has been added";
+                return Created(successMessage, familyId);
+            }
+            return BadRequest(new { message = "This request could not be completed." });
+        }
     }
 }

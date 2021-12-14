@@ -16,7 +16,7 @@ GO
 
 -- Create Tables
 CREATE TABLE users (
-	user_id int IDENTITY(1,1) NOT NULL,
+	user_id int IDENTITY(100001,1) NOT NULL,
 	username varchar(50) NOT NULL,
 	password_hash varchar(200) NOT NULL,
 	salt varchar(200) NOT NULL,
@@ -123,9 +123,9 @@ SET IDENTITY_INSERT campers OFF;
 ALTER TABLE campers ADD FOREIGN KEY (family_id) REFERENCES family(family_id);
 
 ALTER TABLE camper_updates ADD FOREIGN KEY (camper_code) REFERENCES campers(camper_code);
-ALTER TABLE camper_updates ADD	CONSTRAINT Chk_camper_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
+ALTER TABLE camper_updates ADD CONSTRAINT Chk_camper_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
 ALTER TABLE camper_updates ADD CONSTRAINT Chk_camper_updates_status CHECK (status IN ('Pending', 'Approved', 'Updated', 'Rejected'));
 
 ALTER TABLE family_updates ADD FOREIGN KEY (family_id) REFERENCES family(family_id);
-ALTER TABLE family_updates ADD	CONSTRAINT Chk_family_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
+ALTER TABLE family_updates ADD CONSTRAINT Chk_family_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
 ALTER TABLE family_updates ADD CONSTRAINT Chk_family_updates_status CHECK (status IN ('Pending', 'Approved', 'Updated', 'Rejected'));

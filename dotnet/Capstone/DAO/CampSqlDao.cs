@@ -34,7 +34,7 @@ namespace Capstone.DAO
         const string sqlAddCamper = "INSERT INTO campers " +
             "(family_id, first_name, last_name, dob, medications, allergies, special_needs, registrar, payment_status, active_status, date_added ) " +
             "VALUES (@familyId, @firstName, @lastName, @dob, @medications, " +
-            "@allergies, @specialNeeds, @registrar, @payment_status, @active_Status, @date_added)";
+            "@allergies, @specialNeeds, @registrar, @payment_status, @active_Status, @date_added); SELECT @@IDENTITY";
         const string sqlAddFamily = "INSERT INTO family " +
             "(parent_guardian_name, address, email_address, city, state, zip, phone) " +
             "VALUES " +
@@ -81,8 +81,6 @@ namespace Capstone.DAO
 
         public int AddCamper(Camper camper)
         {
-            int camperCode = 0;
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -105,7 +103,7 @@ namespace Capstone.DAO
                     }
                     else
                     {
-                        command.Parameters.AddWithValue("@medications", DBNull.Value);
+                        command.Parameters.AddWithValue("@medications", "");
                     }
                     if (!camper.Allergies.Equals(""))
                     {
@@ -113,7 +111,7 @@ namespace Capstone.DAO
                     }
                     else
                     {
-                        command.Parameters.AddWithValue("@allergies", DBNull.Value);
+                        command.Parameters.AddWithValue("@allergies", "");
                     }
                     if (!camper.SpecialNeeds.Equals(""))
                     {
@@ -121,14 +119,12 @@ namespace Capstone.DAO
                     }
                     else
                     {
-                        command.Parameters.AddWithValue("@specialNeeds", DBNull.Value);
+                        command.Parameters.AddWithValue("@specialNeeds", "");
                     }
 
-                    camperCode = Convert.ToInt32(command.ExecuteNonQuery());
+                    return Convert.ToInt32(command.ExecuteScalar());
                 }
             }
-
-            return camperCode;
         }
 
         public List<Camper> FetchAllCampers()
@@ -217,9 +213,17 @@ namespace Capstone.DAO
             {
                 family.PhoneNumber = Convert.ToString(reader["phone"]);
             }
+            else 
+            {
+                family.PhoneNumber = "";
+            }
             if (reader["email_address"] != DBNull.Value)
             {
                 family.EmailAddress = Convert.ToString(reader["email_address"]);
+            }
+            else
+            {
+                family.EmailAddress = "";
             }
             return family;
         }
@@ -250,18 +254,15 @@ namespace Capstone.DAO
         private Camper BuildCamperFromReader(SqlDataReader reader)
         {
             //return new Camper
-            Camper camper = new Camper
-            {
-                CamperCode = Convert.ToInt32(reader["camper_code"]),
-                FamilyId = Convert.ToInt32(reader["family_id"]),
-                FirstName = Convert.ToString(reader["first_name"]),
-                LastName = Convert.ToString(reader["last_name"]),
-                DOB = Convert.ToDateTime(reader["dob"]),
-                Registrar = Convert.ToString(reader["registrar"]),
-                PaymentStatus = Convert.ToBoolean(reader["payment_status"]),
-                ActiveStatus = Convert.ToBoolean(reader["active_status"]),
-                DateAdded = Convert.ToDateTime(reader["date_added"]),
-            };
+            Camper camper = new Camper() { };
+            camper.CamperCode = Convert.ToInt32(reader["camper_code"]);
+            camper.FamilyId = Convert.ToInt32(reader["family_id"]);
+            camper.FirstName = Convert.ToString(reader["first_name"]);
+            camper.LastName = Convert.ToString(reader["last_name"]);
+            camper.DOB = Convert.ToDateTime(reader["dob"]);
+            camper.Registrar = Convert.ToString(reader["registrar"]);
+            camper.PaymentStatus = Convert.ToBoolean(reader["payment_status"]);
+            camper.ActiveStatus = Convert.ToBoolean(reader["active_status"]);
             if (reader["special_needs"] != DBNull.Value)
             {
                 camper.Medications = Convert.ToString(reader["medications"]);
@@ -282,9 +283,17 @@ namespace Capstone.DAO
             {
                 camper.SpecialNeeds = Convert.ToString(reader["special_needs"]);
             }
-            else 
+            else
             {
                 camper.SpecialNeeds = "";
+            }
+            if (reader["date_added"] != DBNull.Value)
+            {
+                camper.DateAdded = Convert.ToDateTime(reader["date_added"]);
+            }
+            else
+            {
+                camper.DateAdded = DateTime.Now;
             }
 
             return camper;

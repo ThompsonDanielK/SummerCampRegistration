@@ -1,7 +1,7 @@
 <template>
   <article>
-      <add-camper-form v-bind:camper="CamperFamily.camper" />
-      <add-family-form v-show="showFamilyForm" v-bind:family="CamperFamily.family" v-bind:disabled="CamperFamily.camper.familyId" />
+      <add-camper-form v-bind:camper="camper" />
+      <add-family-form v-show="showFamilyForm" v-bind:family="family" v-bind:disabled="camper.familyId" />
       <div class ="camperButtons">
       <button type="submit" v-on:click.prevent="saveNewCamper()" v-bind:disabled="!filledForm">Submit</button>
       <router-link v-bind:to="{name: 'camperList'}" id="cancel">Cancel</router-link>
@@ -21,16 +21,14 @@ export default {
         return{
             showFamilyForm: false,
             families: [],
-            CamperFamily: {
-                camper: {},
-                family: {},
-            },
+            camper: {},
+            family: {},
         }
     },
     computed: {
         filledForm(){
-             let camperFilled = this.CamperFamily.camper.firstName && this.CamperFamily.camper.dob;
-             let familyFilled = this.CamperFamily.family.fullName && this.CamperFamily.family.address && this.CamperFamily.family.city && this.CamperFamily.family.state && this.CamperFamily.family.zip && (this.CamperFamily.family.phoneNumber || this.CamperFamily.family.emailAddress)
+             let camperFilled = this.camper.firstName && this.camper.dob;
+             let familyFilled = this.family.fullName && this.family.address && this.family.city && this.family.state && this.family.zip && (this.family.phoneNumber || this.family.emailAddress)
              return camperFilled && (!this.showFamilyForm || familyFilled)
          },
     },
@@ -39,24 +37,95 @@ export default {
         AddFamilyForm
     },
     methods: {
-        saveNewCamper() {
-            if(this.CamperFamily.camper.familyId)
+        createUpdate(type){
+            let update = {
+                action: 'ADD',
+                requestor: this.$store.state.user.username,
+            };
+            if(type == 'family')
             {
-                this.CamperFamily.camper.familyId= parseInt(this.CamperFamily.camper.familyId)
+                update.fieldToBeChanged = 'family';
+                update.familyId = this.family.familyId;
+                update.newData = this.family.fullName;
+                update.oldData = '';
             }
-        CamperService.addCamperFamily(this.CamperFamily)
-        .then(response => {
-            console.log('New camper added', response.data);
-            this.$store.state.CamperFamily = {};
-            this.$router.push(`/camp/camper/${response.data.camperCode}`);
-        })
-        .catch(response => {
-            console.error('Problem adding new camper', response);
-        })
-    },
+            else
+            {
+                update.fieldToBeChanged = 'camper';
+                if(this.camper.camperCode)
+                {
+                    update.camperCode = parseInt(this.camper.camperCode);
+                }
+                else
+                {
+                    update.camperCode = this.camper.camperCode;
+                }
+                update.newData = this.camper.firstName + ' ' + this.camper.lastName;
+                update.oldData = '';
+            }
+            return update
+        },
+        saveNewCamper(){
+            if(this.camper.familyId)
+            {
+                this.camper.familyId= parseInt(this.camper.familyId)
+            }
+            if(!this.camper.familyId)
+            {
+                FamilyService.addFamily(this.family)
+                .then(response => {
+                    this.family.familyId = response.data
+                    this.camper.familyId = response.data;
+                    let update = this.createUpdate('family');
+                    FamilyService.logChanges(update)
+                    .then(response => {
+                        console.log('Family update created', response.data)
+                        CamperService.addCamper(this.camper)
+                        .then(response => {
+                            console.log('New camper added', response.data);
+                            this.camper.camperCode = response.data;
+                            update = this.createUpdate('camper');
+                            CamperService.logChanges(update)
+                            .then(response => {
+                                console.log('Camper update created', response.data)
+                                this.$router.push(`/camper/${this.camper.camperCode}`);
+                            })
+                            .catch(response => {
+                            console.error('Problem logging new camper update', response);
+                            })
+                        })
+                        .catch(response => {
+                            console.error('Problem logging new family update', response);
+                        })
+                    })
+                    .catch(response => {
+                        console.error('Problem adding new camper', response);
+                    })
+                })
+                .catch(response => {
+                    console.error('Problem adding family', response)
+                })
+            }
+            else
+            {
+                CamperService.addCamper(this.camper)
+                .then(response => {
+                   console.log('New camper added', response.data);
+                    let update = this.createUpdate('camper');
+                    CamperService.logChanges(update)
+                        .then(response => {
+                            console.log('Camper update created', response.data)
+                            this.$router.push(`/camp/camper/${response.data}`);
+                            })
+                        .catch(response => {
+                            console.error('Problem logging new camper update', response);
+                        })
+                    })
+            }
+        },
     },
     created(){
-        this.CamperFamily.camper.registrar = this.$store.state.user.username;
+        this.camper.registrar = this.$store.state.user.username;
         FamilyService.getAllFamilies()
         .then(response => {
             console.log('Got all families', response.data);
