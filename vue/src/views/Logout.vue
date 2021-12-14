@@ -8,7 +8,7 @@
 export default {
   created() {
     this.$store.commit("LOGOUT");
-    this.$router.push({name: 'home'});
-  }
+    this.$router.push({ name: "home" });
+  },
 };
 </script>

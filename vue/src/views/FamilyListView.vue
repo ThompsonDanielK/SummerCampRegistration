@@ -1,16 +1,15 @@
 <template>
   <article>
-      <family-list />
+    <family-list />
   </article>
 </template>
 
 <script>
-import FamilyList from "../components/FamilyList.vue"
+import FamilyList from "../components/FamilyList.vue";
 
 export default {
   components: { FamilyList },
-
-}
+};
 </script>
 
 <style scoped lang="scss">

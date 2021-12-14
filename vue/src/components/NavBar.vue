@@ -1,7 +1,7 @@
 <template>
   <header class="nav">
-      <img id="logo" src="../../images/logo.png" alt="C.A.M.P. Logo" />
-      <div id="navBar">
+    <img id="logo" src="../../images/logo.png" alt="C.A.M.P. Logo" />
+    <div id="navBar">
       <router-link class="nav-item" v-bind:to="{ name: 'home' }">
         <i class="fas fa-home"></i>
         <!-- This is a font awesome icon -->
@@ -17,7 +17,7 @@
         class="nav-item"
         v-bind:to="{ name: 'login' }"
         v-if="!$store.state.token"
-      >Login
+        >Login
       </router-link>
       <router-link
         class="nav-item"
@@ -26,23 +26,22 @@
       >
         Logout
       </router-link>
-      </div>
-    </header>
+    </div>
+  </header>
 </template>
 
 <script>
 export default {
-data(){
-  return{
-    changedOurMinds: false,
-  }
-}
-}
+  data() {
+    return {
+      changedOurMinds: false,
+    };
+  },
+};
 </script>
 
 <style scoped lang="scss">
-
-@import '../styles/colors.scss';
+@import "../styles/colors.scss";
 
 .nav {
   background-color: $secondary;
@@ -57,11 +56,11 @@ data(){
   background-repeat: no-repeat;
   background-position: center;
 }
-.nav #logo{
+.nav #logo {
   height: 13%;
   width: 13%;
- }
-.nav .nav-item{
+}
+.nav .nav-item {
   display: flex;
   justify-content: space-around;
   color: $textLight;
@@ -76,21 +75,21 @@ data(){
   margin: 0% 2%;
   box-shadow: 1.5px 0.5px 0.5px black;
 }
-.nav #navBar{
+.nav #navBar {
   display: flex;
   padding-right: 20%;
 }
-@media only screen and (max-width:768px){
-  .nav-item{
+@media only screen and (max-width: 768px) {
+  .nav-item {
     font-size: 1.4em;
   }
 }
-@media only screen and (max-width:425px){
-  .nav{
+@media only screen and (max-width: 425px) {
+  .nav {
     padding: 0;
     margin: 0;
-  } 
-  .nav .nav-item{
+  }
+  .nav .nav-item {
     font-size: 1em;
   }
 }

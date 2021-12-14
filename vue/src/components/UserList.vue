@@ -1,14 +1,10 @@
 <template>
-    <table>
-    </table>
+  <table></table>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
-
 </style>

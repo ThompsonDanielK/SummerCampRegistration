@@ -13,7 +13,8 @@
           placeholder="Username"
           v-model="user.username"
           required
-          autofocus />
+          autofocus
+        />
       </div>
       <div class="form-group">
         <input
@@ -22,7 +23,8 @@
           class="form-control"
           placeholder="Password"
           v-model="user.password"
-          required />
+          required
+        />
       </div>
       <div class="form-group">
         <input
@@ -31,48 +33,47 @@
           class="form-control"
           placeholder="Confirm Password"
           v-model="user.confirmPassword"
-          required />
+          required
+        />
       </div>
       <div class="form-group">
         <router-link :to="{ name: 'login' }">Have an account?</router-link>
       </div>
-      <button class="btn btn-primary" type="submit">
-        Create Account
-      </button>
+      <button class="btn btn-primary" type="submit">Create Account</button>
     </form>
   </div>
 </template>
 
 <script>
-import authService from '../services/AuthService';
+import authService from "../services/AuthService";
 
 export default {
-  name: 'register',
+  name: "register",
   data() {
     return {
       user: {
-        username: '',
-        password: '',
-        confirmPassword: '',
-        role: 'user',
+        username: "",
+        password: "",
+        confirmPassword: "",
+        role: "user",
       },
       registrationErrors: false,
-      registrationErrorMsg: 'There were problems registering this user.',
+      registrationErrorMsg: "There were problems registering this user.",
     };
   },
   methods: {
     register() {
       if (this.user.password != this.user.confirmPassword) {
         this.registrationErrors = true;
-        this.registrationErrorMsg = 'Password & Confirm Password do not match.';
+        this.registrationErrorMsg = "Password & Confirm Password do not match.";
       } else {
         authService
           .register(this.user)
           .then((response) => {
             if (response.status == 201) {
               this.$router.push({
-                name: 'login',
-                query: { registration: 'success' },
+                name: "login",
+                query: { registration: "success" },
               });
             }
           })
@@ -80,28 +81,29 @@ export default {
             const response = error.response;
             this.registrationErrors = true;
             if (response.status === 400) {
-              this.registrationErrorMsg = 'Bad Request: Validation Errors';
+              this.registrationErrorMsg = "Bad Request: Validation Errors";
             }
           });
       }
     },
     clearErrors() {
       this.registrationErrors = false;
-      this.registrationErrorMsg = 'There were problems registering this user.';
+      this.registrationErrorMsg = "There were problems registering this user.";
     },
   },
 };
 </script>
 
 <style scoped lang="scss">
-@import '../styles/colors.scss';
+@import "../styles/colors.scss";
 
-#register{
+#register {
   color: $textDark;
   padding: 10px;
   border-radius: 10px;
 }
-a, button{
+a,
+button {
   color: $highlight;
 }
 </style>

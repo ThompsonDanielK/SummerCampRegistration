@@ -1,31 +1,31 @@
 import axios from "axios"
 
-export default{
-    getAllUpdates(){
+export default {
+    getAllUpdates() {
         return axios.get(`/update/camperUpdateList`);
     },
-    getUpdatesByCamperCode(camperId){
+    getUpdatesByCamperCode(camperId) {
         return axios.get(`/update/camper/${camperId}`);
     },
-    getUpdatesByFamilyId(familyId){
+    getUpdatesByFamilyId(familyId) {
         return axios.get(`/update/family/${familyId}`);
     },
-    approveAllRequests(requestIds){
+    approveAllRequests(requestIds) {
         return axios.put('update/approval/camper', requestIds)
     },
-    rejectRequest(requestId){
+    rejectRequest(requestId) {
         return axios.put(`update/rejection/camper/${requestId}`)
     },
-    rejectAllRequests(requestIds){
+    rejectAllRequests(requestIds) {
         return axios.put('update/rejection/camper', requestIds)
     },
-    approveAllFamilyRequests(requestIds){
+    approveAllFamilyRequests(requestIds) {
         return axios.put('update/approval/family', requestIds)
     },
-    rejectFamilyRequest(requestId){
+    rejectFamilyRequest(requestId) {
         return axios.put(`update/rejection/family/${requestId}`)
     },
-    rejectAllFamilyRequests(requestIds){
+    rejectAllFamilyRequests(requestIds) {
         return axios.put('update/rejection/family', requestIds)
     }
 }

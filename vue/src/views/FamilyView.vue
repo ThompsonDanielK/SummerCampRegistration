@@ -6,55 +6,56 @@
 </template>
 
 <script>
-import FamilyChangeLog from '../components/FamilyChangeLog.vue';
-import FamilyInfo from '../components/FamilyInfo.vue'
-import FamilyService from '../services/FamilyService.js'
-import UpdateService from '../services/UpdateService.js'
-import CamperService from '../services/CamperService.js'
+import FamilyChangeLog from "../components/FamilyChangeLog.vue";
+import FamilyInfo from "../components/FamilyInfo.vue";
+import FamilyService from "../services/FamilyService.js";
+import UpdateService from "../services/UpdateService.js";
+import CamperService from "../services/CamperService.js";
 
 export default {
-  data(){
-    return{
+  data() {
+    return {
       updates: [],
-    }
+    };
   },
-  components: { 
+  components: {
     FamilyInfo,
-    FamilyChangeLog, 
+    FamilyChangeLog,
+  },
+  computed: {
+    family() {
+      return this.$store.state.families.find(
+        (f) => f.familyId == this.$route.params.familyId
+      );
     },
-    computed: {
-      family(){
-        return this.$store.state.families.find(f => f.familyId == this.$route.params.familyId)
-      }
-    },
-    created(){
-       CamperService.getAllCampers()
+  },
+  created() {
+    CamperService.getAllCampers()
       .then((response) => {
-        console.log('Got all campers', response.data)
-        this.$store.commit('SET_CAMPERS', response.data);
+        console.log("Got all campers", response.data);
+        this.$store.commit("SET_CAMPERS", response.data);
         FamilyService.getAllFamilies()
-        .then((response) => {
-        console.log('Got family', response.data)
-        this.$store.commit('SET_FAMILY_LIST', response.data);
-        this.$forceUpdate();
-        })
-        .catch(response =>
-        {
-          console.error('Problem getting family', response)
-        })
+          .then((response) => {
+            console.log("Got family", response.data);
+            this.$store.commit("SET_FAMILY_LIST", response.data);
+            this.$forceUpdate();
+          })
+          .catch((response) => {
+            console.error("Problem getting family", response);
+          });
       })
-        .catch((response) => {
-      console.error("Problem getting all campers", response);
+      .catch((response) => {
+        console.error("Problem getting all campers", response);
       });
     UpdateService.getUpdatesByFamilyId(this.$route.params.familyId)
-    .then(response => {
-        console.log('Got all updates', response.data);
+      .then((response) => {
+        console.log("Got all updates", response.data);
         this.updates = response.data;
         this.$forceUpdate();
-    })
-    .catch(response => {
-        console.error('Could not get updates', response)
-    })
+      })
+      .catch((response) => {
+        console.error("Could not get updates", response);
+      });
   },
 };
 </script>
@@ -62,7 +63,7 @@ export default {
 <style scoped lang="scss">
 @import "../styles/colors.scss";
 
-article{
+article {
   background-color: $secondary;
   padding: 2%;
   border-radius: 20px;

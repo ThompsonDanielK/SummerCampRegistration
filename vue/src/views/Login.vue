@@ -13,7 +13,8 @@
       <div
         class="alert alert-success"
         role="alert"
-        v-if="this.$route.query.registration">
+        v-if="this.$route.query.registration"
+      >
         Thank you for registering, please sign in.
       </div>
       <div class="form-group">
@@ -24,7 +25,8 @@
           placeholder="Username"
           v-model="user.username"
           required
-          autofocus />
+          autofocus
+        />
       </div>
       <div class="form-group">
         <input
@@ -33,13 +35,14 @@
           class="form-control"
           placeholder="Password"
           v-model="user.password"
-          required />
+          required
+        />
       </div>
       <div class="form-group">
         <router-link :to="{ name: 'register' }">Need an account?</router-link>
       </div>
       <div class="form-group">
-      <button class="btn btn-primary" type="submit">Sign in</button>
+        <button class="btn btn-primary" type="submit">Sign in</button>
       </div>
     </form>
   </div>
@@ -77,9 +80,7 @@ export default {
 
           if (response == null || response.status === 500) {
             this.networkError = true;
-          }
-
-          else if (response.status === 401) {
+          } else if (response.status === 401) {
             this.invalidCredentials = true;
           }
         });
@@ -89,9 +90,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../styles/colors.scss';
+@import "../styles/colors.scss";
 
-#login{
+#login {
   color: $textDark;
   padding: 10px;
   border-radius: 10px;
@@ -102,27 +103,29 @@ export default {
   margin: 0 20%;
   border: 2px solid $highlight;
 }
-.form-group{
+.form-group {
   display: flex;
   justify-content: center;
 }
-.form-group input, button, a{
+.form-group input,
+button,
+a {
   margin: 10px;
   background-color: $textDark;
   color: $textLight;
   border: 2px solid $highlight;
   border-radius: 5px;
 }
-input::-webkit-input-placeholder{
-  color: white;
-  font-family: 'Russo One', sans-serif;
+input::-webkit-input-placeholder {
+  color: $textLight;
+  font-family: "Lora", serif;
 }
-a{
+a {
   width: 70%;
   text-align: center;
 }
-button{
+button {
   font-size: 1.2em;
-  font-family: 'Russo One', sans-serif;
+  font-family: "Lora", serif;
 }
 </style>

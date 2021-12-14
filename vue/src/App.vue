@@ -4,7 +4,7 @@
 <template>
   <div id="app" class="container">
     <!-- If you start to get random styling you don't like, remove container from this div -->
-    <nav-bar id='navBar' />
+    <nav-bar id="navBar" />
     <div class="page">
       <router-view />
     </div>
@@ -19,7 +19,6 @@ export default {
   components: {
     NavBar,
   },
-  
 };
 </script>
 
@@ -39,15 +38,21 @@ export default {
   align-items: center;
   border-radius: 20px;
 }
-@media only screen and (max-width:768px){
+@media only screen and (max-width: 768px) {
+  #navBar,
   .container div.page {
-    padding: 2% 5%;
+    padding: 2% 4% 2% 0%;
+    margin: 1% 0%;
     box-shadow: none;
   }
 }
-@media only screen and (max-width:425px){
-  .container div.page {
-    padding: 2% 5%;
+@media only screen and (max-width: 425px) {
+  #navBar,
+  .container, .page {
+    padding: 0%;
+    border-radius: 0;
+    margin: 1% 0%;
+    box-shadow: none;
   }
 }
 </style>

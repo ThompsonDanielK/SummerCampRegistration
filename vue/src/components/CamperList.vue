@@ -215,9 +215,8 @@ export default {
         campersList = this.campers.filter((a) => a.age <= maxAge);
       }
       if (this.activeToFilter != "All") {
-        
-        campersList = this.campers.filter(
-          (c) => this.activeToFilter == 'Active'? c.activeStatus: !c.activeStatus
+        campersList = this.campers.filter((c) =>
+          this.activeToFilter == "Active" ? c.activeStatus : !c.activeStatus
         );
       }
       if (this.missingToFilter) {

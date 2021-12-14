@@ -40,7 +40,7 @@ namespace Capstone.DAO
             "VALUES " +
             "(@parentGuardianName, @address, @emailAddress, @city, @state, @zip, @phoneNumber); SELECT @@IDENTITY";
         const string sqlGetAdHocNotes = "SELECT note_id, camper_code, parameter, value, input_type, possible_values " +
-            "FROM ad_hoc_notes WHERE camperCode = @camperCode";
+            "FROM ad_hoc_notes WHERE camper_code = @camper_code";
         const string sqlAddAdHocNotes = "INSERT INTO ad_hoc_notes (camper_code, parameter, value, input_type, possible_values) " +
             "VALUES (@camper_code, @parameter, @value, @input_type, @possible_values)";
 
@@ -146,23 +146,26 @@ namespace Capstone.DAO
                         while (reader.Read())
                         {
                             Camper camper = BuildCamperFromReader(reader);
-                            using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
-                            {
-                                cmd.Parameters.AddWithValue("@camperCode", camper.CamperCode);
-                                using SqlDataReader rdr = cmd.ExecuteReader();
-                                while (rdr.Read())
-                                {
-                                    if (rdr.HasRows)
-                                    {
-                                        camper.Notes.Add(BuildNoteFromReader(rdr));
-                                    }
-                                }
-                            }
-                            //Add Camper to list
                             camperList.Add(camper);
                         }
                     }
                 }
+                foreach (Camper camper in camperList)
+                {
+                    using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@camper_code", camper.CamperCode);
+                        using SqlDataReader rdr = cmd.ExecuteReader();
+                        while (rdr.Read())
+                        {
+                            if (rdr.HasRows)
+                            {
+                                camper.Notes.Add(BuildNoteFromReader(rdr));
+                            }
+                        }
+                    }
+                }
+                //Add Camper to list
             }
             // return list of campers
             return camperList;
@@ -249,33 +252,35 @@ namespace Capstone.DAO
         {
             Camper camper = new Camper();
 
-            using SqlConnection conn = new SqlConnection(connectionString);
-            conn.Open();
-
-            using (SqlCommand command = new SqlCommand(sqlCamper, conn))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                command.Parameters.AddWithValue("@camper_code", camperCode);
+                conn.Open();
 
-                using SqlDataReader reader = command.ExecuteReader();
+                using (SqlCommand command = new SqlCommand(sqlCamper, conn))
+                {
+                    command.Parameters.AddWithValue("@camper_code", camperCode);
 
-                while (reader.Read())
-                {
-                    camper = BuildCamperFromReader(reader);
-                }
-            }
-            using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
-            {
-                cmd.Parameters.AddWithValue("@camperCode", camperCode);
-                using SqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
-                {
-                    if (rdr.HasRows)
+                    using SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        camper.Notes.Add(BuildNoteFromReader(rdr));
+                        camper = BuildCamperFromReader(reader);
                     }
                 }
+                using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
+                {
+                    cmd.Parameters.AddWithValue("@camperCode", camperCode);
+                    using SqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        if (rdr.HasRows)
+                        {
+                            camper.Notes.Add(BuildNoteFromReader(rdr));
+                        }
+                    }
+                }
+                return camper;
             }
-            return camper;
         }
 
         private AdHocNote BuildNoteFromReader(SqlDataReader rdr)
@@ -343,7 +348,8 @@ namespace Capstone.DAO
         }
 
         public bool AddAdHocNote(AdHocNote note)
-        {   try
+        {
+            try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -375,7 +381,7 @@ namespace Capstone.DAO
                 }
             }
             catch (SqlException ex)
-            { 
+            {
                 return false;
             }
         }
