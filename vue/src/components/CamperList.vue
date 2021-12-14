@@ -125,14 +125,19 @@
         </td>
       </tr>
     </table>
+    <email-form v-bind:filteredCampers="filteredCampers" />
   </section>
 </template>
 
 <script>
 import CamperService from "../services/CamperService.js";
 import FamilyService from "../services/FamilyService.js";
+import EmailForm from "../components/EmailForm.vue"
 
 export default {
+  components:{
+    EmailForm,
+  },
   data() {
     return {
       firstNameToFilter: "",
@@ -170,26 +175,30 @@ export default {
       return list;
     },
     filteredCampers() {
+      if(!this.campers.length > 0)
+      {
+        return [];
+      }
       let campersList = this.campers;
       if (this.firstNameToFilter) {
-        campersList = this.campers.filter((a) =>
+        campersList = campersList.filter((a) =>
           a.firstName
             .toLowerCase()
             .includes(this.firstNameToFilter.toLowerCase())
         );
       }
       if (this.lastNameToFilter) {
-        campersList = this.campers.filter((a) =>
+        campersList = campersList.filter((a) =>
           a.lastName.toLowerCase().includes(this.lastNameToFilter.toLowerCase())
         );
       }
-      if (this.paymentStatusToFilter && this.paymentStatusToFilter != "All") {
-        campersList = this.campers.filter(
-          (a) => a.paymentStatus == this.paymentStatusToFilter
+      if (this.paymentStatusToFilter != "All") {
+        campersList = campersList.filter(
+          (a) => this.paymentStatusToFilter === 'Paid'? a.paymentStatus: !a.paymentStatus
         );
       }
       if (this.familyIdToFilter) {
-        campersList = this.campers.filter(
+        campersList = campersList.filter(
           (a) =>
             a.familyId.toString().includes(this.familyIdToFilter.toString()) ||
             a.familyName.includes(this.familyIdToFilter)
@@ -209,18 +218,18 @@ export default {
         );
       }
       if (minAge && !maxAge) {
-        campersList = this.campers.filter((a) => a.age >= minAge);
+        campersList = campersList.filter((a) => a.age >= minAge);
       }
       if (!minAge && maxAge) {
-        campersList = this.campers.filter((a) => a.age <= maxAge);
+        campersList = campersList.filter((a) => a.age <= maxAge);
       }
       if (this.activeToFilter != "All") {
-        campersList = this.campers.filter((c) =>
+        campersList = campersList.filter((c) =>
           this.activeToFilter == "Active" ? c.activeStatus : !c.activeStatus
         );
       }
       if (this.missingToFilter) {
-        campersList = this.campers.filter((a) =>
+        campersList = campersList.filter((a) =>
           a.missingData.includes(this.missingToFilter)
         );
       }
@@ -228,7 +237,7 @@ export default {
     },
   },
   created() {
-    CamperService.getAllCampers()
+      CamperService.getAllCampers()
       .then((response) => {
         this.campers = response.data;
         console.log("Got all campers", this.campers);
