@@ -705,8 +705,12 @@
         <td></td>
       </tr>
       <tr>
-        <td v-if="showNotes"><input type="text" v-model="note.parameter" placeholder="Parameter" /></td>
-        <td v-if="showNotes"><input type="text" v-model="note.value" placeholder="Value" /></td>
+        <td v-if="showNotes">
+          <input type="text" v-model="note.parameter" placeholder="Parameter" />
+        </td>
+        <td v-if="showNotes">
+          <input type="text" v-model="note.value" placeholder="Value" />
+        </td>
         <td>
           <span class="editButtons">
             <button
@@ -932,23 +936,25 @@ export default {
           this.camper.activeStatus = this.pending.activeStatus;
           this.showActive = false;
           break;
-        case "ad_hoc_notes":
-          if(this.camper.notes != undefined)
-          {
-            this.updateToSend.oldData = this.camper.notes.toString();
-          }
-          else
-          {
-            this.updateToSend.oldData = '';
-          }
-          this.updateToSend.newData = this.note.parameter + ',' + this.note.value;
+        case "parameter":
+          this.updateToSend.oldData = "";
+          this.updateToSend.newData = this.note.parameter;
           this.pending.notes = this.note;
-          if(this.camper.notes != undefined)
-          {
+          if (this.camper.notes != undefined) {
+            this.camper.notes.push(this.note);
+          } else {
+            this.camper.notes = [];
             this.camper.notes.push(this.note);
           }
-          else
-          {
+          this.showNotes = false;
+          break;
+          case "value":
+          this.updateToSend.oldData = "";
+          this.updateToSend.newData = this.note.value;
+          this.pending.notes = this.note;
+          if (this.camper.notes != undefined) {
+            this.camper.notes.push(this.note);
+          } else {
             this.camper.notes = [];
             this.camper.notes.push(this.note);
           }
@@ -958,7 +964,10 @@ export default {
       this.camper.allergies = this.camper.allergies.toString();
       this.camper.medications = this.camper.medications.toString();
       this.camper.specialNeeds = this.camper.specialNeeds.toString();
-      this.camper.notes = this.camper.notes.toString();
+      if(this.camper.notes != undefined)
+      {
+        this.camper.notes = this.camper.notes.toString();
+      }
       this.logChanges(formName);
     },
     convertToPending(data) {
@@ -1055,26 +1064,23 @@ export default {
         });
     },
     logChanges(formName) {
-      this.createUpdate(formName);
-      if(formName == 'ad_hoc_notes')
-      {
+      if (formName == "ad_hoc_notes") {
         CamperService.logNotes(this.camper.notes.parameter)
-        .then(response => {
-          console.log('Logged new note parameter', response.data);
-          CamperService.logNotes(this.camper.notes.value)
-        .then(response => {
-          console.log('Logged new note value', response.data);
-        })
-        .catch(response => {
-          console.error ('Problem logging note', response);
-        })
-        })
-        .catch(response => {
-          console.error ('Problem logging note', response);
-        })
-      }
-      else
-      {
+          .then((response) => {
+            console.log("Logged new note parameter", response.data);
+            CamperService.logNotes(this.camper.notes.value)
+              .then((response) => {
+                console.log("Logged new note value", response.data);
+              })
+              .catch((response) => {
+                console.error("Problem logging note", response);
+              });
+          })
+          .catch((response) => {
+            console.error("Problem logging note", response);
+          });
+      } else {
+        this.createUpdate(formName);
         CamperService.logChanges(this.updateToSend)
           .then((response) => {
             console.log("Logged changes", response.data);

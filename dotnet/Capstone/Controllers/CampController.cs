@@ -63,15 +63,5 @@ namespace Capstone.Controllers
             }
             return BadRequest(new { message = "This request could not be completed." });
         }
-
-        [HttpPost("camper/note")]
-        public ActionResult PostNote(AdHocNote note)
-        {
-            if (camp.AddAdHocNote(note))
-            {
-                return Created($"camper/note", note);
-            }
-            return BadRequest("Problem adding note to camper");
-        }
     }
 }
