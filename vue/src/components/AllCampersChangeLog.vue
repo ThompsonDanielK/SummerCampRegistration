@@ -117,7 +117,7 @@ export default {
           u.requestor.includes(this.userToFilter)
         );
       }
-      if (this.statusToFilter != 'All') {
+      if (this.statusToFilter != "All") {
         updateList = updateList.filter((u) =>
           u.status.includes(this.statusToFilter)
         );
@@ -130,31 +130,36 @@ export default {
       .then((response) => {
         console.log("Got all updates", response.data);
         this.updates = response.data;
+        this.updates.forEach((u) => {
+          if (!u.oldData) {
+            u.oldData = "N/A";
+          }
+          if (!u.newData) {
+            u.newData = "N/A";
+          }
+          u.requestDate =
+            new Date(u.requestDate).getMonth() +
+            1 +
+            "/" +
+            new Date(u.requestDate).getDate() +
+            "/" +
+            new Date(u.requestDate).getFullYear();
+          u.finalizeDate =
+            new Date(u.finalizeDate).getMonth() +
+            1 +
+            "/" +
+            new Date(u.finalizeDate).getDate() +
+            "/" +
+            new Date(u.finalizeDate).getFullYear();
+          if (u.finalizeDate == "1/1/1") {
+            u.finalizeDate = "N/A";
+          }
+        });
         this.$forceUpdate();
       })
       .catch((response) => {
         console.error("Could not get updates", response);
       });
-    if (typeof this.updates == Object) {
-      if (!this.updates.oldData) {
-        this.updates.oldData = "N/A";
-      }
-      if (
-        Date.parse(this.updates.finalizeDate) ==
-        Date.parse("0001-01-01T00:00:00")
-      ) {
-        this.updates.finalizeDate = "N/A";
-      }
-    } else {
-      this.updates.forEach((u) => {
-        if (!u.oldData) {
-          u.oldData = "N/A";
-        }
-        if (Date.parse(u.finalizeDate) == Date.parse("0001-01-01T00:00:00")) {
-          u.finalizeDate = "N/A";
-        }
-      });
-    }
   },
 };
 </script>

@@ -702,11 +702,6 @@
         <td>{{ note.value }}</td>
         <td></td>
       </tr>
-      <tr v-if="pending.parameter || pending.value">
-        <td class="newValue">{{ pending.parameter }}</td>
-        <td class="newValue">{{ pending.value }}</td>
-        <td></td>
-      </tr>
       <tr>
         <td v-if="showNotes">
           <input type="text" v-model="note.parameter" placeholder="Parameter" />
@@ -949,7 +944,7 @@ export default {
           this.showNotes = false;
           break;
       }
-      this.logChanges(formName);
+        this.logChanges(formName);
     },
     convertToPending(data) {
       if (data.status == "Pending") {
@@ -1109,12 +1104,15 @@ button {
   text-shadow: 2px 1px 1px black;
   font-size: 1em;
   font-family: "Lora", serif;
-  box-shadow: 1px 0.5px 0px $textLight;
+  box-shadow: 1.25px 1px 1px black;
   width: 30%;
 }
 button:disabled {
   background-color: $secondary;
-  color: white;
+  color: rgba(255, 255, 255, 0.356);
+  text-shadow: none;
+  border: none;
+  box-shadow: none;
 }
 tr {
   display: flex;
