@@ -58,23 +58,23 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@zip", family.Zip);
                     command.Parameters.AddWithValue("@address", family.Address);
 
-                    if (family.PhoneNumber != null)
-                    {
+                    //if (family.PhoneNumber != null)
+                    //{
                         command.Parameters.AddWithValue("@phoneNumber", family.PhoneNumber);
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@phoneNumber", DBNull.Value);
-                    }
+                    //}
+                    //else
+                    //{
+                    //    command.Parameters.AddWithValue("@phoneNumber", DBNull.Value);
+                    //}
 
-                    if (family.EmailAddress != null)
-                    {
+                    //if (family.EmailAddress != null)
+                    //{
                         command.Parameters.AddWithValue("@emailAddress", family.EmailAddress);
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@emailAddress", DBNull.Value);
-                    }
+                    //}
+                    //else
+                    //{
+                    //    command.Parameters.AddWithValue("@emailAddress", DBNull.Value);
+                    //}
 
                     int familyId = Convert.ToInt32(command.ExecuteScalar());
 
@@ -101,30 +101,30 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@date_added", DateTime.Now);
 
 
-                    if (!camper.Medications.Equals(""))
-                    {
+                    //if (!camper.Medications.Equals(""))
+                    //{
                         command.Parameters.AddWithValue("@medications", camper.Medications);
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@medications", "");
-                    }
-                    if (!camper.Allergies.Equals(""))
-                    {
+                    //}
+                    //else
+                    //{
+                    //    command.Parameters.AddWithValue("@medications", "");
+                    //}
+                    //if (!camper.Allergies.Equals(""))
+                    //{
                         command.Parameters.AddWithValue("@allergies", camper.Allergies);
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@allergies", "");
-                    }
-                    if (!camper.SpecialNeeds.Equals(""))
-                    {
+                    //}
+                    //else
+                    //{
+                    //    command.Parameters.AddWithValue("@allergies", "");
+                    //}
+                    //if (!camper.SpecialNeeds.Equals(""))
+                    //{
                         command.Parameters.AddWithValue("@specialNeeds", camper.SpecialNeeds);
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@specialNeeds", "");
-                    }
+                    //}
+                    //else
+                    //{
+                    //    command.Parameters.AddWithValue("@specialNeeds", "");
+                    //}
 
                     return Convert.ToInt32(command.ExecuteScalar());
                 }
