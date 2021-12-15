@@ -43,7 +43,7 @@ namespace Capstone.Controllers
             var from = new EmailAddress("TEOscar15@gmail.com", "Team Oscar");
             var subject = email.Subject;
             var plainTextContent = email.Body;
-            var htmlContent = "<strong>Your friends at Camp Oscar</strong>";
+            var htmlContent = ""; // "<strong>Your friends at Camp Oscar</strong>";
 
 
             foreach (int familyId in email.Recipients)
