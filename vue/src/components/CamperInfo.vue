@@ -1083,7 +1083,14 @@ export default {
       CamperService.logChanges(this.updateToSend)
         .then((response) => {
           console.log("Logged changes", response.data);
-          this.$forceUpdate();
+          if(this.$store.state.user.role == 'admin')
+          {
+            this.$router.go()
+          }
+          else
+          {
+            this.$forceUpdate();
+          }
         })
         .catch((response) => {
           console.warn("Problem logging changes", response);
