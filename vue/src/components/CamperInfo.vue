@@ -86,7 +86,7 @@
             type="submit"
             v-on:click="saveChange('last_name')"
             v-show="showLast"
-            v-bind:disabled="!newData.lastName"
+            v-bind:disabled="newData.lastName != camper.lastName"
           >
             Save
           </button>
@@ -690,8 +690,8 @@
             type="button"
             v-on:click.prevent="showNotes = true"
             v-show="!showNotes"
-            v-bind:disabled="pending.notes"
-            v-if="!($store.state.user.role == 'admin' && pending.notes)"
+            v-bind:disabled="pending.note"
+            v-if="!($store.state.user.role == 'admin' && pending.note)"
           >
             Add Additional Info
           </button>
@@ -700,6 +700,11 @@
       <tr v-for="note in camper.notes" v-bind:key="note.noteId">
         <td>{{ note.parameter }}</td>
         <td>{{ note.value }}</td>
+        <td></td>
+      </tr>
+      <tr v-if="pending.parameter || pending.value">
+        <td class="newValue">{{ pending.parameter }}</td>
+        <td class="newValue">{{ pending.value }}</td>
         <td></td>
       </tr>
       <tr>
@@ -714,7 +719,7 @@
             <button
               type="button"
               v-on:click="rejectRequest('ad_hoc_notes')"
-              v-if="$store.state.user.role == 'admin' && pending.notes"
+              v-if="$store.state.user.role == 'admin' && pending.s"
             >
               Reject
             </button>
@@ -723,8 +728,8 @@
               v-on:click="
                 saveNote();
                 showNotes = false;
-                logChanges('parameter');
-                logChanges('value');
+                saveChange('parameter');
+                saveChange('value');
               "
               v-show="showNotes"
               v-bind:disabled="!(note.parameter && note.value)"
@@ -860,21 +865,18 @@ export default {
           this.updateToSend.oldData = this.camper.firstName;
           this.updateToSend.newData = this.newData.firstName;
           this.pending.firstName = this.newData.firstName;
-          this.camper.firstName = this.newData.firstName;
           this.showFirst = false;
           break;
         case "last_name":
           this.updateToSend.oldData = this.camper.lastName;
           this.updateToSend.newData = this.newData.lastName;
           this.pending.lastName = this.newData.lastName;
-          this.camper.lastName = this.newData.lastName;
           this.showLast = false;
           break;
         case "dob":
           this.updateToSend.oldData = this.camper.dob;
           this.updateToSend.newData = this.newData.dob;
           this.pending.dob = this.newData.dob;
-          this.camper.dob = this.newData.dob;
           this.showDOB = false;
           break;
         case "allergies":
@@ -886,7 +888,6 @@ export default {
           if (this.pending.allergies != "None") {
             this.pending.allergies = this.newData.allergies.split(",");
           }
-          this.camper.allergies = this.newData.allergies;
           this.showAllergies = false;
           break;
         case "medications":
@@ -898,14 +899,12 @@ export default {
           if (this.pending.medications != "None") {
             this.pending.medications = this.newData.medications.split(",");
           }
-          this.camper.medications = this.newData.medications;
           this.showMedications = false;
           break;
         case "family_id":
           this.updateToSend.oldData = this.camper.familyId;
           this.updateToSend.newData = this.newData.familyId;
           this.pending.familyId = this.newData.familyId;
-          this.camper.familyId = this.newFamilyId;
           this.showFamily = false;
           break;
         case "special_needs":
@@ -917,66 +916,44 @@ export default {
           if (this.pending.specialNeeds != "None") {
             this.pending.specialNeeds = this.newData.specialNeeds.split(",");
           }
-          this.camper.specialNeeds = this.newData.specialNeeds;
           this.showSpecial = false;
           break;
         case "payment_status":
           this.updateToSend.oldData = this.camper.paymentStatus;
           this.updateToSend.newData = this.newData.paymentStatus;
           this.pending.paymentStatus = this.newData.paymentStatus;
-          this.camper.paymentStatus = this.pending.paymentStatus;
           this.showPayment = false;
           break;
         case "registrar":
           this.updateToSend.oldData = this.camper.registrar;
           this.updateToSend.newData = this.newData.registrar;
           this.pending.registrar = this.newData.registrar;
-          this.camper.registrar = this.newData.registrar;
           this.showRegistrar = false;
           break;
         case "active_status":
           this.updateToSend.oldData = this.camper.activeStatus;
           this.updateToSend.newData = this.newData.activeStatus;
           this.pending.activeStatus = this.newData.activeStatus;
-          this.camper.activeStatus = this.pending.activeStatus;
           this.showActive = false;
           break;
         case "parameter":
           this.updateToSend.oldData = "";
           this.updateToSend.newData = this.note.parameter;
-          this.pending.notes = this.note;
-          if (this.camper.notes != undefined) {
-            this.camper.notes.push(this.note);
-          } else {
-            this.camper.notes = [];
-            this.camper.notes.push(this.note);
-          }
+          this.pending.parameter = this.note.parameter;
           this.showNotes = false;
           break;
         case "value":
           this.updateToSend.oldData = "";
           this.updateToSend.newData = this.note.value;
-          this.pending.notes = this.note;
-          if (this.camper.notes != undefined) {
-            this.camper.notes.push(this.note);
-          } else {
-            this.camper.notes = [];
-            this.camper.notes.push(this.note);
-          }
+          this.pending.value = this.note.value;
           this.showNotes = false;
           break;
-      }
-      this.camper.allergies = this.camper.allergies.toString();
-      this.camper.medications = this.camper.medications.toString();
-      this.camper.specialNeeds = this.camper.specialNeeds.toString();
-      if (this.camper.notes != undefined) {
-        this.camper.notes = this.camper.notes.toString();
       }
       this.logChanges(formName);
     },
     convertToPending(data) {
       if (data.status == "Pending") {
-        this.requests.push(data);
+        this.requests.push(data); 
         switch (data.fieldToBeChanged) {
           case "first_name":
             this.pending.firstName = data.newData;
@@ -1015,10 +992,10 @@ export default {
             this.pending.paymentStatus = data.newData;
             break;
           case "parameter":
-            this.pending.notes.parameter = data.newData;
+            this.pending.parameter = data.newData;
             break;
           case "value":
-            this.pending.notes.parameter = data.newData;
+            this.pending.value = data.newData;
             break;
         }
       }
@@ -1083,7 +1060,14 @@ export default {
       CamperService.logChanges(this.updateToSend)
         .then((response) => {
           console.log("Logged changes", response.data);
-          this.$forceUpdate();
+          if(this.$store.state.user.role == 'admin')
+          {
+            this.$router.go()
+          }
+          else
+          {
+            this.$forceUpdate();
+          }
         })
         .catch((response) => {
           console.warn("Problem logging changes", response);
