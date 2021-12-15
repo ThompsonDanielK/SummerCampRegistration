@@ -21,7 +21,7 @@
       <td>{{ update.newData }}</td>
       <td>{{ update.requestor }}</td>
       <td>{{ update.requestDate }}</td>
-      <td>{{ update.finalizedDate }}</td>
+      <td>{{ update.finalizeDate }}</td>
       <td>{{ update.status }}</td>
     </tr>
   </table>
@@ -55,6 +55,10 @@ export default {
       }
       if (!u.finalizeDate) {
         u.finalizeDate = "N/A";
+      }
+      else
+      {
+        u.finalizeDate = u.finalizeDate.toLocaleDateString()
       }
     });
   },
