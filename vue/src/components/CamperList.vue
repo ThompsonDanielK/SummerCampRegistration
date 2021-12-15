@@ -192,6 +192,11 @@ export default {
           a.lastName.toLowerCase().includes(this.lastNameToFilter.toLowerCase())
         );
       }
+       if (this.registrarToFilter) {
+        campersList = campersList.filter((a) =>
+          a.registrar.toLowerCase().includes(this.registrarToFilter.toLowerCase())
+        );
+      }
       if (this.paymentStatusToFilter != "All") {
         campersList = campersList.filter(
           (a) => this.paymentStatusToFilter === 'Paid'? a.paymentStatus: !a.paymentStatus
