@@ -39,10 +39,10 @@ namespace Capstone.DAO
             "(parent_guardian_name, address, email_address, city, state, zip, phone) " +
             "VALUES " +
             "(@parentGuardianName, @address, @emailAddress, @city, @state, @zip, @phoneNumber); SELECT @@IDENTITY";
-        const string sqlGetAdHocNotes = "SELECT note_id, camper_code, parameter, value, input_type, possible_values " +
+        const string sqlGetAdHocNotes = "SELECT note_id, camper_code, parameter, value " +
             "FROM ad_hoc_notes WHERE camper_code = @camper_code";
-        const string sqlAddAdHocNotes = "INSERT INTO ad_hoc_notes (camper_code, parameter, value, input_type, possible_values) " +
-            "VALUES (@camper_code, @parameter, @value, @input_type, @possible_values)";
+        const string sqlAddAdHocNotes = "INSERT INTO ad_hoc_notes (camper_code, parameter, value) " +
+            "VALUES (@camper_code, @parameter, @value)";
 
         public int AddFamily(Family family)
         {
@@ -154,9 +154,10 @@ namespace Capstone.DAO
                     using (SqlCommand cmd = new SqlCommand(sqlGetAdHocNotes, conn))
                     {
                         cmd.Parameters.AddWithValue("@camper_code", camper.CamperCode);
-                        using SqlDataReader rdr = cmd.ExecuteReader();
                         try
                         {
+                            using SqlDataReader rdr = cmd.ExecuteReader();
+                            camper.Notes = new List<AdHocNote>() {};
                             while (rdr.Read())
                             {
                                 if (rdr.HasRows)
@@ -298,9 +299,7 @@ namespace Capstone.DAO
                 NoteId = Convert.ToInt32(rdr["note_id"]),
                 CamperCode = Convert.ToInt32(rdr["camper_code"]),
                 Parameter = Convert.ToString(rdr["parameter"]),
-                Value = Convert.ToString(rdr["value"]),
-                InputType = Convert.ToString(rdr["input_type"]),
-                PossibleValues = Convert.ToString(rdr["possible_values"])
+                Value = Convert.ToString(rdr["value"])
             };
             return note;
         }
@@ -366,22 +365,6 @@ namespace Capstone.DAO
                         command.Parameters.AddWithValue("@camper_code", note.CamperCode);
                         command.Parameters.AddWithValue("@parameter", note.Parameter);
                         command.Parameters.AddWithValue("@value", note.Value);
-                        if (note.InputType != null)
-                        {
-                            command.Parameters.AddWithValue("@input_type", note.InputType);
-                        }
-                        else
-                        {
-                            command.Parameters.AddWithValue("@input_type", "");
-                        }
-                        if (note.InputType != null)
-                        {
-                            command.Parameters.AddWithValue("@possible_values", note.PossibleValues);
-                        }
-                        else
-                        {
-                            command.Parameters.AddWithValue("@possible_values", "");
-                        }
                         command.ExecuteNonQuery();
                     }
                     return true;

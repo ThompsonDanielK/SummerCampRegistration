@@ -87,8 +87,6 @@ CREATE TABLE ad_hoc_notes(
 	camper_code int NOT NULL,
 	parameter nvarchar(1000) NOT NULL,
 	value nvarchar(1000) NOT NULL,
-	input_type nvarchar(100),
-	possible_values nvarchar(1000)
 );
 
 GO

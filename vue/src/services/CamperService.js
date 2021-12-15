@@ -18,5 +18,9 @@ export default {
     },
     updateCamper(camper) {
         return axios.post('/update/camper', camper)
+    },
+    addNote(note){
+        return axios.post('/camp/note', note)
     }
+
 }

@@ -680,10 +680,9 @@
         </td>
       </tr>
     </table>
-    <h2>Additional Information</h2>
     <table id="adHoc">
       <tr>
-        <td></td>
+        <td><h4>Additional Information</h4></td>
         <td></td>
         <td>
           <button
@@ -721,7 +720,12 @@
             </button>
             <button
               type="submit"
-              v-on:click="saveChange('ad_hoc_notes')"
+              v-on:click="
+                saveNote();
+                showNotes = false;
+                logChanges('parameter');
+                logChanges('value');
+              "
               v-show="showNotes"
               v-bind:disabled="!(note.parameter && note.value)"
             >
@@ -730,7 +734,7 @@
             <button
               type="button"
               v-on:click.prevent="
-                this.note = {};
+                note = {};
                 showNotes = false;
               "
               v-show="showNotes"
@@ -782,7 +786,9 @@ export default {
       showActive: false,
       showNotes: false,
       requests: [],
-      note: {},
+      note: {
+        camperCode: parseInt(this.$route.params.camperCode),
+      },
     };
   },
   props: {
@@ -935,7 +941,7 @@ export default {
           this.camper.activeStatus = this.pending.activeStatus;
           this.showActive = false;
           break;
-        case "ad_hoc_notes":
+        case "parameter":
           this.updateToSend.oldData = "";
           this.updateToSend.newData = this.note.parameter;
           this.pending.notes = this.note;
@@ -947,7 +953,7 @@ export default {
           }
           this.showNotes = false;
           break;
-          case "value":
+        case "value":
           this.updateToSend.oldData = "";
           this.updateToSend.newData = this.note.value;
           this.pending.notes = this.note;
@@ -963,8 +969,7 @@ export default {
       this.camper.allergies = this.camper.allergies.toString();
       this.camper.medications = this.camper.medications.toString();
       this.camper.specialNeeds = this.camper.specialNeeds.toString();
-      if(this.camper.notes != undefined)
-      {
+      if (this.camper.notes != undefined) {
         this.camper.notes = this.camper.notes.toString();
       }
       this.logChanges(formName);
@@ -1064,34 +1069,25 @@ export default {
           console.error("Problem Rejecting Request", response);
         });
     },
+    saveNote() {
+      CamperService.addNote(this.note)
+        .then((response) => {
+          console.log("Note added to camper", response.data);
+        })
+        .catch((response) => {
+          console.error("Problem adding note to camper", response);
+        });
+    },
     logChanges(formName) {
-      if (formName == "parameter") {
-        CamperService.logNotes(this.camper.notes.parameter)
-          .then((response) => {
-            console.log("Logged new note parameter", response.data);
-            CamperService.logNotes(this.camper.notes.value)
-              .then((response) => {
-                console.log("Logged new note value", response.data);
-                this.$forceUpdate();
-              })
-              .catch((response) => {
-                console.error("Problem logging note", response);
-              });
-          })
-          .catch((response) => {
-            console.error("Problem logging note", response);
-          });
-      } else {
-        this.createUpdate(formName);
-        CamperService.logChanges(this.updateToSend)
-          .then((response) => {
-            console.log("Logged changes", response.data);
-            this.$forceUpdate();
-          })
-          .catch((response) => {
-            console.warn("Problem logging changes", response);
-          });
-      }
+      this.createUpdate(formName);
+      CamperService.logChanges(this.updateToSend)
+        .then((response) => {
+          console.log("Logged changes", response.data);
+          this.$forceUpdate();
+        })
+        .catch((response) => {
+          console.warn("Problem logging changes", response);
+        });
     },
   },
   created() {
@@ -1153,7 +1149,7 @@ td {
 }
 input,
 select,
-input [type=checkbox] {
+input [type="checkbox"] {
   font-family: "Lora", serif;
   border: 1px dotted $highlight;
   border-radius: 10px;

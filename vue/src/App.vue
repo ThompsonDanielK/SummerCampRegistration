@@ -26,22 +26,19 @@ export default {
      Any valid CSS or SCSS is allowable here. See https://sass-lang.com/documentation/style-rules for info on SCSS -->
 <style lang="scss">
 @import "./styles/colors.scss";
-html{
-  background: #43281e;
-  background: -moz-linear-gradient(
-    -45deg,
-    #43281e 0%,
-    #c49c79 68%,
-    #ffffff 100%
-  );
+html {
+  background: #3b5f3a;
+  background: -moz-linear-gradient(top, #3b5f3a 0%, #c49c79 41%, #43281e 100%);
   background: -webkit-linear-gradient(
-    -45deg,
-    #43281e 0%,
-    #c49c79 68%,
-    #ffffff 100%
+    top,
+    #3b5f3a 0%,
+    #c49c79 41%,
+    #43281e 100%
   );
-  background: linear-gradient(135deg, #43281e 0%, #c49c79 68%, #ffffff 100%);
-  height: 1rem;
+  background: linear-gradient(to bottom, #3b5f3a 0%, #c49c79 41%, #43281e 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  height: 100%;
 }
 .container {
   display: flex;
