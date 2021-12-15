@@ -84,6 +84,7 @@ export default {
         .catch(response => {
             console.error('Could not send email', response);
         })
+        this.showEmailForm = false;
     },
     cancelEmail(){
         this.email = {};
