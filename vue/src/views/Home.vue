@@ -56,15 +56,17 @@ export default {
   'summary summary'
   'listCamper listFamily'
   'historyCamper historyFamily';
-  grid-gap: 2% 5%;
+  grid-gap: 5% 5%;
   font-size: 1.3rem;
 }
 section{
+  margin-bottom: 5%;
   background-color: $textLight;
   border: 2px solid $highlight;
   border-radius: 40px;
   padding: 1%;
   box-shadow: 3px 2px 1px rgb(82, 81, 81);
+  margin: 0 auto;
 }
 .links{
   width: 92%;
@@ -77,8 +79,21 @@ img{
   box-shadow: 3px 2px 1px rgb(82, 81, 81);
 }
 #summary{
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
   grid-area: summary;
-  margin-bottom: 2%;
+  height: 95%;
+  width: 50%;
+  clip-path: polygon(50% 0, 100% 100%, 0% 100%);
+}
+#summary h1, #summary p, #summary span{
+  text-align: center;
+}
+#summary h1{
+  padding-top: 10%;
 }
 #listCamper{
   text-align: right;
@@ -100,5 +115,9 @@ img{
 a {
   margin-top: 5px;
   color: $highlight;
+}
+p{
+  width: 30%;
+  text-align: left;
 }
 </style>
