@@ -949,6 +949,8 @@ export default {
           this.showNotes = false;
           break;
       }
+        this.updateToSend.newData = this.updateToSend.newData.toString();
+        this.updateToSend.oldData = this.updateToSend.oldData.toString();
         this.logChanges(formName);
     },
     convertToPending(data) {
