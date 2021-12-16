@@ -4,6 +4,9 @@ export default {
     getAllUpdates() {
         return axios.get(`/update/camperUpdateList`);
     },
+    getAllFamilyUpdates() {
+        return axios.get(`/update/familyUpdateList`);
+    },
     getUpdatesByCamperCode(camperId) {
         return axios.get(`/update/camper/${camperId}`);
     },

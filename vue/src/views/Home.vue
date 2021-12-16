@@ -3,8 +3,10 @@
     <section id="summary">
     <h1>Home</h1>
     <p>
-      Welcome to C.A.M.P. - The Camp Attendee Management Program.<br />
-      We're here to help you keep track of all of those delightful campers who fill the trails at your summer camp.
+      Welcome to C.A.M.P. - <br />The Camp Attendee Management Program.<br />
+      </p>
+      <p>
+      We're here to help you keep track of the campers who fill the trails at your summer camp.
     </p>
     </section>
     <section class='links' id="listCamper">
@@ -15,22 +17,22 @@
     <span>Here you can enroll new campers to your roster, view and edit their information, see the history of those changes, and even send an email to their parent(s) and/or guardian(s).</span>
     </section>
     <section class='links' id="listFamily">
-    <img src="../../images/anna-samoylova-w55SpMmoPgE-unsplash.jpg" />
     <router-link v-bind:to="{ name: 'familyList' }">
+    <img src="../../images/anna-samoylova-w55SpMmoPgE-unsplash.jpg" />
     <h2>Maintain a List of Families</h2>
     </router-link>
     <span>See general information about those families and the associated campers. You may also enroll new campers from this screen as well.</span>
     </section>
     <section class='links' id="historyCamper">
-    <img src="../../images/artem-kniaz-DqgMHzeio7g-unsplash.jpg" />
     <router-link v-bind:to="{ name: 'historyCamper' }">
+    <img src="../../images/artem-kniaz-DqgMHzeio7g-unsplash.jpg" />
     <h2>View Camper Change Log</h2>
     </router-link>
     <span>As your users make changes to campers' information, you can see a list of those changes here.  View historical approved & rejected changes here as well as changes pending approval.  With one click, go to those changes needing your attention.</span>
     </section>
     <section class='links' id="historyFamily">
-    <img src="../../images/mi-pham-xtd3zYWxEs4-unsplash.jpg" />
     <router-link v-bind:to="{ name: 'historyFamily' }">
+    <img src="../../images/mi-pham-xtd3zYWxEs4-unsplash.jpg" />
     <h2>View Family Change Log</h2>
     </router-link>
     <span>As your users make changes to families' information, you can see a list of those changes here.  View historical approved & rejected changes here as well as changes pending approval.  With one click, go to those changes needing your attention.</span>
@@ -58,6 +60,7 @@ export default {
   'historyCamper historyFamily';
   grid-gap: 5% 5%;
   font-size: 1.3rem;
+  text-shadow: 1px 0px 1px black;
 }
 section{
   margin-bottom: 5%;
@@ -65,7 +68,7 @@ section{
   border: 2px solid $highlight;
   border-radius: 40px;
   padding: 1%;
-  box-shadow: 3px 2px 1px rgb(82, 81, 81);
+  box-shadow: 2px 2px 1px rgb(82, 81, 81);
   margin: 0 auto;
 }
 .links{
@@ -79,45 +82,28 @@ img{
   box-shadow: 3px 2px 1px rgb(82, 81, 81);
 }
 #summary{
-  display: grid;
-  place-items: center;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
   grid-area: summary;
-  height: 95%;
-  width: 50%;
-  clip-path: polygon(50% 0, 100% 100%, 0% 100%);
-}
-#summary h1, #summary p, #summary span{
-  text-align: center;
-}
-#summary h1{
-  padding-top: 10%;
+  width: 45%;
 }
 #listCamper{
-  text-align: right;
+  text-align: left;
   grid-area: listCamper;
   
 }
 #listFamily{
-  text-align: left;
+  text-align: right;
   grid-area: listFamily;
 }
 #historyCamper{
-  text-align: right;
+  text-align: left;
   grid-area: historyCamper;
 }
 #historyFamily{
-  text-align: left;
+  text-align: right;
   grid-area: historyFamily;
 }
 a {
   margin-top: 5px;
   color: $highlight;
-}
-p{
-  width: 30%;
-  text-align: left;
 }
 </style>

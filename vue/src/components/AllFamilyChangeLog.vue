@@ -3,6 +3,7 @@
     <thead>
       <tr>
         <td>ID</td>
+        <td>Family</td>
         <td>Action</td>
         <td>Value</td>
         <td>Current</td>
@@ -15,13 +16,14 @@
     </thead>
     <tr v-for="update in updates" v-bind:key="update.requestId">
       <td>{{ update.requestId }}</td>
+      <td><router-link v-bind:to="{name: 'family', params: {familyId: update.familyId}}">{{ update.familyId }}</router-link></td>
       <td>{{ update.action }}</td>
       <td>{{ update.fieldToBeChanged }}</td>
       <td>{{ update.oldData }}</td>
       <td>{{ update.newData }}</td>
       <td>{{ update.requestor }}</td>
       <td>{{ update.requestDate }}</td>
-      <td>{{ update.finalizedDate }}</td>
+      <td>{{ update.finalizeDate }}</td>
       <td>{{ update.status }}</td>
     </tr>
   </table>
@@ -37,7 +39,7 @@ export default {
     };
   },
   created() {
-    UpdateService.getUpdatesByFamilyId(this.$route.params.familyId)
+    UpdateService.getAllFamilyUpdates()
       .then((response) => {
         console.log("Got all updates", response.data);
         this.updates = response.data;
@@ -79,51 +81,73 @@ export default {
 @import "../styles/colors.scss";
 
 table {
-  margin: 2% 0;
-  padding: 0 2%;
-  font-size: 0.85rem;
-  display: flex;
-  justify-content: center;
+  display: block;
 }
-td:first-child {
-  width: 7%;
-  border-right: 1px solid $highlight;
+input {
+  width: 90%;
 }
-td:nth-child(2) {
-  width: 7%;
-  border-right: 1px solid $highlight;
-}
-td:nth-child(3) {
-  width: 13%;
-  border-right: 1px solid $highlight;
-}
-td:nth-child(4) {
-  width: 12%;
-  border-right: 1px solid $highlight;
-}
-td:nth-child(5) {
-  width: 14%;
-  border-right: 1px solid $highlight;
-}
-td:nth-child(6) {
-  width: 12%;
-  border-right: 1px solid $highlight;
-}
-td:nth-child(7) {
-  width: 12%;
-  border-right: 1px solid $highlight;
-}
-td:nth-child(8) {
-  width: 12%;
-  border-right: 1px solid $highlight;
-}
-td:last-child {
-  width: 8%;
-}
-tr {
-  border: 1px solid $highlight;
+td {
+  padding-left: 0.5%;
+  padding-right: 0.5%;
 }
 thead {
+  font-size: 1.08rem;
   font-weight: bold;
+}
+tr td:first-child {
+  width: 7%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(2) {
+  width: 8%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(3) {
+  width: 8%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(4) {
+  width: 9%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(5) {
+  width: 16%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(6) {
+  width: 16%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(7) {
+  width: 10%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(8) {
+  width: 10%;
+  border-right: 1px solid $highlight;
+}
+tr td:nth-child(9) {
+  width: 12%;
+  border-right: 1px solid $highlight;
+}
+tr td:last-child {
+  width: 10%;
+}
+input,
+select {
+  background-color: $textDark;
+  color: $textLight;
+  border-radius: 10px;
+  border: 1px solid $highlight;
+  font-size: 0.9rem;
+  font-family: "Lora", serif;
+  box-shadow: 2px 1px 1px $secondary;
+}
+input::placeholder {
+  color: $textLight;
+}
+a {
+  color: $highlight;
+  text-decoration: none;
 }
 </style>
