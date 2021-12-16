@@ -829,7 +829,7 @@ export default {
     convertedDateTime() {
       let dob = new Date(this.camper.dob);
       let month = dob.getMonth() + 1;
-      let day = dob.getDate() + 1;
+      let day = dob.getDate();
       let year = dob.getFullYear();
       let formattedDob = `${month}/${day}/${year}`;
       return formattedDob;
@@ -874,8 +874,8 @@ export default {
           this.showLast = false;
           break;
         case "dob":
-          this.updateToSend.oldData = this.camper.dob;
-          this.updateToSend.newData = this.newData.dob;
+          this.updateToSend.oldData = this.convertedDateTime;
+          this.updateToSend.newData = this.newConvertedDateTime;
           this.pending.dob = this.newData.dob;
           this.showDOB = false;
           break;
