@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <section id="summary">
-    <h1>Home</h1>
+    <h1>C.A.M.P.</h1>
     <p>
       Welcome to C.A.M.P. - <br />The Camp Attendee Management Program.<br />
       </p>
@@ -84,6 +84,7 @@ img{
 #summary{
   grid-area: summary;
   width: 45%;
+  text-align: center;
 }
 #listCamper{
   text-align: left;

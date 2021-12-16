@@ -691,7 +691,7 @@
             v-on:click.prevent="showNotes = true"
             v-show="!showNotes"
             v-bind:disabled="pending.note"
-            v-if="!($store.state.user.role == 'admin' && pending.note)"
+            v-if="!($store.state.user.role == 'admin' && pending.parameter)"
           >
             Add Additional Info
           </button>
@@ -702,19 +702,24 @@
         <td>{{ note.value }}</td>
         <td></td>
       </tr>
+      <tr v-if="pending.parameter" class="newValue">
+        <td>{{ pending.parameter }}</td>
+        <td>{{ pending.value }}</td>
+        <td></td>
+      </tr>
       <tr>
         <td v-if="showNotes">
-          <input type="text" v-model="note.parameter" placeholder="Parameter" />
+          <input type="text" v-model="note.parameter" placeholder="Title" />
         </td>
         <td v-if="showNotes">
-          <input type="text" v-model="note.value" placeholder="Value" />
+          <input type="text" v-model="note.value" placeholder="Note" />
         </td>
         <td>
           <span class="editButtons">
             <button
               type="button"
               v-on:click="rejectRequest('ad_hoc_notes')"
-              v-if="$store.state.user.role == 'admin' && pending.s"
+              v-if="$store.state.user.role == 'admin' && (pending.parameter || pending.parameter)"
             >
               Reject
             </button>
@@ -985,12 +990,6 @@ export default {
             break;
           case "payment_status":
             this.pending.paymentStatus = data.newData;
-            break;
-          case "parameter":
-            this.pending.parameter = data.newData;
-            break;
-          case "value":
-            this.pending.value = data.newData;
             break;
         }
       }

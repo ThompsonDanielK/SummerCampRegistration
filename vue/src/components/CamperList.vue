@@ -9,7 +9,7 @@
     <table>
       <thead>
         <tr>
-          <td class="labels">Search:</td>
+          <td class="labels"></td>
           <td>
             <input
               type="text"
@@ -26,12 +26,12 @@
           </td>
           <td>
             <select v-model="minAgeToFilter" class="ageFilter">
-              <option>Any</option>
+              <option>Min</option>
               <option v-for="num in minNums" v-bind:key="num">{{ num }}</option>
             </select>
             -
             <select v-model="maxAgeToFilter" class="ageFilter">
-              <option>Any</option>
+              <option>Max</option>
               <option v-for="num in maxNums" v-bind:key="num">{{ num }}</option>
             </select>
           </td>
@@ -66,13 +66,13 @@
           <td>
             <select v-model="missingToFilter">
               <option value="">All</option>
-              <option value="first_name">First Name</option>
-              <option value="last_name">Last Name</option>
-              <option value="age">Age</option>
-              <option value="payment_status">Payment Status</option>
-              <option value="registrar">Registrar</option>
-              <option value="family">Family</option>
-              <option value="active_status">Active Status</option>
+              <option value="First Name">First Name</option>
+              <option value="Last Name">Last Name</option>
+              <option value="Date of Birth">Date of Birth</option>
+              <option value="Payment">Payment</option>
+              <option value="Registrar">Registrar</option>
+              <option value="Family">Family</option>
+              <option value="Status">Status</option>
             </select>
           </td>
         </tr>
@@ -86,7 +86,7 @@
         <td>Registrar</td>
         <td>Family</td>
         <td>Status</td>
-        <td>Missing</td>
+        <td>Missing Info</td>
       </tr>
       <tr
         v-for="camper in filteredCampers"
@@ -143,8 +143,8 @@ export default {
       firstNameToFilter: "",
       lastNameToFilter: "",
       familyIdToFilter: "",
-      minAgeToFilter: "Any",
-      maxAgeToFilter: "Any",
+      minAgeToFilter: "Min",
+      maxAgeToFilter: "Max",
       paymentStatusToFilter: "All",
       registrarToFilter: "",
       missingToFilter: "",
@@ -164,7 +164,7 @@ export default {
     maxNums() {
       let list = [];
       let minAge;
-      if (this.minAgeToFilter == "Any") {
+      if (this.minAgeToFilter == "Min") {
         minAge = 1;
       } else {
         minAge = parseInt(this.minAgeToFilter);
@@ -211,10 +211,10 @@ export default {
       }
       let minAge = 0;
       let maxAge = 0;
-      if (this.minAgeToFilter != "Any") {
+      if (this.minAgeToFilter != "Min") {
         minAge = parseInt(this.minAgeToFilter);
       }
-      if (this.maxAgeToFilter != "Any") {
+      if (this.maxAgeToFilter != "Max") {
         maxAge = parseInt(this.maxAgeToFilter);
       }
       if (minAge && maxAge) {
@@ -332,7 +332,10 @@ tr td:nth-child(5) {
   width: 5%;
 }
 tr td:nth-child(8) {
-  width: 4%;
+  width: 5%;
+}
+tr td:nth-child(4) {
+  text-align: center;
 }
 tr td:first-child {
   width: 4%;

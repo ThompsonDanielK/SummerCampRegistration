@@ -84,7 +84,7 @@ export default new Vuex.Store({
           c.missingData.push('Age');
         }
         if (c.paymentStatus == undefined) {
-          c.missingData.push('Payment Status');
+          c.missingData.push('Payment');
         }
         if (!c.registrar) {
           c.missingData.push('Registrar');
@@ -93,9 +93,9 @@ export default new Vuex.Store({
           c.missingData.push('Family');
         }
         if (c.activeStatus == undefined) {
-          c.missingData.push('Active Status');
+          c.missingData.push('Status');
         }
-        if (!c.missingData) {
+        if (c.missingData.length < 1) {
           c.missingData.push('None');
         }
       });

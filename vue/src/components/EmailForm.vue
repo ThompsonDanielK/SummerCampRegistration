@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section id="email"> 
     <button
       type="button"
       v-show="!showEmailForm"
@@ -97,15 +97,21 @@ export default {
 <style scoped lang="scss">
 @import "../styles/colors.scss";
 
-section{
+#email{
     width: 80%;
     margin: 0% 10%;
+    border: 0;
 }
 aside {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   margin: 1%;
+  padding: 0 2%;
+  border: 1px dotted $highlight;
+  background-color: $secondary;
+  border-radius: 20px;
+  box-shadow: 1px 0px 1px $textDark;
 }
 input,
 button,
