@@ -64,7 +64,7 @@ export default {
   color: $textLight;
   text-shadow: 3px 2px 1px black;
   text-decoration: none;
-  font-size: 2em;
+  font-size: 3em;
   border: 2px solid $highlight;
   border-radius: 10px;
   text-align: center;

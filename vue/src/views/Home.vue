@@ -1,23 +1,40 @@
 <template>
   <div class="home">
+    <section id="summary">
     <h1>Home</h1>
     <p>
-      Welcome to CAMP!<br />CAMP is a camp camper management program meant to
-      simplify the hassle of adding and managing your summer camp campers.
+      Welcome to C.A.M.P. - The Camp Attendee Management Program.<br />
+      We're here to help you keep track of all of those delightful campers who fill the trails at your summer camp.
     </p>
-    <router-link
-      v-bind:to="{ name: 'camper', params: { camperCode: '200001' } }"
-      >Camper Example</router-link
-    >
-    <router-link v-bind:to="{ name: 'camperList' }"
-      >Camper List Example</router-link
-    >
-    <router-link v-bind:to="{ name: 'familyList' }"
-      >Family List Example</router-link
-    >
-    <router-link v-bind:to="{ name: 'history' }"
-      >Camper Change History</router-link
-    >
+    </section>
+    <section class='links' id="listCamper">
+    <router-link v-bind:to="{ name: 'camperList' }">
+    <img src="../../images/anderson-schmig-f7b6WX_p1N0-unsplash.jpg" />
+    <h2>Maintain a List of Campers</h2>
+    </router-link>
+    <span>Here you can enroll new campers to your roster, view and edit their information, see the history of those changes, and even send an email to their parent(s) and/or guardian(s).</span>
+    </section>
+    <section class='links' id="listFamily">
+    <img src="../../images/anna-samoylova-w55SpMmoPgE-unsplash.jpg" />
+    <router-link v-bind:to="{ name: 'familyList' }">
+    <h2>Maintain a List of Families</h2>
+    </router-link>
+    <span>See general information about those families and the associated campers. You may also enroll new campers from this screen as well.</span>
+    </section>
+    <section class='links' id="historyCamper">
+    <img src="../../images/artem-kniaz-DqgMHzeio7g-unsplash.jpg" />
+    <router-link v-bind:to="{ name: 'historyCamper' }">
+    <h2>View Camper Change Log</h2>
+    </router-link>
+    <span>As your users make changes to campers' information, you can see a list of those changes here.  View historical approved & rejected changes here as well as changes pending approval.  With one click, go to those changes needing your attention.</span>
+    </section>
+    <section class='links' id="historyFamily">
+    <img src="../../images/mi-pham-xtd3zYWxEs4-unsplash.jpg" />
+    <router-link v-bind:to="{ name: 'historyFamily' }">
+    <h2>View Family Change Log</h2>
+    </router-link>
+    <span>As your users make changes to families' information, you can see a list of those changes here.  View historical approved & rejected changes here as well as changes pending approval.  With one click, go to those changes needing your attention.</span>
+    </section>
   </div>
 </template>
 
@@ -34,13 +51,51 @@ export default {
 @import "../styles/colors.scss";
 
 .home {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas:
+  'summary summary'
+  'listCamper listFamily'
+  'historyCamper historyFamily';
+  grid-gap: 2% 5%;
+  font-size: 1.3rem;
+}
+section{
   background-color: $textLight;
   border: 2px solid $highlight;
-  border-radius: 20px;
-  padding: 10px;
-  box-shadow: 3px 2px 1px $secondary;
+  border-radius: 40px;
+  padding: 1%;
+  box-shadow: 3px 2px 1px rgb(82, 81, 81);
+}
+.links{
+  width: 92%;
+  padding: 2% 3%;
+}
+img{
+  width: 350px;
+  height: 250px;
+  border-radius: 4px;
+  box-shadow: 3px 2px 1px rgb(82, 81, 81);
+}
+#summary{
+  grid-area: summary;
+  margin-bottom: 2%;
+}
+#listCamper{
+  text-align: right;
+  grid-area: listCamper;
+  
+}
+#listFamily{
+  text-align: left;
+  grid-area: listFamily;
+}
+#historyCamper{
+  text-align: right;
+  grid-area: historyCamper;
+}
+#historyFamily{
+  text-align: left;
+  grid-area: historyFamily;
 }
 a {
   margin-top: 5px;

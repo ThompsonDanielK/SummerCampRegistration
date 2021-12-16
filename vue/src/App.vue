@@ -48,7 +48,7 @@ html {
 }
 .container .page {
   color: $main;
-  margin: 2% 15%;
+  margin: 2% 10%;
   color: $textDark;
   align-items: center;
   border-radius: 20px;
