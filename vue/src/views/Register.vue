@@ -39,7 +39,7 @@
       <div class="form-group">
         <router-link :to="{ name: 'login' }">Have an account?</router-link>
       </div>
-      <button class="btn btn-primary" type="submit">Create Account</button>
+      <button class="btn" type="submit">Create Account</button>
     </form>
   </div>
 </template>
@@ -101,9 +101,42 @@ export default {
   color: $textDark;
   padding: 10px;
   border-radius: 10px;
+  background-color: $textLight;
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  margin: 0 20%;
+  border: 2px solid $highlight;
 }
-a,
-button {
-  color: $highlight;
+.form-group {
+  display: flex;
+  justify-content: center;
+}
+.form-group input,
+button,
+a {
+  margin: 10px;
+  background-color: $textDark;
+  color: $textLight;
+  border: 2px solid $highlight;
+  border-radius: 5px;
+}
+input::-webkit-input-placeholder {
+  color: $textLight;
+  font-family: "Lora", serif;
+}
+a {
+  width: 70%;
+  text-align: center;
+}
+button, a {
+  font-size: 1.2em;
+  font-family: "Lora", serif;
+  padding: 1%;
+  margin: 1% auto;
+}
+.btn{
+  margin: 0 15%;
+  width: 70%;
 }
 </style>

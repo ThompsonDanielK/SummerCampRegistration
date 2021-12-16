@@ -128,4 +128,7 @@ button {
   font-size: 1.2em;
   font-family: "Lora", serif;
 }
+.alert alert-danger{
+  color: $warning;
+}
 </style>

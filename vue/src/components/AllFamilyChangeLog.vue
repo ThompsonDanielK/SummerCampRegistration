@@ -103,11 +103,11 @@ tr td:nth-child(2) {
   border-right: 1px solid $highlight;
 }
 tr td:nth-child(3) {
-  width: 8%;
+  width: 7%;
   border-right: 1px solid $highlight;
 }
 tr td:nth-child(4) {
-  width: 9%;
+  width: 13%;
   border-right: 1px solid $highlight;
 }
 tr td:nth-child(5) {
@@ -127,11 +127,8 @@ tr td:nth-child(8) {
   border-right: 1px solid $highlight;
 }
 tr td:nth-child(9) {
-  width: 12%;
-  border-right: 1px solid $highlight;
-}
-tr td:last-child {
   width: 10%;
+  border-right: 1px solid $highlight;
 }
 input,
 select {
