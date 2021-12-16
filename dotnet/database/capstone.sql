@@ -98,11 +98,31 @@ SET IDENTITY_INSERT ad_hoc_notes OFF;
 SET IDENTITY_INSERT camper_updates ON;
 INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
 	VALUES(400001, 'last_name', '200003', 'Update', 'Bowersmith', 'Bowers', 'user', 'Pending', '2021-10-09');
+INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date, finalize_date)
+	VALUES(400002, 'first_name', '200005', 'Update', 'Erica', 'Eric', 'user', 'Approved', '2021-11-09', '2021-11-10');
+INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date, finalize_date)
+	VALUES(400003, 'payment_status', '200003', 'Update', 'true', 'false', 'user', 'Rejected', '2021-11-23', '2021-11-24');
+INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date, finalize_date)
+	VALUES(400004, 'medications', '200004', 'Update', 'Aspirin', 'Asparan', 'admin', 'Approved', '2021-12-16', '2021-12-16');
+INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date, finalize_date)
+	VALUES(400005, 'active_status', '200005', 'Update', 'true', 'false', 'user', 'Rejected', '2021-12-16', '2021-12-17');
+INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
+	VALUES(400006, 'active_status', '200006', 'Update', 'false', 'true', 'user', 'Pending', '2021-12-09');
 SET IDENTITY_INSERT camper_updates OFF;
 
 SET IDENTITY_INSERT family_updates ON;
 INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
 	VALUES(300001, 'address', '100002', 'Update', '200 Secondary Road', '200 Second Ave.', 'user', 'Pending', '2021-10-09');
+INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
+	VALUES(300002, 'parent_guardian_name', '100004', 'Update', 'Cohort 15 Team Mega-Awesome', 'Cohort 15 Team Oscar', 'user', 'Rejected', '2021-11-24');
+INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
+	VALUES(300003, 'parent_guardian_name', '100002', 'Update', 'Mike Bowers', 'Mike Flowers', 'admin', 'Approved', '2021-12-05');
+INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
+	VALUES(300004, 'email_address', '100003', 'Update', 'mollygolly@molly.com', 'molly@molly.com', 'user', 'Pending', '2021-11-27');
+INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
+	VALUES(300005, 'city', '100001', 'Update', 'Flavortown', 'Columbus', 'user', 'Rejected', '2021-12-05');
+INSERT INTO family_updates (request_id, field_to_be_changed, family_id, action, new_data, old_data, requestor, status, request_date)
+	VALUES(300006, 'zip', '100004', 'Update', '43430', '43333', 'user', 'Pending', '2021-12-02');
 SET IDENTITY_INSERT family_updates OFF;
 
 SET IDENTITY_INSERT family ON;
