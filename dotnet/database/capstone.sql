@@ -90,6 +90,10 @@ CREATE TABLE ad_hoc_notes(
 );
 
 GO
+SET IDENTITY_INSERT ad_hoc_notes ON;
+INSERT INTO ad_hoc_notes (note_id, camper_code, parameter, value)
+	VALUES(500001, 200006, 'Members of Team Oscar', 'Caleb, Dan, & Eric');
+SET IDENTITY_INSERT ad_hoc_notes OFF;
 
 SET IDENTITY_INSERT camper_updates ON;
 INSERT INTO camper_updates (request_id, field_to_be_changed, camper_code, action, new_data, old_data, requestor, status, request_date)
@@ -108,6 +112,8 @@ INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, 
 	VALUES (100002, 'Mike Bowers', '200 Second Ave.', 'Dublin', 'OH', '43222', '614-444-5555', 'mike@mike.com');
 INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone, email_address)
 	VALUES (100003, 'Molly Carter', '300 Third St.', 'Hilliard', 'OH', '43333', '614-666-7777', 'molly@molly.com');
+INSERT INTO family (family_id, parent_guardian_name, address, city, state, zip, phone, email_address)
+	VALUES (100004, 'Cohort 15 Team Oscar', '100 Wow Way', 'Columbus', 'OH', '43333', '614-888-9999', 'ioicaleb@hotmail.com');
 SET IDENTITY_INSERT family OFF;
 
 GO
@@ -116,18 +122,21 @@ SET IDENTITY_INSERT campers ON;
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 	VALUES(200001, 100001, 'Alex', 'Andrews', '2010-01-01', 'user', 'false', 'true', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
-	VALUES(200002, 100001, 'Brandy', 'Andrews', '2009-02-03', 'user', 'true', 'true', '2021-12-10');
+	VALUES(200002, 100001, 'Brandy', '', '2009-02-03', 'user', 'true', 'true', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 	VALUES(200003, 100002, 'Cathy', 'Bowers', '2011-03-03', 'user', 'false', 'true', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, medications, allergies, special_needs, date_added)
 	VALUES(200004, 100003, 'David', 'Carter', '2010-04-04', 'user', 'false', 'true', 'Asprin', 'Bees, Nuts, Grass', 'Likes Bedtime Stories, Nightlight', '2021-12-10');
 INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, registrar, payment_status, active_status, date_added)
 	VALUES(200005, 100003, 'Erica', '', '2009-05-05', 'user', 'false', 'false', '2021-12-10');
+INSERT INTO campers (camper_code, family_id, first_name, last_name, dob, medications, allergies, special_needs, registrar, payment_status, active_status, date_added)
+	VALUES(200006, 100004, 'Team Oscar', 'Cohort 15', '2020-12-03', 'Coffee', 'Bright Light, Early Mornings, Bad Reviews', 'Hugs, Appreciation', 'admin', 'true', 'true', '2021-12-10');
 SET IDENTITY_INSERT campers OFF;
 
 
 
 ALTER TABLE campers ADD FOREIGN KEY (family_id) REFERENCES family(family_id);
+ALTER TABLE ad_hoc_notes ADD FOREIGN KEY (camper_code) REFERENCES campers(camper_code);
 
 ALTER TABLE camper_updates ADD FOREIGN KEY (camper_code) REFERENCES campers(camper_code);
 ALTER TABLE camper_updates ADD CONSTRAINT Chk_camper_updates_action CHECK (action IN ('ADD', 'Update', 'Delete'));
